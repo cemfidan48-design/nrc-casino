@@ -10,13 +10,13 @@
   --bg:#08081a;--panel:#10102a;--panel2:#18183a;
   --cyan:#00e5ff;--pink:#e040fb;--gold:#ffd700;--gold2:#ffaa00;
   --green:#00e676;--red:#ff1744;--ivory:#f0e6ff;--ivdim:#6a6a8a;
-  --nav-h:64px;
+  --nav-h:68px;
 }
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--ivory);display:flex;flex-direction:column;}
 
-.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+20px);}
+.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+40px);}
 .inner{max-width:480px;margin:0 auto;padding:0 12px;}
 
 /* NAV */
@@ -381,7 +381,7 @@ function doSpin(){
       phase:'spin',
       t:0,
       delay:r*180,       // more stagger between reels
-      spinDur:1600+r*400, // each reel spins longer
+      spinDur:2800+r*500, // each reel spins longer
       newSyms:newGrids[r],
       blurAmt:10,
       bounced:false,     // bounce effect on stop

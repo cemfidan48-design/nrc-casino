@@ -10,7 +10,7 @@
   --bg:#07071a;--panel:#0f0f28;
   --cyan:#00e5ff;--pink:#e040fb;--gold:#ffd700;--gold2:#ffaa00;
   --green:#00e676;--red:#ff1744;--ivory:#f0e6ff;--ivdim:#6a6a8a;
-  --nav-h:64px;
+  --nav-h:68px;
 }
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
@@ -20,7 +20,7 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 #particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
 /* ── PAGE ── */
-.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+20px);position:relative;z-index:1;}
+.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+40px);position:relative;z-index:2;}
 .inner{max-width:480px;margin:0 auto;padding:0 12px;}
 
 /* ── NAV ── */
@@ -80,19 +80,20 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .dealer2 .dealer-ring{background:linear-gradient(135deg,var(--pink),var(--gold)) border-box;}
 @keyframes ringPulse{0%,100%{opacity:.6;}50%{opacity:1;}}
 .dealer-bubble{
-  background:rgba(10,5,30,.92);
-  border:1px solid rgba(0,229,255,.5);
+  background:#0d0d2a;
+  border:2px solid #00e5ff;
   border-radius:12px 12px 12px 4px;
-  padding:6px 10px;
-  font-size:10px;font-weight:700;
+  padding:7px 11px;
+  font-size:11px;font-weight:700;
   color:#00e5ff;
-  max-width:120px;text-align:center;
-  line-height:1.4;
-  min-height:32px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 10px rgba(0,229,255,.2);
+  max-width:130px;text-align:center;
+  line-height:1.5;
+  min-height:34px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 12px rgba(0,229,255,.4),inset 0 0 8px rgba(0,229,255,.05);
+  position:relative;z-index:10;
 }
-.dealer2 .dealer-bubble{color:#e040fb;border-color:rgba(224,64,251,.5);border-radius:12px 12px 4px 12px;box-shadow:0 0 10px rgba(224,64,251,.2);}
-@keyframes bubbleFade{0%,100%{opacity:1;}50%{opacity:.85;}}
+.dealer2 .dealer-bubble{color:#e040fb;border-color:#e040fb;box-shadow:0 0 12px rgba(224,64,251,.4),inset 0 0 8px rgba(224,64,251,.05);}
+@keyframes bubbleFade{0%,100%{opacity:1;}50%{opacity:.9;}}
 .dealer-name{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ivdim);}
 
 /* ── JACKPOT TICKER ── */
@@ -275,8 +276,7 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
       <div class="bal-usd" id="balUsd">≈ $100.00 USD</div>
     </div>
     <div class="bal-btns">
-      <button class="bal-btn" id="resetBtn">↺ Sıfırla</button>
-      <button class="bal-btn add" id="addBtn">＋ 10,000 NRC</button>
+      <button class="bal-btn add" id="addBtn" style="display:none">＋ 10,000 NRC</button>
     </div>
   </div>
 
@@ -353,13 +353,13 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
 
   <!-- STATS -->
   <div class="sec">Oturum</div>
-  <div class="stats">
+  <div class="stats" style="margin-bottom:32px;">
     <div class="sc"><div class="sv" id="stS">0</div><div class="sl">Tur</div></div>
     <div class="sc"><div class="sv pos" id="stW">0</div><div class="sl">Kazanç</div></div>
     <div class="sc"><div class="sv" id="stN">—</div><div class="sl">Net</div></div>
   </div>
 
-  <footer>NRC Casino · 1 NRC = $0.001 · Sanal Para · 18+</footer>
+  <footer style="margin-bottom:20px;">NRC Casino · 1 NRC = $0.001 · Sanal Para · 18+</footer>
 </div></div>
 
 <!-- NAV -->
