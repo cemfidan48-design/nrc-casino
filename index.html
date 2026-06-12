@@ -80,19 +80,19 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .dealer2 .dealer-ring{background:linear-gradient(135deg,var(--pink),var(--gold)) border-box;}
 @keyframes ringPulse{0%,100%{opacity:.6;}50%{opacity:1;}}
 .dealer-bubble{
-  background:rgba(0,0,0,.75);
-  border:1px solid rgba(0,229,255,.3);
+  background:rgba(10,5,30,.92);
+  border:1px solid rgba(0,229,255,.5);
   border-radius:12px 12px 12px 4px;
-  padding:5px 10px;
-  font-size:10px;font-weight:600;
-  color:var(--cyan);
-  max-width:110px;text-align:center;
-  line-height:1.3;
-  animation:bubbleFade 4s ease-in-out infinite;
+  padding:6px 10px;
+  font-size:10px;font-weight:700;
+  color:#00e5ff;
+  max-width:120px;text-align:center;
+  line-height:1.4;
   min-height:32px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 10px rgba(0,229,255,.2);
 }
-.dealer2 .dealer-bubble{color:var(--pink);border-color:rgba(224,64,251,.3);border-radius:12px 12px 4px 12px;animation-delay:2s;}
-@keyframes bubbleFade{0%,100%{opacity:.7;}50%{opacity:1;}}
+.dealer2 .dealer-bubble{color:#e040fb;border-color:rgba(224,64,251,.5);border-radius:12px 12px 4px 12px;box-shadow:0 0 10px rgba(224,64,251,.2);}
+@keyframes bubbleFade{0%,100%{opacity:1;}50%{opacity:.85;}}
 .dealer-name{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ivdim);}
 
 /* ── JACKPOT TICKER ── */
@@ -769,6 +769,8 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 });
 document.getElementById('addBtn').addEventListener('click',()=>{setBal(getBal()+10000);});
 window.addEventListener('focus',()=>{renderBal();renderStats();});
+// Refresh stats every 2 seconds to catch updates from other games
+setInterval(()=>{renderBal();renderStats();},2000);
 
 // ── SOUND ─────────────────────────────────────────────────────────────────
 let soundOn=true;

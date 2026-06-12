@@ -296,7 +296,7 @@ let dropping = false;
 function dropBall(bet){
   const pins = getPins();
   const PIN_R = Math.max(3, W * 0.013);
-  const BALL_R = Math.max(5, W * 0.022);
+  const BALL_R = Math.max(4, W * 0.016); // daha küçük top
 
   // Start near top center with slight random offset
   const startX = W/2 + (Math.random() - 0.5) * W * 0.05;
@@ -318,8 +318,8 @@ function dropBall(bet){
 function physicsLoop(){
   const pins = getPins();
   const PIN_R = Math.max(3, W * 0.013);
-  const GRAVITY = 0.35;
-  const DAMPEN = 0.55;
+  const GRAVITY = 0.4;
+  const DAMPEN = 0.5;
   const bucketY = H - 10;
 
   // Update each ball
@@ -338,16 +338,21 @@ function physicsLoop(){
     for(const p of pins){
       const dx = b.x - p.x, dy = b.y - p.y;
       const dist = Math.sqrt(dx*dx + dy*dy);
-      const minD = b.r + PIN_R + 1;
-      if(dist < minD && dist > 0){
+      const minD = b.r + PIN_R + 2;
+      if(dist < minD && dist > 0.1){
         const nx = dx/dist, ny = dy/dist;
-        b.x = p.x + nx * minD;
-        b.y = p.y + ny * minD;
+        // Push out completely
+        b.x = p.x + nx * (minD + 0.5);
+        b.y = p.y + ny * (minD + 0.5);
         const dot = b.vx*nx + b.vy*ny;
-        b.vx -= 2*dot*nx * DAMPEN;
-        b.vy -= 2*dot*ny * DAMPEN;
-        // Random nudge for variety
-        b.vx += (Math.random() - 0.5) * 0.8;
+        if(dot < 0){ // only bounce if moving toward pin
+          b.vx -= 2*dot*nx * DAMPEN;
+          b.vy -= 2*dot*ny * DAMPEN;
+        }
+        // Ensure minimum downward velocity
+        if(b.vy < 0.5) b.vy = 0.5;
+        // Random nudge
+        b.vx += (Math.random() - 0.5) * 1.2;
         playPinSound();
       }
     }
