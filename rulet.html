@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Rulet — NRC Casino</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08081a;--panel:#10102a;--panel2:#18183a;
+  --cyan:#00e5ff;--pink:#e040fb;--gold:#ffd700;
+  --green:#00e676;--red:#ff1744;--ivory:#f0e6ff;--ivdim:#6a6a8a;
+  --nav-h:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--ivory);display:flex;flex-direction:column;}
+.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+20px);}
+.inner{max-width:480px;margin:0 auto;padding:0 12px;}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:#0a0a1e;border-top:1px solid rgba(0,229,255,.12);display:flex;align-items:center;justify-content:space-around;z-index:100;padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(16px);}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 10px;border-radius:12px;transition:all .2s;flex:1;text-decoration:none;}
+.ni-icon{font-size:22px;line-height:1;}
+.ni-lbl{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ivdim);transition:color .2s;}
+.ni.active .ni-lbl{color:var(--cyan);}
+.ni.active .ni-icon{filter:drop-shadow(0 0 8px var(--cyan));}
+
+/* HEADER */
+.hdr{padding:14px 0 10px;display:flex;justify-content:space-between;align-items:center;}
+.gtitle{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:.12em;background:linear-gradient(135deg,#00e5ff,#00b8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.bchip{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:6px 14px;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--gold);}
+
+/* WHEEL STAGE */
+.stage{position:relative;width:100%;max-width:320px;margin:0 auto 14px;aspect-ratio:1/1;}
+.stage::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(#00e5ff,#e040fb,#ffd700,#00e5ff);z-index:0;animation:spin-rim 8s linear infinite;}
+@keyframes spin-rim{to{transform:rotate(360deg);}}
+.stage::after{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 4px var(--bg),0 0 40px rgba(0,229,255,.3),0 0 80px rgba(224,64,251,.15);z-index:4;pointer-events:none;}
+.stage canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important;border-radius:50%;}
+#cW{z-index:1;}#cB{z-index:2;pointer-events:none;}
+.ptr{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:24px solid var(--cyan);filter:drop-shadow(0 0 6px var(--cyan));z-index:5;}
+
+/* RESULT BOARD */
+.board{background:var(--panel);border:1px solid rgba(0,229,255,.15);border-radius:14px;padding:12px 16px;display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;margin-bottom:12px;}
+.res-num{font-family:'Orbitron',monospace;font-size:38px;font-weight:900;text-align:center;line-height:1;transition:color .3s;}
+.res-num.red{color:var(--red);text-shadow:0 0 16px rgba(255,23,68,.5);}
+.res-num.black{color:#aaa;text-shadow:0 0 10px rgba(170,170,170,.3);}
+.res-num.green{color:var(--green);text-shadow:0 0 16px rgba(0,230,118,.5);}
+.res-num.idle{color:var(--ivdim);font-size:26px;}
+.res-info{}
+.res-main{font-size:12px;font-weight:600;color:var(--ivory);line-height:1.3;}
+.res-sub{font-size:10px;color:var(--ivdim);margin-top:2px;}
+.bal-box{text-align:right;}
+.bal-lbl{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ivdim);}
+.bal-num{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--gold);line-height:1.2;}
+
+/* HISTORY */
+.hist{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;min-height:26px;}
+.hd{width:26px;height:26px;border-radius:50%;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hd.red{background:#8b1a1a;color:#f2c4c4;border:1px solid #c03030;}
+.hd.black{background:#252525;color:#aaa;border:1px solid #444;}
+.hd.green{background:#145220;color:#a8e6b0;border:1px solid #2a7a38;}
+
+/* SPIN BUTTON */
+.spin-btn{width:100%;padding:16px;border:none;border-radius:14px;font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--cyan),#0097a7);color:#001a1f;box-shadow:0 0 20px rgba(0,229,255,.35),0 4px 0 #004d5c;transition:transform .1s,box-shadow .1s,opacity .15s;margin-bottom:12px;}
+.spin-btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 0 10px rgba(0,229,255,.2),0 1px 0 #004d5c;}
+.spin-btn[disabled]{opacity:.4;cursor:default;}
+
+/* BET PANEL */
+.bet-panel{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;margin-bottom:10px;}
+.plbl{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ivdim);}
+
+.amt-row{display:flex;gap:6px;align-items:center;}
+.qbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--ivory);font-family:inherit;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;cursor:pointer;transition:background .1s;}
+.qbtn:active{background:rgba(255,255,255,.15);}
+.amt-in{flex:1;min-width:0;background:rgba(0,0,0,.5);border:1px solid rgba(0,229,255,.3);color:var(--cyan);font-family:'Orbitron',monospace;font-size:16px;font-weight:700;text-align:center;padding:8px 4px;border-radius:8px;outline:none;}
+
+/* BET TYPE GRID */
+.bt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.bt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:var(--ivory);font-family:inherit;font-size:11px;font-weight:600;padding:10px 4px;border-radius:8px;cursor:pointer;text-align:center;line-height:1.25;transition:all .1s;}
+.bt .mx{display:block;font-size:8px;color:var(--ivdim);margin-top:3px;font-weight:500;}
+.bt.sel{background:rgba(0,229,255,.12);border-color:var(--cyan);color:var(--cyan);}
+.bt.sel .mx{color:#0097a7;}
+.bt.s3{grid-column:1/-1;}
+
+/* NUMBER GRID */
+.num-grid-wrap{display:flex;flex-direction:column;gap:4px;}
+.num-grid-title{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ivdim);}
+.num-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:2px;}
+.ng-zero{grid-column:1;background:#145220;border:1px solid #2a7a38;border-radius:4px;color:#a8e6b0;font-size:9px;font-weight:700;text-align:center;padding:6px 0;cursor:pointer;transition:all .1s;}
+.ng-zero.sel{box-shadow:0 0 8px rgba(0,230,118,.6);border-color:var(--green);}
+.ng-nums{grid-column:2/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:2px;}
+.ng{border-radius:4px;color:#fff;font-size:8px;font-weight:700;text-align:center;padding:5px 0;cursor:pointer;border:1px solid transparent;transition:all .1s;}
+.ng.r{background:#8b1a1a;border-color:#c03030;}
+.ng.b{background:#1a1a1a;border-color:#444;}
+.ng.sel{box-shadow:0 0 8px rgba(255,215,0,.7);border-color:var(--gold)!important;transform:scale(1.05);}
+
+/* NUMBER ROW */
+.num-row{display:flex;align-items:center;gap:10px;padding:8px 14px;background:rgba(0,0,0,.35);border:1px solid rgba(0,229,255,.2);border-radius:8px;}
+.num-row label{font-size:11px;color:var(--ivdim);white-space:nowrap;}
+.num-row input{background:transparent;border:none;color:var(--cyan);font-family:'Orbitron',monospace;font-size:16px;font-weight:700;width:60px;text-align:center;outline:none;}
+
+/* RESET */
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,.08);color:var(--ivdim);font-family:inherit;font-size:11px;font-weight:500;padding:11px;border-radius:8px;cursor:pointer;width:100%;transition:border-color .15s,color .15s;letter-spacing:.05em;margin-bottom:12px;}
+.reset-btn:hover{border-color:rgba(255,255,255,.22);color:var(--ivory);}
+footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spacing:.08em;padding-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="page"><div class="inner">
+
+<div class="hdr">
+  <div class="gtitle">RULET</div>
+  <div class="bchip" id="hBal">100,000 NRC</div>
+</div>
+
+<!-- WHEEL -->
+<div class="stage" id="stage">
+  <canvas id="cW" width="600" height="600"></canvas>
+  <canvas id="cB" width="600" height="600"></canvas>
+  <div class="ptr"></div>
+</div>
+
+<!-- BOARD -->
+<div class="board">
+  <div class="res-num idle" id="rNum">—</div>
+  <div class="res-info">
+    <div class="res-main" id="rMain">Bahis seç, çarkı döndür</div>
+    <div class="res-sub" id="rSub">Avrupa ruleti · 37 segment</div>
+  </div>
+  <div class="bal-box">
+    <div class="bal-lbl">Bakiye</div>
+    <div class="bal-num" id="balNum">—</div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="hist" id="histDots"></div>
+
+<!-- SPIN -->
+<button class="spin-btn" id="spinBtn">▶ ÇARKI DÖNDÜR</button>
+
+<!-- BET PANEL -->
+<div class="bet-panel">
+  <div class="plbl">Bahis Miktarı</div>
+  <div class="amt-row">
+    <button class="qbtn" id="q50">50</button>
+    <button class="qbtn" id="q100">100</button>
+    <button class="qbtn" id="q500">500</button>
+    <button class="qbtn" id="q1k">1K</button>
+    <input class="amt-in" type="number" id="betIn" value="100" min="10" step="10">
+  </div>
+  <div class="plbl">Bahis Tipi</div>
+  <div class="bt-grid" id="btGrid">
+    <button class="bt sel" data-t="red">🔴 Kırmızı<span class="mx">2×</span></button>
+    <button class="bt" data-t="black">⚫ Siyah<span class="mx">2×</span></button>
+    <button class="bt" data-t="even">Çift<span class="mx">2×</span></button>
+    <button class="bt" data-t="odd">Tek<span class="mx">2×</span></button>
+    <button class="bt" data-t="low">1–18<span class="mx">2×</span></button>
+    <button class="bt" data-t="high">19–36<span class="mx">2×</span></button>
+    <button class="bt" data-t="d1">1. Düzine<span class="mx">3×</span></button>
+    <button class="bt" data-t="d2">2. Düzine<span class="mx">3×</span></button>
+    <button class="bt" data-t="d3">3. Düzine<span class="mx">3×</span></button>
+    <button class="bt s3" data-t="num">Tek Sayı<span class="mx">36×</span></button>
+  </div>
+  <div class="num-row" id="numRow" style="display:none">
+    <label>Sayı (0–36)</label>
+    <input type="number" id="numPick" value="7" min="0" max="36">
+  </div>
+</div>
+
+<button class="reset-btn" id="resetBtn">↺ Bakiyeyi Sıfırla · 100,000 NRC</button>
+<footer>NRC Casino · Sanal Para · 18+</footer>
+</div></div>
+
+<nav class="nav">
+  <a class="ni" href="index.html"><span class="ni-icon">🏠</span><span class="ni-lbl">Lobi</span></a>
+  <a class="ni" href="slot.html"><span class="ni-icon">🎰</span><span class="ni-lbl">Slot</span></a>
+  <a class="ni active" href="rulet.html"><span class="ni-icon">🎡</span><span class="ni-lbl">Rulet</span></a>
+  <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">Blackjack</span></a>
+  <a class="ni" href="plinko.html"><span class="ni-icon">⚪</span><span class="ni-lbl">Plinko</span></a>
+</nav>
+
+<script>
+(function(){
+'use strict';
+
+// ── STORAGE ──────────────────────────────────────────────────────────────
+const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
+const getBal=()=>{const v=localStorage.getItem(BAL_KEY);return v!==null?parseInt(v):INIT;};
+const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
+const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
+const addStat=(w,l)=>{const s=getStats();s.spins++;s.wins+=w;s.loss+=l;localStorage.setItem(STATS_KEY,JSON.stringify(s));};
+const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
+
+// ── CONSTANTS ────────────────────────────────────────────────────────────
+const WHEEL=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+const REDS=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+const N=WHEEL.length, STEP=(Math.PI*2)/N;
+const SPIN_MS=4500, BALL_OUTER=0.91, BALL_POCKET=0.77, BALL_FRET=0.84;
+const numCol=n=>n===0?'green':REDS.has(n)?'red':'black';
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let betType='red', spinning=false, rafId=null;
+let history=[], wheelRot=0, ballAngle=-Math.PI/2, ballR=null;
+
+// ── CANVAS ────────────────────────────────────────────────────────────────
+const stage=document.getElementById('stage');
+const cvW=document.getElementById('cW'), cvB=document.getElementById('cB');
+const ctxW=cvW.getContext('2d'), ctxB=cvB.getContext('2d');
+let SZ,CX,CY,R;
+
+function resize(){
+  SZ=stage.clientWidth;
+  cvW.width=cvW.height=SZ; cvB.width=cvB.height=SZ;
+  CX=CY=SZ/2; R=SZ/2-6;
+}
+window.addEventListener('resize',()=>{resize();drawWheel();drawBall(ballAngle,ballR);});
+
+// ── DRAW WHEEL ────────────────────────────────────────────────────────────
+function drawWheel(){
+  ctxW.clearRect(0,0,SZ,SZ);
+  // base
+  ctxW.beginPath(); ctxW.arc(CX,CY,R,0,Math.PI*2);
+  ctxW.fillStyle='#0a0018'; ctxW.fill();
+
+  for(let i=0;i<N;i++){
+    const num=WHEEL[i], c=numCol(num);
+    const a0=i*STEP+wheelRot-Math.PI/2, a1=a0+STEP, mid=a0+STEP/2;
+
+    // segment
+    ctxW.beginPath(); ctxW.moveTo(CX,CY); ctxW.arc(CX,CY,R*.90,a0,a1); ctxW.closePath();
+    ctxW.fillStyle=c==='red'?'#6a1010':c==='black'?'#101010':'#104520';
+    ctxW.fill();
+
+    // outer rim stripe with neon glow
+    ctxW.beginPath(); ctxW.arc(CX,CY,R*.95,a0,a1);
+    ctxW.arc(CX,CY,R*.90,a1,a0,true); ctxW.closePath();
+    ctxW.fillStyle=c==='red'?'#8b1a1a':c==='black'?'#1a1a1a':'#1a6030';
+    ctxW.fill();
+    // neon rim glow
+    ctxW.strokeStyle=c==='red'?'rgba(255,50,50,.4)':c==='black'?'rgba(100,100,100,.2)':'rgba(0,200,80,.4)';
+    ctxW.lineWidth=2; ctxW.stroke();
+
+    // divider
+    ctxW.beginPath();
+    ctxW.moveTo(CX+R*.90*Math.cos(a0),CY+R*.90*Math.sin(a0));
+    ctxW.lineTo(CX+R*.97*Math.cos(a0),CY+R*.97*Math.sin(a0));
+    ctxW.strokeStyle='rgba(0,229,255,0.5)'; ctxW.lineWidth=1.5; ctxW.stroke();
+
+    // number
+    const fs=Math.max(8,R*.08);
+    const tx=CX+R*.70*Math.cos(mid), ty=CY+R*.70*Math.sin(mid);
+    ctxW.save(); ctxW.translate(tx,ty); ctxW.rotate(mid+Math.PI/2);
+    ctxW.font=`700 ${fs}px Orbitron,monospace`;
+    ctxW.textAlign='center'; ctxW.textBaseline='middle';
+    ctxW.shadowColor=c==='red'?'#ff1744':c==='black'?'#aaa':'#00e676';
+    ctxW.shadowBlur=4;
+    ctxW.fillStyle=c==='green'?'#69f0ae':'#f0e6ff';
+    ctxW.fillText(num.toString(),0,0);
+    ctxW.restore();
+  }
+
+  // fret diamonds
+  for(let i=0;i<N;i++){
+    const a=i*STEP+wheelRot-Math.PI/2;
+    const fx=CX+R*BALL_FRET*Math.cos(a), fy=CY+R*BALL_FRET*Math.sin(a);
+    ctxW.save(); ctxW.translate(fx,fy); ctxW.rotate(a+Math.PI/4);
+    const ds=R*.022;
+    ctxW.beginPath(); ctxW.rect(-ds/2,-ds/2,ds,ds);
+    ctxW.fillStyle='#00e5ff';
+    ctxW.shadowColor='#00e5ff'; ctxW.shadowBlur=4;
+    ctxW.fill(); ctxW.restore();
+  }
+
+  // ball track
+  ctxW.beginPath(); ctxW.arc(CX,CY,R*BALL_OUTER,0,Math.PI*2);
+  ctxW.strokeStyle='rgba(0,229,255,0.15)'; ctxW.lineWidth=R*.03; ctxW.stroke();
+
+  // hub
+  const hR=R*.13;
+  ctxW.beginPath(); ctxW.arc(CX,CY,hR,0,Math.PI*2);
+  ctxW.fillStyle='#0a0018'; ctxW.fill();
+  ctxW.beginPath(); ctxW.arc(CX,CY,hR*.75,0,Math.PI*2);
+  const hg=ctxW.createRadialGradient(CX-hR*.25,CY-hR*.25,0,CX,CY,hR*.75);
+  hg.addColorStop(0,'#00e5ff'); hg.addColorStop(1,'#004d5c');
+  ctxW.fillStyle=hg;
+  ctxW.shadowColor='#00e5ff'; ctxW.shadowBlur=12;
+  ctxW.fill(); ctxW.shadowBlur=0;
+  ctxW.beginPath(); ctxW.arc(CX,CY,hR*.22,0,Math.PI*2);
+  ctxW.fillStyle='#0a0018'; ctxW.fill();
+}
+
+// ── DRAW BALL ─────────────────────────────────────────────────────────────
+function drawBall(angle,r){
+  ctxB.clearRect(0,0,SZ,SZ);
+  if(r===null) return;
+  const br=Math.max(5,R*.055);
+  const bx=CX+r*Math.cos(angle), by=CY+r*Math.sin(angle);
+  // shadow
+  ctxB.beginPath(); ctxB.arc(bx+br*.5,by+br*.5,br*1.1,0,Math.PI*2);
+  ctxB.fillStyle='rgba(0,0,0,.5)'; ctxB.fill();
+  // ball
+  const g=ctxB.createRadialGradient(bx-br*.4,by-br*.45,br*.04,bx,by,br);
+  g.addColorStop(0,'#ffffff'); g.addColorStop(.4,'#c0d8ff'); g.addColorStop(1,'#304060');
+  ctxB.beginPath(); ctxB.arc(bx,by,br,0,Math.PI*2);
+  ctxB.shadowColor='rgba(0,229,255,.6)'; ctxB.shadowBlur=8;
+  ctxB.fillStyle=g; ctxB.fill(); ctxB.shadowBlur=0;
+  // specular
+  ctxB.beginPath(); ctxB.arc(bx-br*.3,by-br*.35,br*.2,0,Math.PI*2);
+  ctxB.fillStyle='rgba(255,255,255,.8)'; ctxB.fill();
+}
+
+// ── SPIN ──────────────────────────────────────────────────────────────────
+function doSpin(targetNum, onDone){
+  const idx=WHEEL.indexOf(targetNum);
+  const spins=8+Math.random()*5;
+  const baseRot=-(idx+.5)*STEP;
+  let finalRot=baseRot;
+  while(finalRot<wheelRot+spins*Math.PI*2-Math.PI) finalRot+=Math.PI*2;
+  const startRot=wheelRot;
+  const ballStartAngle=ballAngle;
+  const ballStartR=ballR!==null?ballR:R*BALL_OUTER;
+  const ballRevs=spins*1.8;
+  const t0=performance.now();
+
+  function tick(now){
+    const elapsed=now-t0, raw=Math.min(1,elapsed/SPIN_MS);
+    const eW=1-Math.pow(1-raw,5);
+    wheelRot=startRot+(finalRot-startRot)*eW;
+    drawWheel();
+
+    let bAngle,bR;
+    if(raw<0.65){
+      const t1=raw/0.65, e1=1-Math.pow(1-t1,2);
+      bAngle=ballStartAngle-ballRevs*.65*Math.PI*2*e1; bR=R*BALL_OUTER;
+    } else if(raw<0.85){
+      const t2=(raw-.65)/.20, e2=t2;
+      const a1End=ballStartAngle-ballRevs*.65*Math.PI*2*(1-Math.pow(.35,2));
+      bAngle=a1End-ballRevs*.20*Math.PI*2*e2*.3;
+      const jitter=Math.sin(t2*Math.PI*8)*R*.018*(1-t2);
+      bR=R*BALL_OUTER-(R*BALL_OUTER-R*BALL_FRET)*e2+jitter;
+    } else {
+      const t3=(raw-.85)/.15, e3=1-Math.pow(1-t3,3);
+      const fSeg=idx*STEP+finalRot-Math.PI/2+STEP/2;
+      const a1End=ballStartAngle-ballRevs*.65*Math.PI*2*(1-Math.pow(.35,2));
+      const a2End=a1End-ballRevs*.20*Math.PI*2*.3;
+      bAngle=a2End+(fSeg-a2End)*e3;
+      bR=R*BALL_FRET+(R*BALL_POCKET-R*BALL_FRET)*e3;
+    }
+
+    if(raw<1){
+      drawBall(bAngle,bR); rafId=requestAnimationFrame(tick);
+    } else {
+      wheelRot=finalRot; drawWheel();
+      const pa=idx*STEP+finalRot-Math.PI/2+STEP/2;
+      ballAngle=pa; ballR=R*BALL_POCKET;
+      drawBall(ballAngle,ballR);
+      spinning=false;
+      document.getElementById('spinBtn').disabled=false;
+      onDone();
+    }
+  }
+  rafId=requestAnimationFrame(tick);
+}
+
+// ── EVALUATE ─────────────────────────────────────────────────────────────
+function evaluate(n,type){
+  const c=numCol(n);
+  if(type==='red'&&c==='red') return 2;
+  if(type==='black'&&c==='black') return 2;
+  if(type==='even'&&n!==0&&n%2===0) return 2;
+  if(type==='odd'&&n!==0&&n%2!==0) return 2;
+  if(type==='low'&&n>=1&&n<=18) return 2;
+  if(type==='high'&&n>=19&&n<=36) return 2;
+  if(type==='d1'&&n>=1&&n<=12) return 3;
+  if(type==='d2'&&n>=13&&n<=24) return 3;
+  if(type==='d3'&&n>=25&&n<=36) return 3;
+  if(type==='num'){const p=parseInt(document.getElementById('numPick').value)||0;if(n===p)return 36;}
+  return 0;
+}
+
+// ── SOUNDS ────────────────────────────────────────────────────────────────
+let ac;
+const getAC=()=>{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();return ac;};
+function tone(f,d,t='sine',g=.15,s=0){
+  try{const a=getAC(),o=a.createOscillator(),gn=a.createGain();
+  o.connect(gn);gn.connect(a.destination);o.type=t;o.frequency.value=f;
+  gn.gain.setValueAtTime(g,a.currentTime+s);gn.gain.exponentialRampToValueAtTime(.001,a.currentTime+s+d);
+  o.start(a.currentTime+s);o.stop(a.currentTime+s+d);}catch(e){}
+}
+function playBallRoll(){for(let i=0;i<6;i++)tone(800+i*30,.04,'sine',.05,i*.1);}
+function playWin(amt){
+  if(amt>5000){[523,659,784,1047].forEach((f,i)=>tone(f,.15,'square',.2,i*.1));}
+  else tone(523,.3,'sine',.2);
+}
+function playLose(){tone(200,.2,'sawtooth',.08);}
+
+// ── UI ────────────────────────────────────────────────────────────────────
+function renderBal(){const b=getBal();document.getElementById('balNum').textContent=fmt(b);document.getElementById('hBal').textContent=fmt(b)+' NRC';}
+function pushHistory(n){
+  history.unshift(n); if(history.length>14)history.pop();
+  document.getElementById('histDots').innerHTML=history.map(x=>`<div class="hd ${numCol(x)}">${x}</div>`).join('');
+}
+function showResult(n,mult,amount){
+  const c=numCol(n),label=c==='red'?'Kırmızı':c==='black'?'Siyah':'Yeşil';
+  const el=document.getElementById('rNum');
+  el.className='res-num '+c; el.textContent=n;
+  const main=document.getElementById('rMain'), sub=document.getElementById('rSub');
+  if(mult>0){main.textContent=`+${fmt(amount*mult)} NRC — Kazandın!`;sub.textContent=`${n} · ${label} · ${mult}× çarpan`;}
+  else{main.textContent='Kazanamadın';sub.textContent=`${n} · ${label} · Bahis tutmadı`;}
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────
+['q50','q100','q500','q1k'].forEach((id,i)=>{
+  document.getElementById(id).addEventListener('click',()=>{
+    document.getElementById('betIn').value=[50,100,500,1000][i];
+  });
+});
+document.getElementById('btGrid').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-t]'); if(!btn)return;
+  betType=btn.dataset.t;
+  document.querySelectorAll('.bt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('numRow').style.display=betType==='num'?'flex':'none';
+});
+document.getElementById('spinBtn').addEventListener('click',()=>{
+  if(spinning)return;
+  const amount=parseInt(document.getElementById('betIn').value)||0;
+  if(amount<10){document.getElementById('rMain').textContent='Min bahis 10 NRC';return;}
+  const bal=getBal();
+  if(amount>bal){document.getElementById('rMain').textContent='Yetersiz bakiye';return;}
+  setBal(bal-amount); spinning=true;
+  document.getElementById('spinBtn').disabled=true;
+  document.getElementById('rMain').textContent='🎡 Döndürülüyor...';
+  if(ballR===null)ballR=R*BALL_OUTER;
+  playBallRoll();
+  const target=Math.floor(Math.random()*37);
+  doSpin(target,()=>{
+    const mult=evaluate(target,betType);
+    const win=mult>0?amount*mult:0, loss=mult>0?0:amount;
+    if(win>0)setBal(getBal()+win);
+    addStat(win,loss); pushHistory(target); showResult(target,mult,amount);
+    mult>0?playWin(win):playLose();
+    if(getBal()<=0)document.getElementById('rMain').textContent='Bakiye bitti — sıfırla';
+  });
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(rafId){cancelAnimationFrame(rafId);rafId=null;}
+  spinning=false; ballR=null; history=[];
+  setBal(100000);
+  document.getElementById('spinBtn').disabled=false;
+  document.getElementById('histDots').innerHTML='';
+  document.getElementById('rNum').className='res-num idle';
+  document.getElementById('rNum').textContent='—';
+  document.getElementById('rMain').textContent='Bahis seç, çarkı döndür';
+  document.getElementById('rSub').textContent='Avrupa ruleti · 37 segment';
+  drawWheel(); drawBall(0,null);
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+resize(); renderBal(); drawWheel(); drawBall(ballAngle,ballR);
+})();
+</script>
+</body>
+</html>

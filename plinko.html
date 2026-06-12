@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Plinko — NRC Casino</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08081a;--panel:#10102a;
+  --cyan:#00e5ff;--pink:#e040fb;--gold:#ffd700;
+  --green:#00e676;--red:#ff1744;--ivory:#f0e6ff;--ivdim:#6a6a8a;
+  --nav-h:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--ivory);display:flex;flex-direction:column;}
+.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+20px);}
+.inner{max-width:480px;margin:0 auto;padding:0 12px;}
+
+.nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:#0a0a1e;border-top:1px solid rgba(0,229,255,.12);display:flex;align-items:center;justify-content:space-around;z-index:100;padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(16px);}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 10px;border-radius:12px;flex:1;text-decoration:none;}
+.ni-icon{font-size:22px;line-height:1;}
+.ni-lbl{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ivdim);}
+.ni.active .ni-lbl{color:var(--pink);}
+.ni.active .ni-icon{filter:drop-shadow(0 0 8px var(--pink));}
+
+.hdr{padding:14px 0 10px;display:flex;justify-content:space-between;align-items:center;}
+.gtitle{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:.12em;background:linear-gradient(135deg,#00e5ff,#e040fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.bchip{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:6px 14px;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--gold);}
+
+/* WIN BANNER */
+.win-banner{height:34px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;}
+.wm{color:var(--ivory);}
+.wa{color:var(--gold);text-shadow:0 0 12px rgba(255,215,0,.5);}
+
+/* BOARD */
+.board-wrap{
+  background:linear-gradient(180deg,#0a0428,#060214);
+  border:2px solid rgba(0,229,255,.3);
+  border-radius:16px;
+  padding:10px 8px 0;
+  margin-bottom:10px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 30px rgba(0,229,255,.1),inset 0 0 20px rgba(0,0,0,.5);
+}
+.board-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,.08),transparent 50%);pointer-events:none;}
+#plinkoCanvas{display:block;width:100%;}
+
+/* MULTIPLIER BUCKETS */
+.buckets{display:flex;gap:2px;padding:0 0 8px;}
+.bucket{
+  flex:1;text-align:center;border-radius:6px;padding:5px 2px;
+  font-family:'Orbitron',monospace;font-size:8px;font-weight:700;
+  transition:transform .1s;
+}
+.bucket.hit{transform:scale(1.15);animation:bucketHit .3s ease-out;}
+@keyframes bucketHit{0%{transform:scale(1.3);}100%{transform:scale(1);}}
+
+/* BET PANEL */
+.bet-panel{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:13px 14px;display:flex;flex-direction:column;gap:10px;margin-bottom:10px;}
+.plbl{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ivdim);}
+
+.bet-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.bctrl{display:flex;align-items:center;gap:8px;}
+.cbtn{width:34px;height:34px;border-radius:8px;border:none;background:rgba(255,255,255,.07);color:var(--ivory);font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.cbtn:active{background:rgba(255,255,255,.18);}
+.cval{font-family:'Orbitron',monospace;font-size:15px;font-weight:700;color:var(--gold);min-width:72px;text-align:center;}
+
+.chips{display:flex;gap:5px;}
+.chip{flex:1;padding:9px 2px;border:none;border-radius:8px;font-family:'Orbitron',monospace;font-size:10px;font-weight:800;cursor:pointer;transition:transform .1s;text-align:center;}
+.chip:active{transform:scale(.92);}
+.c1{background:radial-gradient(circle at 35% 35%,#f0e6c8,#c8b890);color:#333;}
+.c2{background:radial-gradient(circle at 35% 35%,#e05050,#8b1a1a);color:#fff;}
+.c3{background:radial-gradient(circle at 35% 35%,#2a7a40,#0f3d1f);color:#fff;}
+.c4{background:radial-gradient(circle at 35% 35%,#9c27b0,#4a0072);color:#fff;}
+.c5{background:radial-gradient(circle at 35% 35%,#ffd700,#e65100);color:#333;}
+
+/* RISK */
+.risk-row{display:flex;gap:6px;}
+.risk-btn{flex:1;padding:9px 4px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.04);color:var(--ivdim);font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;cursor:pointer;text-align:center;transition:all .15s;}
+.risk-btn.sel{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.08);}
+
+/* DROP BUTTON */
+.drop-btn{width:100%;padding:17px;border:none;border-radius:14px;font-family:'Orbitron',monospace;font-size:17px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,#00e5ff,#0097a7);color:#001a1f;box-shadow:0 0 20px rgba(0,229,255,.35),0 5px 0 #004d5c;transition:transform .1s,box-shadow .1s,opacity .15s;margin-bottom:10px;}
+.drop-btn:active:not([disabled]){transform:translateY(4px);box-shadow:0 0 10px rgba(0,229,255,.2),0 1px 0 #004d5c;}
+.drop-btn[disabled]{opacity:.5;cursor:default;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.sc{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 8px;text-align:center;}
+.sv{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--gold);}
+.sv.pos{color:var(--green);}.sv.neg{color:var(--red);}
+.sl{font-size:8px;color:var(--ivdim);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;}
+footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spacing:.08em;padding-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="page"><div class="inner">
+
+<div class="hdr">
+  <div class="gtitle">PLINKO</div>
+  <div class="bchip" id="hBal">100,000 NRC</div>
+</div>
+
+<div class="win-banner">
+  <span class="wm" id="winMsg">Top düşür ve kazan!</span>
+  <span class="wa" id="winAmt"></span>
+</div>
+
+<div class="board-wrap">
+  <canvas id="plinkoCanvas"></canvas>
+  <div class="buckets" id="buckets"></div>
+</div>
+
+<div class="bet-panel">
+  <div class="bet-row">
+    <span class="plbl">Bahis</span>
+    <div class="bctrl">
+      <button class="cbtn" id="bMinus">−</button>
+      <span class="cval" id="bVal">100</span>
+      <button class="cbtn" id="bPlus">+</button>
+    </div>
+    <div style="text-align:right">
+      <div class="plbl">Toplam</div>
+      <div style="font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--cyan);" id="totalBet">100 NRC</div>
+    </div>
+  </div>
+  <div class="chips">
+    <button class="chip c1" data-v="50">50</button>
+    <button class="chip c2" data-v="100">100</button>
+    <button class="chip c3" data-v="500">500</button>
+    <button class="chip c4" data-v="1000">1K</button>
+    <button class="chip c5" data-v="5000">5K</button>
+  </div>
+  <div class="plbl">Risk Seviyesi</div>
+  <div class="risk-row">
+    <button class="risk-btn sel" data-r="low">DÜŞÜK</button>
+    <button class="risk-btn" data-r="med">ORTA</button>
+    <button class="risk-btn" data-r="high">YÜKSEK</button>
+  </div>
+</div>
+
+<button class="drop-btn" id="dropBtn">▼ TOPU BIRAK</button>
+
+<div class="stats">
+  <div class="sc"><div class="sv" id="stD">0</div><div class="sl">Düşüş</div></div>
+  <div class="sc"><div class="sv pos" id="stW">0</div><div class="sl">Kazanç</div></div>
+  <div class="sc"><div class="sv" id="stN">—</div><div class="sl">Net</div></div>
+</div>
+<footer>NRC Casino · Sanal Para · 18+</footer>
+</div></div>
+
+<nav class="nav">
+  <a class="ni" href="index.html"><span class="ni-icon">🏠</span><span class="ni-lbl">Lobi</span></a>
+  <a class="ni" href="slot.html"><span class="ni-icon">🎰</span><span class="ni-lbl">Slot</span></a>
+  <a class="ni" href="rulet.html"><span class="ni-icon">🎡</span><span class="ni-lbl">Rulet</span></a>
+  <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">Blackjack</span></a>
+  <a class="ni active" href="plinko.html"><span class="ni-icon">⚪</span><span class="ni-lbl">Plinko</span></a>
+</nav>
+
+<script>
+(function(){
+'use strict';
+
+// ── STORAGE ───────────────────────────────────────────────────────────────
+const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
+const getBal=()=>{const v=localStorage.getItem(BAL_KEY);return v!==null?parseInt(v):INIT;};
+const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
+const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
+const addStat=(w,l)=>{const s=getStats();s.spins++;s.wins+=w;s.loss+=l;localStorage.setItem(STATS_KEY,JSON.stringify(s));};
+const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
+
+// ── MULTIPLIERS ───────────────────────────────────────────────────────────
+const MULTS = {
+  low:  [1.5, 1.2, 1.0, 0.8, 0.5, 0.3, 0.5, 0.8, 1.0, 1.2, 1.5],
+  med:  [5,   3,   2,   1.5, 0.8, 0.3, 0.8, 1.5, 2,   3,   5  ],
+  high: [110, 41,  10,  5,   3,   0.3, 3,   5,   10,  41,  110 ],
+};
+const BUCKET_COLORS = {
+  low:  ['#00e676','#4caf50','#8bc34a','#cddc39','#ff9800','#ff5722','#ff9800','#cddc39','#8bc34a','#4caf50','#00e676'],
+  med:  ['#00e5ff','#29b6f6','#42a5f5','#66bb6a','#ff9800','#ff5722','#ff9800','#66bb6a','#42a5f5','#29b6f6','#00e5ff'],
+  high: ['#e040fb','#ab47bc','#7e57c2','#42a5f5','#26c6da','#ff5722','#26c6da','#42a5f5','#7e57c2','#ab47bc','#e040fb'],
+};
+
+// ── CANVAS ────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('plinkoCanvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+const ROWS = 12;
+const COLS = ROWS + 1; // buckets = ROWS + 1 = 13... we'll use 11 buckets
+const BUCKET_COUNT = 11;
+
+function resize(){
+  const wrap = document.querySelector('.board-wrap');
+  W = wrap.clientWidth - 16;
+  canvas.width = W;
+  canvas.height = W * 1.1;
+  H = canvas.height;
+  buildBuckets();
+  drawBoard();
+}
+window.addEventListener('resize', resize);
+
+// ── PINS ──────────────────────────────────────────────────────────────────
+function getPins(){
+  const pins = [];
+  const padX = W * 0.08;
+  const padY = H * 0.06;
+  const usableW = W - padX * 2;
+  const usableH = H - padY * 2;
+  for(let row = 0; row < ROWS; row++){
+    const cols = row + 3;
+    const spacingX = usableW / (cols - 1);
+    const y = padY + (usableH / (ROWS - 1)) * row;
+    for(let col = 0; col < cols; col++){
+      const x = (W - spacingX * (cols - 1)) / 2 + col * spacingX;
+      pins.push({x, y, row, col});
+    }
+  }
+  return pins;
+}
+
+// ── DRAW BOARD ────────────────────────────────────────────────────────────
+function drawBoard(balls){
+  ctx.clearRect(0, 0, W, H);
+  // bg gradient
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#0a0428');
+  bg.addColorStop(1, '#060214');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // pins
+  const pins = getPins();
+  for(const p of pins){
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, Math.max(3, W * 0.013), 0, Math.PI * 2);
+    ctx.fillStyle = '#00e5ff';
+    ctx.shadowColor = '#00e5ff';
+    ctx.shadowBlur = 6;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  // balls
+  if(balls) for(const b of balls) drawBallObj(b);
+}
+
+function drawBallObj(b){
+  ctx.beginPath();
+  ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+  const g = ctx.createRadialGradient(b.x - b.r*.3, b.y - b.r*.3, b.r*.05, b.x, b.y, b.r);
+  g.addColorStop(0, '#ffffff');
+  g.addColorStop(.4, '#c0d8ff');
+  g.addColorStop(1, '#304060');
+  ctx.fillStyle = g;
+  ctx.shadowColor = 'rgba(0,229,255,.5)';
+  ctx.shadowBlur = 8;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  // specular
+  ctx.beginPath();
+  ctx.arc(b.x - b.r*.25, b.y - b.r*.3, b.r*.2, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,.75)';
+  ctx.fill();
+}
+
+// ── BUCKETS UI ────────────────────────────────────────────────────────────
+let risk = 'low';
+function buildBuckets(){
+  const cont = document.getElementById('buckets');
+  const mults = MULTS[risk];
+  const colors = BUCKET_COLORS[risk];
+  cont.innerHTML = mults.map((m,i)=>`
+    <div class="bucket" id="bucket_${i}" style="background:${colors[i]}22;border:1px solid ${colors[i]}55;color:${colors[i]};">
+      ${m}×
+    </div>
+  `).join('');
+}
+
+function flashBucket(idx){
+  const el = document.getElementById('bucket_'+idx);
+  if(!el) return;
+  el.classList.remove('hit');
+  void el.offsetWidth;
+  el.classList.add('hit');
+}
+
+// ── PHYSICS ───────────────────────────────────────────────────────────────
+let activeBalls = [];
+let animId = null;
+let dropping = false;
+
+function dropBall(bet){
+  const pins = getPins();
+  const PIN_R = Math.max(3, W * 0.013);
+  const BALL_R = Math.max(5, W * 0.022);
+
+  // Start near top center with slight random offset
+  const startX = W/2 + (Math.random() - 0.5) * W * 0.05;
+  const ball = {
+    x: startX, y: H * 0.02,
+    vx: (Math.random() - 0.5) * 1.5,
+    vy: 0,
+    r: BALL_R,
+    bet: bet,
+    done: false,
+    trail: [],
+  };
+
+  activeBalls.push(ball);
+
+  if(!animId) animId = requestAnimationFrame(physicsLoop);
+}
+
+function physicsLoop(){
+  const pins = getPins();
+  const PIN_R = Math.max(3, W * 0.013);
+  const GRAVITY = 0.35;
+  const DAMPEN = 0.55;
+  const bucketY = H - 10;
+
+  // Update each ball
+  for(const b of activeBalls){
+    if(b.done) continue;
+
+    b.vy += GRAVITY;
+    b.x += b.vx;
+    b.y += b.vy;
+
+    // Wall bounce
+    if(b.x - b.r < 0){ b.x = b.r; b.vx = Math.abs(b.vx) * DAMPEN; }
+    if(b.x + b.r > W){ b.x = W - b.r; b.vx = -Math.abs(b.vx) * DAMPEN; }
+
+    // Pin collisions
+    for(const p of pins){
+      const dx = b.x - p.x, dy = b.y - p.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const minD = b.r + PIN_R + 1;
+      if(dist < minD && dist > 0){
+        const nx = dx/dist, ny = dy/dist;
+        b.x = p.x + nx * minD;
+        b.y = p.y + ny * minD;
+        const dot = b.vx*nx + b.vy*ny;
+        b.vx -= 2*dot*nx * DAMPEN;
+        b.vy -= 2*dot*ny * DAMPEN;
+        // Random nudge for variety
+        b.vx += (Math.random() - 0.5) * 0.8;
+        playPinSound();
+      }
+    }
+
+    // Trail
+    b.trail.push({x:b.x, y:b.y});
+    if(b.trail.length > 8) b.trail.shift();
+
+    // Reached bottom?
+    if(b.y + b.r >= bucketY){
+      b.y = bucketY - b.r;
+      b.done = true;
+
+      // Determine bucket
+      const bucketW = W / BUCKET_COUNT;
+      const bucketIdx = Math.min(BUCKET_COUNT - 1, Math.max(0, Math.floor(b.x / bucketW)));
+      const mult = MULTS[risk][bucketIdx];
+      const win = Math.floor(b.bet * mult);
+
+      flashBucket(bucketIdx);
+
+      if(win > b.bet){
+        setBal(getBal() + win);
+        addStat(win - b.bet, 0);
+        setMsg(`🎉 ${mult}× — +${fmt(win - b.bet)} NRC`, '+'+fmt(win-b.bet)+' NRC');
+        playWin(win);
+      } else if(win === b.bet){
+        setBal(getBal() + win);
+        addStat(0, 0);
+        setMsg(`${mult}× — Baş başa`, '');
+      } else {
+        setBal(getBal() + win);
+        addStat(0, b.bet - win);
+        setMsg(`${mult}× — −${fmt(b.bet - win)} NRC`, '');
+        playLose();
+      }
+
+      renderStats();
+
+      setTimeout(()=>{
+        activeBalls = activeBalls.filter(x => x !== b);
+        if(activeBalls.length === 0){
+          dropping = false;
+          document.getElementById('dropBtn').disabled = false;
+          cancelAnimationFrame(animId);
+          animId = null;
+          drawBoard();
+        }
+      }, 600);
+    }
+  }
+
+  // Draw
+  drawBoard(activeBalls);
+
+  // Draw trails
+  for(const b of activeBalls){
+    if(b.trail.length < 2) continue;
+    ctx.beginPath();
+    ctx.moveTo(b.trail[0].x, b.trail[0].y);
+    for(let i=1; i<b.trail.length; i++) ctx.lineTo(b.trail[i].x, b.trail[i].y);
+    ctx.strokeStyle = 'rgba(0,229,255,.25)';
+    ctx.lineWidth = b.r * 0.6;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+
+  if(activeBalls.length > 0) animId = requestAnimationFrame(physicsLoop);
+}
+
+// ── SOUNDS ────────────────────────────────────────────────────────────────
+let ac;
+const getAC=()=>{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();return ac;};
+let lastPinSound=0;
+function playPinSound(){
+  const now=Date.now();
+  if(now-lastPinSound<80) return;
+  lastPinSound=now;
+  try{
+    const a=getAC(),o=a.createOscillator(),g=a.createGain();
+    o.connect(g);g.connect(a.destination);
+    o.type='sine';o.frequency.value=600+Math.random()*400;
+    g.gain.setValueAtTime(.08,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.06);
+    o.start();o.stop(a.currentTime+.06);
+  }catch(e){}
+}
+function playWin(amt){
+  try{
+    const a=getAC();
+    const freqs=amt>10000?[523,659,784,1047,1319]:[523,659,784,1047];
+    freqs.forEach((f,i)=>{
+      const o=a.createOscillator(),g=a.createGain();
+      o.connect(g);g.connect(a.destination);
+      o.type='square';o.frequency.value=f;
+      g.gain.setValueAtTime(.15,a.currentTime+i*.08);
+      g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.08+.15);
+      o.start(a.currentTime+i*.08);o.stop(a.currentTime+i*.08+.2);
+    });
+  }catch(e){}
+}
+function playLose(){
+  try{const a=getAC(),o=a.createOscillator(),g=a.createGain();
+  o.connect(g);g.connect(a.destination);o.type='sawtooth';o.frequency.value=180;
+  g.gain.setValueAtTime(.08,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.2);
+  o.start();o.stop(a.currentTime+.2);}catch(e){}
+}
+
+// ── UI ────────────────────────────────────────────────────────────────────
+let betAmt = 100;
+const BET_STEPS = [50,100,250,500,1000,2500,5000];
+
+function renderBal(){document.getElementById('hBal').textContent=fmt(getBal())+' NRC';}
+function setMsg(m,a){document.getElementById('winMsg').textContent=m;document.getElementById('winAmt').textContent=a;}
+function renderBet(){
+  document.getElementById('bVal').textContent=fmt(betAmt);
+  document.getElementById('totalBet').textContent=fmt(betAmt)+' NRC';
+}
+function renderStats(){
+  const s=getStats();
+  document.getElementById('stD').textContent=fmt(s.spins);
+  document.getElementById('stW').textContent='+'+fmt(s.wins);
+  const net=s.wins-s.loss;
+  const el=document.getElementById('stN');
+  el.textContent=(net>=0?'+':'')+fmt(net);
+  el.className='sv '+(net>0?'pos':net<0?'neg':'');
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────
+document.getElementById('bMinus').addEventListener('click',()=>{
+  const i=BET_STEPS.indexOf(betAmt);
+  if(i>0) betAmt=BET_STEPS[i-1]; renderBet();
+});
+document.getElementById('bPlus').addEventListener('click',()=>{
+  const i=BET_STEPS.indexOf(betAmt);
+  if(i>=0&&i<BET_STEPS.length-1) betAmt=BET_STEPS[i+1]; renderBet();
+});
+document.querySelectorAll('.chip').forEach(btn=>{
+  btn.addEventListener('click',()=>{betAmt=parseInt(btn.dataset.v);renderBet();});
+});
+
+document.querySelectorAll('.risk-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    risk=btn.dataset.r;
+    document.querySelectorAll('.risk-btn').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    buildBuckets();
+  });
+});
+
+document.getElementById('dropBtn').addEventListener('click',()=>{
+  const bal=getBal();
+  if(betAmt>bal){setMsg('Yetersiz bakiye!','');return;}
+  setBal(bal-betAmt);
+  dropping=true;
+  document.getElementById('dropBtn').disabled=true;
+  dropBall(betAmt);
+  setMsg('Top düşüyor...','');
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+resize();
+renderBal();
+renderBet();
+renderStats();
+
+})();
+</script>
+</body>
+</html>
