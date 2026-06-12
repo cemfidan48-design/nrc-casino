@@ -22,8 +22,8 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 10px;border-radius:12px;flex:1;text-decoration:none;}
 .ni-icon{font-size:22px;line-height:1;}
 .ni-lbl{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ivdim);}
-.ni.active .ni-lbl{color:var(--pink);}
-.ni.active .ni-icon{filter:drop-shadow(0 0 8px var(--pink));}
+.ni.active .ni-lbl{color:var(--active-col,var(--cyan));}
+.ni.active .ni-icon{filter:drop-shadow(0 0 6px var(--active-col,var(--cyan)));transform:scale(1.1);}
 
 .hdr{padding:14px 0 8px;display:flex;justify-content:space-between;align-items:center;}
 .gtitle{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:.12em;background:linear-gradient(135deg,#00e5ff,#e040fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -151,12 +151,13 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 <footer>NRC Casino · Sanal Para · 18+</footer>
 </div></div>
 
-<nav class="nav">
+<nav class="nav" style="--active-col:#00e5ff">
   <a class="ni" href="index.html"><span class="ni-icon">🏠</span><span class="ni-lbl">Lobi</span></a>
   <a class="ni" href="slot.html"><span class="ni-icon">🎰</span><span class="ni-lbl">Slot</span></a>
   <a class="ni" href="rulet.html"><span class="ni-icon">🎡</span><span class="ni-lbl">Rulet</span></a>
-  <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">Blackjack</span></a>
+  <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">BJ</span></a>
   <a class="ni active" href="plinko.html"><span class="ni-icon">⚪</span><span class="ni-lbl">Plinko</span></a>
+  <a class="ni" href="cuzdan.html"><span class="ni-icon">💰</span><span class="ni-lbl">Cüzdan</span></a>
 </nav>
 
 <script>

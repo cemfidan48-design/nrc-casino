@@ -10,364 +10,217 @@
   --bg:#07071a;--panel:#0f0f28;
   --cyan:#00e5ff;--pink:#e040fb;--gold:#ffd700;--gold2:#ffaa00;
   --green:#00e676;--red:#ff1744;--ivory:#f0e6ff;--ivdim:#6a6a8a;
-  --nav-h:68px;
+  --nav-h:60px;
 }
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
-body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--ivory);display:flex;flex-direction:column;position:relative;}
+body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--ivory);display:flex;flex-direction:column;}
 
-/* ── PARTICLE CANVAS ── */
+/* PARTICLES */
 #particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-/* ── PAGE ── */
-.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+40px);position:relative;z-index:2;}
+/* PAGE */
+.page{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+50px);position:relative;z-index:2;}
 .inner{max-width:480px;margin:0 auto;padding:0 12px;}
 
-/* ── NAV ── */
-.nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(8,8,26,.92);border-top:1px solid rgba(0,229,255,.15);display:flex;align-items:center;justify-content:space-around;z-index:100;padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(20px);}
-.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 10px;border-radius:12px;flex:1;text-decoration:none;transition:all .2s;}
-.ni-icon{font-size:22px;line-height:1;transition:transform .2s;}
-.ni-lbl{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ivdim);transition:color .2s;}
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(8,8,26,.96);border-top:1px solid rgba(0,229,255,.15);display:flex;align-items:center;justify-content:space-around;z-index:100;padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(20px);}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;flex:1;text-decoration:none;transition:all .2s;}
+.ni-icon{font-size:20px;line-height:1;transition:transform .2s;}
+.ni-lbl{font-size:8px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ivdim);transition:color .2s;}
 .ni.active .ni-lbl{color:var(--cyan);}
-.ni.active .ni-icon{filter:drop-shadow(0 0 8px var(--cyan));transform:scale(1.15);}
-.ni:hover .ni-icon{transform:scale(1.1);}
+.ni.active .ni-icon{filter:drop-shadow(0 0 6px var(--cyan));transform:scale(1.1);}
 
-/* ── HERO SECTION ── */
-.hero{
-  padding:20px 0 10px;
-  text-align:center;
-  position:relative;
-}
-.hero-logo{
-  font-family:'Orbitron',monospace;
-  font-size:clamp(36px,10vw,52px);
-  font-weight:900;
-  letter-spacing:.12em;
-  line-height:1;
-  margin-bottom:4px;
-  background:linear-gradient(135deg,#00e5ff 0%,#e040fb 50%,#ffd700 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 20px rgba(0,229,255,.3));
-  animation:logoPulse 3s ease-in-out infinite;
-}
-@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 20px rgba(0,229,255,.3));}50%{filter:drop-shadow(0 0 35px rgba(224,64,251,.5));}}
-.hero-sub{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--ivdim);margin-bottom:16px;}
+/* HERO */
+.hero{padding:18px 0 8px;text-align:center;position:relative;}
+.sound-btn{position:absolute;top:18px;right:0;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--ivory);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.logo{font-family:'Orbitron',monospace;font-size:clamp(34px,10vw,50px);font-weight:900;letter-spacing:.12em;line-height:1;background:linear-gradient(135deg,#00e5ff,#e040fb,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:logoPulse 3s ease-in-out infinite;}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 15px rgba(0,229,255,.3));}50%{filter:drop-shadow(0 0 25px rgba(224,64,251,.4));}}
+.logo-sub{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--ivdim);margin-bottom:14px;}
 
-/* ── DEALERS ── */
-.dealers{display:flex;justify-content:center;gap:12px;margin-bottom:10px;position:relative;}
-.dealer{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  position:relative;
-}
-.dealer-avatar{
-  width:72px;height:72px;border-radius:50%;
-  position:relative;
-  animation:dealerFloat 3s ease-in-out infinite;
-  cursor:pointer;
-}
-.dealer-avatar:nth-child(1){animation-delay:.5s;}
-.dealer2 .dealer-avatar{animation-delay:1.2s;}
-@keyframes dealerFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
-.dealer-canvas{width:72px;height:72px;border-radius:50%;display:block;}
-.dealer-ring{
-  position:absolute;inset:-3px;border-radius:50%;
-  border:2px solid transparent;
-  background:linear-gradient(135deg,var(--cyan),var(--pink)) border-box;
-  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:destination-out;mask-composite:exclude;
-  animation:ringPulse 2s ease-in-out infinite;
-}
-.dealer2 .dealer-ring{background:linear-gradient(135deg,var(--pink),var(--gold)) border-box;}
-@keyframes ringPulse{0%,100%{opacity:.6;}50%{opacity:1;}}
-.dealer-bubble{
-  background:#0d0d2a;
-  border:2px solid #00e5ff;
-  border-radius:12px 12px 12px 4px;
-  padding:7px 11px;
-  font-size:11px;font-weight:700;
-  color:#00e5ff;
-  max-width:130px;text-align:center;
-  line-height:1.5;
-  min-height:34px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 12px rgba(0,229,255,.4),inset 0 0 8px rgba(0,229,255,.05);
-  position:relative;z-index:10;
-}
-.dealer2 .dealer-bubble{color:#e040fb;border-color:#e040fb;box-shadow:0 0 12px rgba(224,64,251,.4),inset 0 0 8px rgba(224,64,251,.05);}
-@keyframes bubbleFade{0%,100%{opacity:1;}50%{opacity:.9;}}
-.dealer-name{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ivdim);}
+/* DEALERS */
+.dealers{display:flex;justify-content:center;gap:20px;margin-bottom:8px;}
+.dealer{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.d-avatar{width:68px;height:68px;border-radius:50%;position:relative;animation:dFloat 3s ease-in-out infinite;}
+.dealer:nth-child(2) .d-avatar{animation-delay:1s;}
+@keyframes dFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+.d-canvas{width:68px;height:68px;border-radius:50%;display:block;}
+.d-ring{position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--cyan);box-shadow:0 0 10px rgba(0,229,255,.4);animation:ringPulse 2s ease-in-out infinite;}
+.dealer:nth-child(2) .d-ring{border-color:var(--pink);box-shadow:0 0 10px rgba(224,64,251,.4);}
+@keyframes ringPulse{0%,100%{opacity:.7;}50%{opacity:1;}}
+.d-bubble{background:#0a0820;border:2px solid var(--cyan);border-radius:10px 10px 10px 2px;padding:6px 10px;font-size:10px;font-weight:700;color:var(--cyan);max-width:120px;text-align:center;line-height:1.4;min-height:32px;display:flex;align-items:center;justify-content:center;}
+.dealer:nth-child(2) .d-bubble{color:var(--pink);border-color:var(--pink);border-radius:10px 10px 2px 10px;}
+.d-name{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ivdim);}
 
-/* ── JACKPOT TICKER ── */
-.jackpot{
-  background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,170,0,.05));
-  border:1px solid rgba(255,215,0,.3);
-  border-radius:12px;
-  padding:10px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
-  position:relative;overflow:hidden;
-}
-.jackpot::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,215,0,.05),transparent);animation:shimmer 2s infinite;}
+/* JACKPOT */
+.jackpot{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,170,0,.04));border:1px solid rgba(255,215,0,.25);border-radius:12px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;overflow:hidden;position:relative;}
+.jackpot::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,215,0,.04),transparent);animation:shimmer 2s infinite;}
 @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
-.jk-label{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);}
-.jk-val{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--gold);text-shadow:0 0 12px rgba(255,215,0,.5);font-variant-numeric:tabular-nums;}
-.jk-nrc{font-size:9px;color:var(--gold2);}
+.jk-lbl{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);}
+.jk-val{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,.4);}
 
-/* ── BALANCE ── */
-.bal-card{
-  background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(224,64,251,.05));
-  border:1px solid rgba(0,229,255,.2);
-  border-radius:16px;padding:16px;
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:14px;position:relative;overflow:hidden;
-}
-.bal-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,229,255,.06),transparent 60%);pointer-events:none;}
-.bal-left{}
-.bal-lbl{font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ivdim);margin-bottom:4px;}
-.bal-amt{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;color:var(--gold);text-shadow:0 0 16px rgba(255,215,0,.3);font-variant-numeric:tabular-nums;line-height:1;}
-.bal-usd{font-size:10px;color:var(--ivdim);margin-top:2px;font-style:italic;}
-.bal-btns{display:flex;flex-direction:column;gap:6px;}
-.bal-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--ivory);font-family:inherit;font-size:10px;font-weight:600;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-.bal-btn:hover{border-color:var(--cyan);color:var(--cyan);}
-.bal-btn.add{border-color:rgba(224,64,251,.3);color:var(--pink);}
-.bal-btn.add:hover{background:rgba(224,64,251,.1);}
+/* MARQUEE */
+.marquee-wrap{overflow:hidden;margin-bottom:12px;border:1px solid rgba(255,215,0,.12);border-radius:8px;background:rgba(255,215,0,.03);}
+.marquee{display:flex;animation:marquee 18s linear infinite;white-space:nowrap;padding:6px 0;}
+@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.marquee span{font-size:10px;font-weight:600;color:var(--gold2);padding:0 20px;}
+.marquee span.w{color:var(--green);}
+.marquee span.h{color:var(--pink);}
 
-/* ── SOUND TOGGLE ── */
-.sound-btn{
-  position:absolute;top:20px;right:12px;
-  width:36px;height:36px;border-radius:50%;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  color:var(--ivory);font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;z-index:10;
-}
-.sound-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+/* BALANCE */
+.bal-card{background:linear-gradient(135deg,rgba(0,229,255,.07),rgba(224,64,251,.04));border:1px solid rgba(0,229,255,.18);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.bal-l .bal-lbl{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ivdim);margin-bottom:3px;}
+.bal-amt{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;}
+.bal-usd{font-size:9px;color:var(--ivdim);margin-top:2px;font-style:italic;}
+.bal-btn{background:rgba(224,64,251,.1);border:1px solid rgba(224,64,251,.3);color:var(--pink);font-family:inherit;font-size:10px;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;text-decoration:none;display:block;text-align:center;}
 
-/* ── SECTION TITLE ── */
-.sec{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+/* SECTION */
+.sec{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
 .sec::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.3),transparent);}
 
-/* ── GAME CARDS ── */
-.game-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
-.gc{
-  background:var(--panel);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:16px;overflow:hidden;cursor:pointer;
-  text-decoration:none;display:block;
-  transition:border-color .2s,transform .15s,box-shadow .2s;
-  position:relative;
-}
+/* GAME GRID */
+.game-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.gc{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;cursor:pointer;text-decoration:none;display:block;transition:border-color .2s,transform .15s;}
 .gc:active{transform:scale(.985);}
-.gc.ready:hover{border-color:rgba(255,255,255,.2);box-shadow:0 0 24px rgba(0,0,0,.4);}
-.gc.soon{opacity:.45;cursor:default;pointer-events:none;}
-
-.gc-banner{
-  height:80px;display:flex;align-items:center;justify-content:center;
-  font-size:40px;position:relative;overflow:hidden;
-}
-.gc-banner::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.04),transparent 70%);}
-.gc-banner canvas{position:absolute;inset:0;width:100%;height:100%;}
-/* banner bg per game */
+.gc:hover{border-color:rgba(255,255,255,.18);}
+.gc-banner{height:72px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;overflow:hidden;}
 .gb-slot    {background:linear-gradient(135deg,#16043a,#2a0860);}
 .gb-roulette{background:linear-gradient(135deg,#041a04,#08400a);}
 .gb-bj      {background:linear-gradient(135deg,#1a0404,#400808);}
 .gb-plinko  {background:linear-gradient(135deg,#04041a,#080840);}
+.gc-banner canvas{position:absolute;inset:0;width:100%;height:100%;}
+.hot-badge{position:absolute;top:6px;right:6px;background:rgba(255,23,68,.2);border:1px solid rgba(255,23,68,.35);border-radius:6px;padding:2px 7px;font-size:8px;font-weight:700;color:var(--red);text-transform:uppercase;}
+.gc-body{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+.gc-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--ivory);margin-bottom:2px;}
+.gc-desc{font-size:9px;color:var(--ivdim);}
+.gc-tags{display:flex;gap:4px;margin-top:5px;}
+.tag{font-size:7px;font-weight:700;padding:2px 6px;border-radius:3px;}
+.t-g{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);}
+.t-c{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.18);}
+.t-p{background:rgba(224,64,251,.08);color:var(--pink);border:1px solid rgba(224,64,251,.18);}
+.gc-arrow{font-size:18px;color:var(--ivdim);}
 
-.gc-body{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;}
-.gc-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--ivory);letter-spacing:.05em;margin-bottom:2px;}
-.gc-desc{font-size:10px;color:var(--ivdim);line-height:1.4;}
-.gc-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
-.tag{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:4px;}
-.t-green{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.25);}
-.t-cyan {background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.2);}
-.t-pink {background:rgba(224,64,251,.1);color:var(--pink);border:1px solid rgba(224,64,251,.2);}
-.t-gold {background:rgba(255,215,0,.1);color:var(--gold);border:1px solid rgba(255,215,0,.2);}
-.t-dim  {background:rgba(255,255,255,.04);color:var(--ivdim);border:1px solid rgba(255,255,255,.07);}
-.gc-arrow{font-size:20px;color:var(--ivdim);transition:transform .2s,color .2s;}
-.gc.ready:hover .gc-arrow{transform:translateX(4px);color:var(--cyan);}
-
-/* HOT badge */
-.hot-badge{position:absolute;top:8px;right:8px;background:rgba(255,23,68,.2);border:1px solid rgba(255,23,68,.4);border-radius:8px;padding:3px 8px;font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--red);text-transform:uppercase;animation:hotPulse 1.5s ease-in-out infinite;}
-@keyframes hotPulse{0%,100%{opacity:.8;}50%{opacity:1;box-shadow:0 0 8px rgba(255,23,68,.4);}}
-
-/* ── STATS ── */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
-.sc{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 8px;text-align:center;position:relative;overflow:hidden;}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px;}
+.sc{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 6px;text-align:center;position:relative;overflow:hidden;}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--cyan),var(--pink));}
-.sv{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
-.sv.pos{color:var(--green);}
-.sv.neg{color:var(--red);}
-.sl{font-size:8px;color:var(--ivdim);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
+.sv{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--gold);}
+.sv.pos{color:var(--green);}.sv.neg{color:var(--red);}
+.sl{font-size:7px;color:var(--ivdim);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;}
 
-/* ── MARQUEE ── */
-.marquee-wrap{overflow:hidden;margin-bottom:16px;border:1px solid rgba(255,215,0,.15);border-radius:8px;background:rgba(255,215,0,.04);}
-.marquee{display:flex;animation:marquee 18s linear infinite;white-space:nowrap;padding:7px 0;}
-@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-.marquee span{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--gold2);padding:0 24px;}
-.marquee span.win{color:var(--green);}
-.marquee span.hot{color:var(--pink);}
-
-footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spacing:.08em;padding-bottom:4px;}
+footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spacing:.08em;padding-bottom:8px;}
 </style>
 </head>
 <body>
-
 <canvas id="particles"></canvas>
-
 <div class="page"><div class="inner">
 
-  <!-- HERO -->
-  <div class="hero" style="position:relative;">
-    <button class="sound-btn" id="soundBtn" title="Ses">🔊</button>
-    <div class="hero-logo">NRC★</a>
-    <div class="hero-sub">Neon Royal Casino</div>
-
-    <!-- DEALERS -->
-    <div class="dealers">
-      <div class="dealer" id="dealer1">
-        <div class="dealer-avatar">
-          <canvas class="dealer-canvas" id="dc1" width="72" height="72"></canvas>
-          <div class="dealer-ring"></div>
-        </div>
-        <div class="dealer-bubble" id="db1">Şansın açık görünüyor! 😉</div>
-        <div class="dealer-name">Neon Leyla</div>
+<div class="hero">
+  <button class="sound-btn" id="soundBtn">🔊</button>
+  <div class="logo">NRC★</div>
+  <div class="logo-sub">Neon Royal Casino</div>
+  <div class="dealers">
+    <div class="dealer">
+      <div class="d-avatar">
+        <canvas class="d-canvas" id="dc1" width="68" height="68"></canvas>
+        <div class="d-ring"></div>
       </div>
-      <div class="dealer dealer2" id="dealer2">
-        <div class="dealer-avatar">
-          <canvas class="dealer-canvas" id="dc2" width="72" height="72"></canvas>
-          <div class="dealer-ring"></div>
-        </div>
-        <div class="dealer-bubble" id="db2">Bugün büyük kazanç var! 🎰</div>
-        <div class="dealer-name">Pink Selin</div>
+      <div class="d-bubble" id="db1">Şansın açık! 😉</div>
+      <div class="d-name">Neon Leyla</div>
+    </div>
+    <div class="dealer">
+      <div class="d-avatar">
+        <canvas class="d-canvas" id="dc2" width="68" height="68"></canvas>
+        <div class="d-ring"></div>
       </div>
+      <div class="d-bubble" id="db2">Büyük kazanç! 🔥</div>
+      <div class="d-name">Pink Selin</div>
     </div>
   </div>
+</div>
 
-  <!-- JACKPOT -->
-  <div class="jackpot">
-    <div>
-      <div class="jk-label">🏆 Progresif Jackpot</div>
-      <div class="jk-val" id="jackpot">1,247,830</div>
-    </div>
-    <div class="jk-nrc">NRC</div>
+<div class="jackpot">
+  <div><div class="jk-lbl">🏆 Progresif Jackpot</div><div class="jk-val" id="jackpot">1,247,830</div></div>
+  <div style="font-size:9px;color:var(--gold2);">NRC</div>
+</div>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="w">⭐ Patron +850,000 NRC kazandı!</span>
+    <span class="h">🔥 Rulet'te 7 kırmızı arka arkaya!</span>
+    <span class="w">💎 Slot Jackpot: +2,400,000 NRC</span>
+    <span>🎰 NRC Casino'ya Hoş Geldiniz</span>
+    <span class="h">👑 Blackjack'te 21!</span>
+    <span class="w">⭐ Patron +850,000 NRC kazandı!</span>
+    <span class="h">🔥 Rulet'te 7 kırmızı arka arkaya!</span>
+    <span class="w">💎 Slot Jackpot: +2,400,000 NRC</span>
+    <span>🎰 NRC Casino'ya Hoş Geldiniz</span>
+    <span class="h">👑 Blackjack'te 21!</span>
   </div>
+</div>
 
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee" id="marquee">
-      <span class="win">⭐ Patronun kazancı: +850,000 NRC</span>
-      <span class="hot">🔥 Rulet'te 7 kırmızı arka arkaya!</span>
-      <span class="win">💎 Slot Jackpot: +2,400,000 NRC</span>
-      <span>🎰 NRC Casino'ya Hoş Geldiniz</span>
-      <span class="hot">👑 Blackjack'te 21 — Mükemmel!</span>
-      <span class="win">⭐ Patronun kazancı: +850,000 NRC</span>
-      <span class="hot">🔥 Rulet'te 7 kırmızı arka arkaya!</span>
-      <span class="win">💎 Slot Jackpot: +2,400,000 NRC</span>
-      <span>🎰 NRC Casino'ya Hoş Geldiniz</span>
-      <span class="hot">👑 Blackjack'te 21 — Mükemmel!</span>
-    </div>
+<div class="bal-card">
+  <div class="bal-l">
+    <div class="bal-lbl">Toplam Bakiye</div>
+    <div class="bal-amt" id="balAmt">100,000</div>
+    <div style="font-size:9px;color:var(--gold);opacity:.6;">NRC</div>
+    <div class="bal-usd" id="balUsd">≈ $100.00 USD</div>
   </div>
+  <a class="bal-btn" href="cuzdan.html">💰 Cüzdan</a>
+</div>
 
-  <!-- BALANCE -->
-  <div class="bal-card">
-    <div class="bal-left">
-      <div class="bal-lbl">Toplam Bakiye</div>
-      <div class="bal-amt" id="balAmt">100,000</div>
-      <div style="font-size:9px;color:var(--gold);opacity:.6;margin-top:1px;">NRC</div>
-      <div class="bal-usd" id="balUsd">≈ $100.00 USD</div>
+<div class="sec">Oyunlar</div>
+<div class="game-grid">
+  <a class="gc" href="slot.html">
+    <div class="gc-banner gb-slot"><canvas id="bSlot"></canvas><div class="hot-badge">HOT</div></div>
+    <div class="gc-body">
+      <div><div class="gc-name">Neon Slots</div><div class="gc-desc">5 makara · 20 payline · WILD & SCATTER</div>
+      <div class="gc-tags"><span class="tag t-g">Hazır</span><span class="tag t-p">500× Jackpot</span></div></div>
+      <span class="gc-arrow">›</span>
     </div>
-    <div class="bal-btns">
-      <button class="bal-btn add" id="addBtn" style="display:none">＋ 10,000 NRC</button>
+  </a>
+  <a class="gc" href="rulet.html">
+    <div class="gc-banner gb-roulette"><canvas id="bRulet"></canvas></div>
+    <div class="gc-body">
+      <div><div class="gc-name">Rulet</div><div class="gc-desc">Avrupa · 37 segment · Fiziksel top</div>
+      <div class="gc-tags"><span class="tag t-g">Hazır</span><span class="tag t-c">36× Ödeme</span></div></div>
+      <span class="gc-arrow">›</span>
     </div>
-  </div>
-
-  <!-- GAMES -->
-  <div class="sec">Oyunlar</div>
-  <div class="game-grid">
-
-    <a class="gc ready" href="slot.html">
-      <div class="gc-banner gb-slot">
-        <canvas id="bannerSlot"></canvas>
-        <div class="hot-badge">HOT</div>
-      </div>
-      <div class="gc-body">
-        <div>
-          <div class="gc-name">Neon Slots</div>
-          <div class="gc-desc">5 makara · 20 payline · WILD & SCATTER</div>
-          <div class="gc-tags">
-            <span class="tag t-green">Hazır</span>
-            <span class="tag t-pink">500× Jackpot</span>
-            <span class="tag t-cyan">Free Spin</span>
-          </div>
-        </div>
-        <span class="gc-arrow">›</span>
-      </div>
-    </a>
-
-    <a class="gc ready" href="rulet.html">
-      <div class="gc-banner gb-roulette">
-        <canvas id="bannerRulet"></canvas>
-      </div>
-      <div class="gc-body">
-        <div>
-          <div class="gc-name">Rulet</div>
-          <div class="gc-desc">Avrupa ruleti · 37 segment · Gerçekçi top</div>
-          <div class="gc-tags">
-            <span class="tag t-green">Hazır</span>
-            <span class="tag t-cyan">36× Ödeme</span>
-          </div>
-        </div>
-        <span class="gc-arrow">›</span>
-      </div>
-    </a>
-
-    <a class="gc ready" href="blackjack.html">
-      <div class="gc-banner gb-bj">
-        <canvas id="bannerBj"></canvas>
-      </div>
-      <div class="gc-body">
-        <div>
-          <div class="gc-name">Blackjack</div>
-          <div class="gc-desc">Vegas kuralları · Hit / Stand / Double / Split</div>
-          <div class="gc-tags">
-            <span class="tag t-green">Hazır</span>
-            <span class="tag t-gold">3:2 BJ</span>
-          </div>
-        </div>
-        <span class="gc-arrow">›</span>
-      </div>
-    </a>
-
-    <a class="gc ready" href="plinko.html">
-      <div class="gc-banner gb-plinko">⚪</div>
-      <div class="gc-body">
-        <div>
-          <div class="gc-name">Plinko</div>
-          <div class="gc-desc">Fizik motoru · 110× çarpan</div>
-          <div class="gc-tags"><span class="tag t-green">Hazır</span><span class="tag t-cyan">110× Jackpot</span></div>
-        </div>
-        <span class="gc-arrow">›</span>
-      </div>
+  </a>
+  <a class="gc" href="blackjack.html">
+    <div class="gc-banner gb-bj"><canvas id="bBj"></canvas></div>
+    <div class="gc-body">
+      <div><div class="gc-name">Blackjack</div><div class="gc-desc">Vegas kuralları · Hit / Stand / Double</div>
+      <div class="gc-tags"><span class="tag t-g">Hazır</span><span class="tag t-c">3:2 BJ</span></div></div>
+      <span class="gc-arrow">›</span>
     </div>
+  </a>
+  <a class="gc" href="plinko.html">
+    <div class="gc-banner gb-plinko">⚪</div>
+    <div class="gc-body">
+      <div><div class="gc-name">Plinko</div><div class="gc-desc">Fizik motoru · 110× çarpan</div>
+      <div class="gc-tags"><span class="tag t-g">Hazır</span><span class="tag t-c">110× Jackpot</span></div></div>
+      <span class="gc-arrow">›</span>
+    </div>
+  </a>
+</div>
 
-  </div>
+<div class="sec">Oturum</div>
+<div class="stats">
+  <div class="sc"><div class="sv" id="stS">0</div><div class="sl">Tur</div></div>
+  <div class="sc"><div class="sv pos" id="stW">0</div><div class="sl">Kazanç</div></div>
+  <div class="sc"><div class="sv" id="stN">—</div><div class="sl">Net</div></div>
+</div>
 
-  <!-- STATS -->
-  <div class="sec">Oturum</div>
-  <div class="stats" style="margin-bottom:32px;">
-    <div class="sc"><div class="sv" id="stS">0</div><div class="sl">Tur</div></div>
-    <div class="sc"><div class="sv pos" id="stW">0</div><div class="sl">Kazanç</div></div>
-    <div class="sc"><div class="sv" id="stN">—</div><div class="sl">Net</div></div>
-  </div>
-
-  <footer style="margin-bottom:20px;">NRC Casino · 1 NRC = $0.001 · Sanal Para · 18+</footer>
+<footer>NRC Casino · 1 NRC = $0.001 · Sanal Para · 18+</footer>
 </div></div>
 
-<!-- NAV -->
 <nav class="nav">
   <a class="ni active" href="index.html"><span class="ni-icon">🏠</span><span class="ni-lbl">Lobi</span></a>
   <a class="ni" href="slot.html"><span class="ni-icon">🎰</span><span class="ni-lbl">Slot</span></a>
   <a class="ni" href="rulet.html"><span class="ni-icon">🎡</span><span class="ni-lbl">Rulet</span></a>
-  <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">Blackjack</span></a>
+  <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">BJ</span></a>
+  <a class="ni" href="plinko.html"><span class="ni-icon">⚪</span><span class="ni-lbl">Plinko</span></a>
   <a class="ni" href="cuzdan.html"><span class="ni-icon">💰</span><span class="ni-lbl">Cüzdan</span></a>
 </nav>
 
@@ -375,445 +228,21 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
 (function(){
 'use strict';
 
-// ── STORAGE ────────────────────────────────────────────────────────────────
-const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
-const getBal=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
-function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_usd','1000');localStorage.setItem('nrc_initialized','1');}}
-const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
+// ── INIT ──────────────────────────────────────────────────────────────────
+const BAL_KEY='nrc_balance',USD_KEY='nrc_usd',STATS_KEY='nrc_stats',INIT_KEY='nrc_initialized';
+if(!localStorage.getItem(INIT_KEY)){
+  localStorage.setItem(BAL_KEY,'100000');
+  localStorage.setItem(USD_KEY,'1000');
+  localStorage.setItem(INIT_KEY,'1');
+}
+const getNRC=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
 const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
 
-// ── PARTICLES ─────────────────────────────────────────────────────────────
-const pc=document.getElementById('particles');
-const pctx=pc.getContext('2d');
-let pw,ph2;
-const particles=[];
-const COLORS=['#00e5ff','#e040fb','#ffd700','#00e676','#ff1744'];
-
-function resizeParticles(){pw=pc.width=window.innerWidth;ph2=pc.height=window.innerHeight;}
-window.addEventListener('resize',resizeParticles);resizeParticles();
-
-for(let i=0;i<60;i++) particles.push({
-  x:Math.random()*1000,y:Math.random()*1000,
-  vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,
-  r:Math.random()*2+.5,
-  color:COLORS[Math.floor(Math.random()*COLORS.length)],
-  alpha:Math.random()*.5+.1,
-  pulse:Math.random()*Math.PI*2,
-});
-
-function animParticles(){
-  pctx.clearRect(0,0,pw,ph2);
-  for(const p of particles){
-    p.x+=p.vx;p.y+=p.vy;p.pulse+=.02;
-    if(p.x<0)p.x=pw;if(p.x>pw)p.x=0;
-    if(p.y<0)p.y=ph2;if(p.y>ph2)p.y=0;
-    const a=p.alpha*(0.5+0.5*Math.sin(p.pulse));
-    pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    pctx.fillStyle=p.color;pctx.globalAlpha=a;pctx.fill();
-    // glow
-    pctx.beginPath();pctx.arc(p.x,p.y,p.r*3,0,Math.PI*2);
-    const g=pctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
-    g.addColorStop(0,p.color+'44');g.addColorStop(1,'transparent');
-    pctx.fillStyle=g;pctx.globalAlpha=a*.4;pctx.fill();
-  }
-  pctx.globalAlpha=1;
-  requestAnimationFrame(animParticles);
-}
-animParticles();
-
-// ── DEALER DRAWINGS ────────────────────────────────────────────────────────
-function drawDealer1(canvas){
-  const ctx=canvas.getContext('2d');
-  const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2;
-  ctx.clearRect(0,0,w,h);
-
-  // Background circle
-  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,w/2);
-  bg.addColorStop(0,'#2a0840');bg.addColorStop(1,'#0a0020');
-  ctx.beginPath();ctx.arc(cx,cy,w/2,0,Math.PI*2);
-  ctx.fillStyle=bg;ctx.fill();
-
-  // Face (skin tone)
-  ctx.beginPath();ctx.arc(cx,cy-2,20,0,Math.PI*2);
-  const face=ctx.createRadialGradient(cx-3,cy-6,2,cx,cy-2,20);
-  face.addColorStop(0,'#ffb380');face.addColorStop(1,'#e8825a');
-  ctx.fillStyle=face;ctx.fill();
-
-  // Hair (long, dark with cyan highlights)
-  ctx.beginPath();ctx.ellipse(cx,cy-8,22,26,0,Math.PI,Math.PI*2);
-  ctx.fillStyle='#1a0a2a';ctx.fill();
-  // hair shine
-  ctx.beginPath();ctx.ellipse(cx-8,cy-14,5,12,-.3,Math.PI*.8,Math.PI*1.8);
-  ctx.fillStyle='rgba(0,229,255,.3)';ctx.fill();
-  // side hair
-  ctx.beginPath();ctx.ellipse(cx-20,cy+8,6,16,.2,0,Math.PI);
-  ctx.fillStyle='#1a0a2a';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+20,cy+8,6,16,-.2,0,Math.PI);
-  ctx.fillStyle='#1a0a2a';ctx.fill();
-
-  // Eyes
-  ctx.beginPath();ctx.ellipse(cx-7,cy-3,4,3.5,0,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+7,cy-3,4,3.5,0,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-  // iris
-  ctx.beginPath();ctx.arc(cx-7,cy-3,2.5,0,Math.PI*2);
-  ctx.fillStyle='#00e5ff';ctx.fill();
-  ctx.beginPath();ctx.arc(cx+7,cy-3,2.5,0,Math.PI*2);
-  ctx.fillStyle='#00e5ff';ctx.fill();
-  // pupil
-  ctx.beginPath();ctx.arc(cx-7,cy-3,1.2,0,Math.PI*2);
-  ctx.fillStyle='#000';ctx.fill();
-  ctx.beginPath();ctx.arc(cx+7,cy-3,1.2,0,Math.PI*2);
-  ctx.fillStyle='#000';ctx.fill();
-  // eye shine
-  ctx.beginPath();ctx.arc(cx-6.2,cy-3.8,.7,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-  ctx.beginPath();ctx.arc(cx+7.8,cy-3.8,.7,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-
-  // Eyebrows
-  ctx.beginPath();ctx.moveTo(cx-11,cy-8);ctx.quadraticCurveTo(cx-7,cy-10,cx-3,cy-8);
-  ctx.strokeStyle='#1a0a2a';ctx.lineWidth=1.5;ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx+3,cy-8);ctx.quadraticCurveTo(cx+7,cy-10,cx+11,cy-8);
-  ctx.stroke();
-
-  // Nose
-  ctx.beginPath();ctx.moveTo(cx,cy+1);ctx.lineTo(cx-3,cy+6);ctx.lineTo(cx+3,cy+6);
-  ctx.strokeStyle='rgba(180,100,60,.5)';ctx.lineWidth=1;ctx.stroke();
-
-  // Smile
-  ctx.beginPath();ctx.arc(cx,cy+5,7,Math.PI*.1,Math.PI*.9);
-  ctx.strokeStyle='#c06040';ctx.lineWidth=1.5;ctx.stroke();
-  // lips
-  ctx.beginPath();ctx.ellipse(cx,cy+8,5,2.5,0,0,Math.PI);
-  ctx.fillStyle='#ff6b8a';ctx.fill();
-
-  // Blush
-  ctx.beginPath();ctx.ellipse(cx-12,cy+2,5,3,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(255,100,120,.25)';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+12,cy+2,5,3,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(255,100,120,.25)';ctx.fill();
-
-  // Outfit hint (cyan collar)
-  ctx.beginPath();ctx.moveTo(cx-14,cy+22);ctx.lineTo(cx,cy+16);ctx.lineTo(cx+14,cy+22);
-  ctx.fillStyle='#00b8d4';ctx.fill();
-
-  // Earring (cyan drop)
-  ctx.beginPath();ctx.arc(cx-21,cy+2,3,0,Math.PI*2);
-  ctx.fillStyle='#00e5ff';ctx.shadowColor='#00e5ff';ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
-  ctx.beginPath();ctx.arc(cx+21,cy+2,3,0,Math.PI*2);
-  ctx.fillStyle='#00e5ff';ctx.shadowColor='#00e5ff';ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
-}
-
-function drawDealer2(canvas){
-  const ctx=canvas.getContext('2d');
-  const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2;
-  ctx.clearRect(0,0,w,h);
-
-  // Background
-  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,w/2);
-  bg.addColorStop(0,'#300820');bg.addColorStop(1,'#100008');
-  ctx.beginPath();ctx.arc(cx,cy,w/2,0,Math.PI*2);
-  ctx.fillStyle=bg;ctx.fill();
-
-  // Face
-  ctx.beginPath();ctx.arc(cx,cy-2,19,0,Math.PI*2);
-  const face=ctx.createRadialGradient(cx-3,cy-6,2,cx,cy-2,19);
-  face.addColorStop(0,'#ffd0b0');face.addColorStop(1,'#e0a080');
-  ctx.fillStyle=face;ctx.fill();
-
-  // Hair (dark red/pink highlights, upswept)
-  ctx.beginPath();ctx.ellipse(cx,cy-12,21,18,0,Math.PI,Math.PI*2);
-  ctx.fillStyle='#1a0010';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx-15,cy-8,8,14,.4,0,Math.PI*2);
-  ctx.fillStyle='#1a0010';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+15,cy-8,8,14,-.4,0,Math.PI*2);
-  ctx.fillStyle='#1a0010';ctx.fill();
-  // pink highlights in hair
-  ctx.beginPath();ctx.ellipse(cx+6,cy-18,4,8,.3,0,Math.PI*2);
-  ctx.fillStyle='rgba(224,64,251,.35)';ctx.fill();
-  // updo bun
-  ctx.beginPath();ctx.arc(cx+10,cy-22,7,0,Math.PI*2);
-  ctx.fillStyle='#1a0010';ctx.fill();
-
-  // Eyes (larger, with pink eyeshadow)
-  // eyeshadow
-  ctx.beginPath();ctx.ellipse(cx-7,cy-4,7,4,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(224,64,251,.25)';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+7,cy-4,7,4,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(224,64,251,.25)';ctx.fill();
-  // whites
-  ctx.beginPath();ctx.ellipse(cx-7,cy-3,4.5,3.5,0,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+7,cy-3,4.5,3.5,0,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-  // iris (purple/pink)
-  ctx.beginPath();ctx.arc(cx-7,cy-3,2.8,0,Math.PI*2);
-  ctx.fillStyle='#e040fb';ctx.fill();
-  ctx.beginPath();ctx.arc(cx+7,cy-3,2.8,0,Math.PI*2);
-  ctx.fillStyle='#e040fb';ctx.fill();
-  // pupil
-  ctx.beginPath();ctx.arc(cx-7,cy-3,1.3,0,Math.PI*2);
-  ctx.fillStyle='#000';ctx.fill();
-  ctx.beginPath();ctx.arc(cx+7,cy-3,1.3,0,Math.PI*2);
-  ctx.fillStyle='#000';ctx.fill();
-  // shine
-  ctx.beginPath();ctx.arc(cx-6,cy-4,.8,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-  ctx.beginPath();ctx.arc(cx+8,cy-4,.8,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-
-  // Lashes (simple lines)
-  for(let i=-2;i<=2;i++){
-    ctx.beginPath();ctx.moveTo(cx-7+i*1.5,cy-6.5);ctx.lineTo(cx-7+i*1.8,cy-9);
-    ctx.strokeStyle='#000';ctx.lineWidth=.8;ctx.stroke();
-    ctx.beginPath();ctx.moveTo(cx+7+i*1.5,cy-6.5);ctx.lineTo(cx+7+i*1.8,cy-9);
-    ctx.stroke();
-  }
-
-  // Eyebrows (arched)
-  ctx.beginPath();ctx.moveTo(cx-11,cy-9);ctx.quadraticCurveTo(cx-7,cy-12,cx-3,cy-9);
-  ctx.strokeStyle='#1a0010';ctx.lineWidth=1.8;ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx+3,cy-9);ctx.quadraticCurveTo(cx+7,cy-12,cx+11,cy-9);
-  ctx.stroke();
-
-  // Nose
-  ctx.beginPath();ctx.arc(cx,cy+4,1.5,0,Math.PI*2);
-  ctx.fillStyle='rgba(180,100,80,.3)';ctx.fill();
-
-  // Lips (full, red/pink)
-  ctx.beginPath();ctx.ellipse(cx,cy+9,6,3,0,0,Math.PI*2);
-  ctx.fillStyle='#ff2060';ctx.fill();
-  ctx.beginPath();ctx.moveTo(cx-6,cy+9);ctx.quadraticCurveTo(cx,cy+6,cx+6,cy+9);
-  ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=1;ctx.stroke();
-
-  // Blush
-  ctx.beginPath();ctx.ellipse(cx-13,cy+1,5,3,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(255,80,120,.3)';ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+13,cy+1,5,3,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(255,80,120,.3)';ctx.fill();
-
-  // Outfit (pink/dark)
-  ctx.beginPath();ctx.moveTo(cx-14,cy+22);ctx.lineTo(cx,cy+15);ctx.lineTo(cx+14,cy+22);
-  ctx.fillStyle='#c2185b';ctx.fill();
-
-  // Earrings (pink crystal drops)
-  ctx.beginPath();ctx.arc(cx-20,cy+2,4,0,Math.PI*2);
-  ctx.fillStyle='#e040fb';ctx.shadowColor='#e040fb';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;
-  ctx.beginPath();ctx.arc(cx+20,cy+2,4,0,Math.PI*2);
-  ctx.fillStyle='#e040fb';ctx.shadowColor='#e040fb';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;
-}
-
-// Animated blink
-let blinkT=0;
-function animDealers(){
-  blinkT+=.04;
-  const c1=document.getElementById('dc1');
-  const c2=document.getElementById('dc2');
-  if(!c1||!c2)return;
-  drawDealer1(c1);
-  drawDealer2(c2);
-  // Blink effect
-  const shouldBlink1=Math.sin(blinkT*1.1)>0.97;
-  const shouldBlink2=Math.sin(blinkT*0.9+1.5)>0.97;
-  if(shouldBlink1){
-    const ctx=c1.getContext('2d');
-    const cx=36,cy=32;
-    ctx.beginPath();ctx.ellipse(cx-7,cy-3,4,1,0,0,Math.PI*2);
-    ctx.fillStyle='#ffb380';ctx.fill();
-    ctx.beginPath();ctx.ellipse(cx+7,cy-3,4,1,0,0,Math.PI*2);
-    ctx.fillStyle='#ffb380';ctx.fill();
-  }
-  if(shouldBlink2){
-    const ctx=c2.getContext('2d');
-    const cx=36,cy=32;
-    ctx.beginPath();ctx.ellipse(cx-7,cy-3,4.5,1,0,0,Math.PI*2);
-    ctx.fillStyle='#ffd0b0';ctx.fill();
-    ctx.beginPath();ctx.ellipse(cx+7,cy-3,4.5,1,0,0,Math.PI*2);
-    ctx.fillStyle='#ffd0b0';ctx.fill();
-  }
-  requestAnimationFrame(animDealers);
-}
-animDealers();
-
-// ── DEALER SPEECH ─────────────────────────────────────────────────────────
-const speeches1 = {
-  idle:  ['Şansın açık görünüyor! 😉','Bu tur senin! 🎰','Büyük kazanç yakın! ⭐','Kalbim seninle 💙','Döndür bakalım! 🎡'],
-  win:   ['KAZANDIN! 🎉🎉🎉','Harika! Devam et! 🔥','Süper! Sen bir şampiyonsun! 👑','YEP! Bu kazanç! 💰','Müthiş! Jackpot yaklaşıyor! 💎'],
-  lose:  ['Üzme kendini, şans döner 💙','Bir daha dene! 🎰','Yakında gelir, inanıyorum! 🍀','Olmadı bu sefer 😔','Hadi! Bir daha! ⭐'],
-  bigwin:['JACKPOT!!! 🎊🎊🎊','İNANILMAZ! 💰💰💰','BU GECE SEN KAZANIYORSUN! 🔥','EFSANE! Böyle bir şey görmedim! 👑','NRC YAĞIYOR! 💎💎💎'],
-};
-const speeches2 = {
-  idle:  ['Bugün büyük kazanç var! 🔥','NRC yağıyor! 💰','Jackpot zamanı! 👑','Oyuna hazır mısın? 💎','Şans kapıda! 🍀'],
-  win:   ['İşte bu! Harika! 🎉','Vay canına! Tebrikler! 🏆','Kazandın! Hep bileceğimi biliyordum! 💕','Bravo! Devam et! 🎊','Mükemmel strateji! 👑'],
-  lose:  ['Endişelenme, sıradaki kazanç senin! 💪','Şans bazen oynar 😊','Dene tekrar! Ben senin yanındayım 💕','Olmadı ama... olacak! 🌟','Hadi yeniden! 🎰'],
-  bigwin:['OMG!!! JACKPOT!!! 🎊','Sen bir efsanesin! 💰💰','BU GECENİN KAZANANI SEN! 🏆','DUDAK UÇUKLATAN KAZANÇ! 🔥','NRC KRALI/KRALİÇESİ! 👑'],
-};
-
-let si1=0, si2=0;
-let dealerMode = 'idle';
-let dealerTimeout = null;
-
-function setDealerMode(mode, duration=4000){
-  dealerMode = mode;
-  const b1 = speeches1[mode]||speeches1.idle;
-  const b2 = speeches2[mode]||speeches2.idle;
-  document.getElementById('db1').textContent = b1[Math.floor(Math.random()*b1.length)];
-  document.getElementById('db2').textContent = b2[Math.floor(Math.random()*b2.length)];
-  clearTimeout(dealerTimeout);
-  if(mode !== 'idle'){
-    dealerTimeout = setTimeout(()=>setDealerMode('idle'), duration);
-  }
-}
-
-// Idle rotation
-setInterval(()=>{
-  if(dealerMode !== 'idle') return;
-  si1=(si1+1)%speeches1.idle.length;
-  si2=(si2+1)%speeches2.idle.length;
-  document.getElementById('db1').textContent=speeches1.idle[si1];
-  document.getElementById('db2').textContent=speeches2.idle[si2];
-},4000);
-
-// Listen for game results from other pages via localStorage
-window.addEventListener('storage', e=>{
-  if(e.key === 'nrc_last_result'){
-    try{
-      const r = JSON.parse(e.newValue);
-      if(r.win > 50000) setDealerMode('bigwin', 6000);
-      else if(r.win > 0) setDealerMode('win', 4000);
-      else setDealerMode('lose', 3000);
-    }catch(e){}
-  }
-});
-
-// Also check periodically for result changes
-let lastResultCheck = '';
-setInterval(()=>{
-  const r = localStorage.getItem('nrc_last_result');
-  if(r && r !== lastResultCheck){
-    lastResultCheck = r;
-    try{
-      const parsed = JSON.parse(r);
-      const age = Date.now() - (parsed.ts||0);
-      if(age < 5000){ // only react to results in last 5 seconds
-        if(parsed.win > 50000) setDealerMode('bigwin', 6000);
-        else if(parsed.win > 0) setDealerMode('win', 4000);
-        else setDealerMode('lose', 3000);
-      }
-    }catch(e){}
-  }
-},1000);
-
-// ── BANNER ANIMATIONS ─────────────────────────────────────────────────────
-function animBannerSlot(){
-  const c=document.getElementById('bannerSlot');
-  if(!c)return;
-  const ctx=c.getContext('2d');
-  c.width=c.offsetWidth||300;c.height=80;
-  const w=c.width,h=c.height;
-  const syms=['7','◆','★','♛','🔔'];
-  const colors=['#ff1744','#00e5ff','#e040fb','#ffd700','#ffab00'];
-  let t=0;
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    const offset=(t*30)%w;
-    for(let i=0;i<6;i++){
-      const x=(i*80-offset+w)%w-20;
-      const si=(i+Math.floor(t*.2))%syms.length;
-      ctx.font='bold 36px Orbitron,Arial';
-      ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillStyle=colors[si];
-      ctx.shadowColor=colors[si];ctx.shadowBlur=15;
-      ctx.globalAlpha=0.3+0.1*Math.sin(t*.05+i);
-      ctx.fillText(syms[si],x,h/2);
-    }
-    ctx.globalAlpha=1;ctx.shadowBlur=0;
-    t++;requestAnimationFrame(draw);
-  }
-  draw();
-}
-
-function animBannerRulet(){
-  const c=document.getElementById('bannerRulet');
-  if(!c)return;
-  const ctx=c.getContext('2d');
-  c.width=c.offsetWidth||300;c.height=80;
-  const w=c.width,h=c.height,cx=w/2,cy=h/2;
-  let rot=0;
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    const r=30;
-    // mini wheel
-    for(let i=0;i<12;i++){
-      const a=i*Math.PI/6+rot;
-      ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,a+Math.PI/6-.02);ctx.closePath();
-      ctx.fillStyle=i%2===0?'rgba(139,26,26,.6)':'rgba(20,20,20,.6)';ctx.fill();
-    }
-    // green 0
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,rot+Math.PI*1.9,rot+Math.PI*2.05);ctx.closePath();
-    ctx.fillStyle='rgba(20,100,40,.7)';ctx.fill();
-    // rim
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.strokeStyle='rgba(0,230,118,.4)';ctx.lineWidth=2;ctx.stroke();
-    // hub
-    ctx.beginPath();ctx.arc(cx,cy,6,0,Math.PI*2);
-    ctx.fillStyle='#00e676';ctx.shadowColor='#00e676';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;
-    rot+=.015;
-    requestAnimationFrame(draw);
-  }
-  draw();
-}
-
-function animBannerBj(){
-  const c=document.getElementById('bannerBj');
-  if(!c)return;
-  const ctx=c.getContext('2d');
-  c.width=c.offsetWidth||300;c.height=80;
-  const w=c.width,h=c.height;
-  let t=0;
-  const cards=[{r:'A',s:'♥',col:'#ff1744'},{r:'K',s:'♠',col:'#aaa'},{r:'Q',s:'♦',col:'#ff6b6b'},{r:'J',s:'♣',col:'#aaa'}];
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    const cx=w/2;
-    cards.forEach((cd,i)=>{
-      const offset=(i-1.5)*36+Math.sin(t*.03+i)*4;
-      const x=cx+offset,y=h/2+Math.sin(t*.04+i*1.2)*4;
-      ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(t*.02+i)*.1);
-      // card shadow
-      ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=8;ctx.shadowOffsetY=3;
-      // card bg
-      ctx.fillStyle='#f8f4ec';ctx.beginPath();ctx.roundRect(-18,-26,36,52,4);ctx.fill();
-      ctx.shadowBlur=0;ctx.shadowOffsetY=0;
-      // rank
-      ctx.font='bold 18px Orbitron,Arial';ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillStyle=cd.col;ctx.fillText(cd.r,0,-8);
-      ctx.font='14px Arial';ctx.fillText(cd.s,0,10);
-      ctx.restore();
-    });
-    t++;requestAnimationFrame(draw);
-  }
-  draw();
-}
-
-setTimeout(animBannerSlot,100);
-setTimeout(animBannerRulet,150);
-setTimeout(animBannerBj,200);
-
-// ── JACKPOT TICKER ────────────────────────────────────────────────────────
-let jackpot=1247830;
-setInterval(()=>{
-  jackpot+=Math.floor(Math.random()*47+3);
-  document.getElementById('jackpot').textContent=fmt(jackpot);
-},800);
-
-// ── BALANCE ───────────────────────────────────────────────────────────────
 function renderBal(){
-  const b=getBal();
+  const b=getNRC();
   document.getElementById('balAmt').textContent=fmt(b);
-  document.getElementById('balUsd').textContent='≈ $'+( b/1000).toFixed(2)+' USD';
+  document.getElementById('balUsd').textContent='≈ $'+(b/1000).toFixed(2)+' USD';
 }
 function renderStats(){
   const s=getStats();
@@ -824,186 +253,202 @@ function renderStats(){
   el.textContent=(net>=0?'+':'')+fmt(net);
   el.className='sv '+(net>0?'pos':net<0?'neg':'');
 }
-
-document.getElementById('resetBtn').addEventListener('click',()=>{
-  setBal(100000);
-  localStorage.setItem(STATS_KEY,JSON.stringify({spins:0,wins:0,loss:0}));
-  renderStats();
-});
-document.getElementById('addBtn').addEventListener('click',()=>{setBal(getBal()+10000);});
-window.addEventListener('focus',()=>{renderBal();renderStats();});
-// Refresh stats every 2 seconds to catch updates from other games
-setInterval(()=>{renderBal();renderStats();},2000);
-
-// ── SOUND ─────────────────────────────────────────────────────────────────
-let soundOn=true;
-let ac,bgNodes=[];
-function getAC(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();return ac;}
-
-function stopAmbient(){
-  bgNodes.forEach(n=>{try{n.stop();}catch(e){}});
-  bgNodes=[];
-}
-
-function startAmbient(){
-  stopAmbient();
-  try{
-    const a=getAC();
-
-    // Master gain
-    const master=a.createGain();
-    master.gain.value=0.04;
-    master.connect(a.destination);
-
-    // ── BASS LINE (casino feel) ──
-    // Repeating bass pattern: C2-G2-A2-G2
-    const bassNotes=[65.4,98,110,98]; // Hz
-    const bassGain=a.createGain();bassGain.gain.value=1.2;bassGain.connect(master);
-    function playBass(noteIdx,time){
-      const o=a.createOscillator();
-      const g=a.createGain();
-      o.connect(g);g.connect(bassGain);
-      o.type='triangle';
-      o.frequency.value=bassNotes[noteIdx%bassNotes.length];
-      g.gain.setValueAtTime(0.8,time);
-      g.gain.exponentialRampToValueAtTime(0.001,time+0.45);
-      o.start(time);o.stop(time+0.5);
-      bgNodes.push(o);
-    }
-    const beatLen=0.5;
-    for(let i=0;i<32;i++) playBass(i,a.currentTime+i*beatLen);
-
-    // ── CHORD PAD ──
-    // Warm casino ambiance chord: Cmaj
-    const chordFreqs=[[261.6,329.6,392],[293.7,369.9,440],[261.6,329.6,392],[246.9,311.1,392]];
-    const padGain=a.createGain();padGain.gain.value=0.3;padGain.connect(master);
-    chordFreqs.forEach((chord,ci)=>{
-      chord.forEach(freq=>{
-        const o=a.createOscillator(),g=a.createGain();
-        o.connect(g);g.connect(padGain);
-        o.type='sine';o.frequency.value=freq;
-        const t=a.currentTime+ci*4;
-        g.gain.setValueAtTime(0,t);
-        g.gain.linearRampToValueAtTime(0.4,t+0.3);
-        g.gain.linearRampToValueAtTime(0.35,t+3.5);
-        g.gain.linearRampToValueAtTime(0,t+4);
-        o.start(t);o.stop(t+4.1);
-        bgNodes.push(o);
-      });
-    });
-
-    // ── MELODY (casino jingle) ──
-    // Simple pentatonic melody
-    const melFreqs=[523,659,784,880,784,659,523,659,784,1047,880,784];
-    const melTimes=[0,.25,.5,.75,1,1.25,1.5,2,2.25,2.5,2.75,3];
-    const melGain=a.createGain();melGain.gain.value=0.25;melGain.connect(master);
-    melFreqs.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g);g.connect(melGain);
-      o.type='square';o.frequency.value=freq;
-      const t=a.currentTime+melTimes[i];
-      g.gain.setValueAtTime(0.3,t);
-      g.gain.exponentialRampToValueAtTime(0.001,t+0.22);
-      o.start(t);o.stop(t+0.25);
-      bgNodes.push(o);
-    });
-
-    // ── HI-HAT RHYTHM ──
-    const hhGain=a.createGain();hhGain.gain.value=0.15;hhGain.connect(master);
-    for(let i=0;i<32;i++){
-      if(i%2===0) continue; // off-beat
-      const buf=a.createBuffer(1,a.sampleRate*0.05,a.sampleRate);
-      const d=buf.getChannelData(0);
-      for(let j=0;j<d.length;j++) d[j]=(Math.random()*2-1)*Math.pow(1-j/d.length,2);
-      const src=a.createBufferSource();
-      src.buffer=buf;
-      const f=a.createBiquadFilter();f.type='highpass';f.frequency.value=8000;
-      src.connect(f);f.connect(hhGain);
-      src.start(a.currentTime+i*beatLen*0.5);
-      bgNodes.push(src);
-    }
-
-    // ── COIN JINGLE every 8 beats ──
-    [0,4,8,12].forEach(beat=>{
-      [880,1100,1320].forEach((freq,j)=>{
-        const o=a.createOscillator(),g=a.createGain();
-        o.connect(g);g.connect(master);
-        o.type='sine';o.frequency.value=freq;
-        const t=a.currentTime+beat*beatLen+j*.06;
-        g.gain.setValueAtTime(0.12,t);
-        g.gain.exponentialRampToValueAtTime(0.001,t+0.15);
-        o.start(t);o.stop(t+0.2);
-        bgNodes.push(o);
-      });
-    });
-
-    // Restart after ~16 seconds
-    setTimeout(()=>{ if(soundOn) startAmbient(); }, 16000);
-
-  }catch(e){}
-}
-
-function playCoin(){
-  try{
-    const a=getAC();
-    [880,1100,1320,1540].forEach((f,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g);g.connect(a.destination);
-      o.type='sine';o.frequency.value=f;
-      g.gain.setValueAtTime(.18,a.currentTime+i*.06);
-      g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.06+.18);
-      o.start(a.currentTime+i*.06);o.stop(a.currentTime+i*.06+.2);
-    });
-  }catch(e){}
-}
-
-document.getElementById('soundBtn').addEventListener('click',()=>{
-  soundOn=!soundOn;
-  document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';
-  if(soundOn){startAmbient();playCoin();}else stopAmbient();
-});
-
-document.querySelectorAll('.gc.ready').forEach(gc=>{
-  gc.addEventListener('click',()=>{if(soundOn)playCoin();});
-});
-
-// ── COIN MODAL ────────────────────────────────────────────────────────────
-function showCoinModal(){
-  if(document.getElementById('coinModal')) return;
-  const modal = document.createElement('div');
-  modal.id = 'coinModal';
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;';
-  modal.innerHTML = `
-    <div style="background:#10102a;border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:24px;max-width:360px;width:100%;text-align:center;">
-      <div style="font-size:36px;margin-bottom:8px;">💸</div>
-      <div style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:#ffd700;margin-bottom:6px;">BAKİYE BİTTİ!</div>
-      <div style="font-size:12px;color:#6a6a8a;margin-bottom:20px;">Cüzdanından NRC satın alabilir veya görev tamamlayabilirsin.</div>
-      <a href="cuzdan.html" style="display:block;background:linear-gradient(135deg,#ffd700,#e65100);color:#0a0800;font-family:'Orbitron',monospace;font-size:13px;font-weight:900;padding:14px;border-radius:12px;text-decoration:none;margin-bottom:10px;">
-        🪙 CÜZDANA GİT
-      </a>
-      <button onclick="document.getElementById('coinModal').remove()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:#6a6a8a;font-family:inherit;font-size:11px;padding:10px 20px;border-radius:8px;cursor:pointer;width:100%;">
-        Kapat
-      </button>
-    </div>`;
-  document.body.appendChild(modal);
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────
+setInterval(()=>{renderBal();renderStats();},1500);
 renderBal();renderStats();
 
-// Single-time initialization
-ensureInit();
+// ── PARTICLES ──────────────────────────────────────────────────────────────
+const pc=document.getElementById('particles');
+const pctx=pc.getContext('2d');
+const COLS=['#00e5ff','#e040fb','#ffd700','#00e676'];
+let pw,ph2;
+const pts=[];
+function resizeP(){pw=pc.width=window.innerWidth;ph2=pc.height=window.innerHeight;}
+window.addEventListener('resize',resizeP);resizeP();
+for(let i=0;i<50;i++) pts.push({x:Math.random()*1000,y:Math.random()*1000,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+.5,color:COLS[Math.floor(Math.random()*COLS.length)],a:Math.random()*.4+.1,p:Math.random()*Math.PI*2});
+(function animP(){
+  pctx.clearRect(0,0,pw,ph2);
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;p.p+=.02;if(p.x<0)p.x=pw;if(p.x>pw)p.x=0;if(p.y<0)p.y=ph2;if(p.y>ph2)p.y=0;const a=p.a*(0.5+0.5*Math.sin(p.p));pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,Math.PI*2);pctx.fillStyle=p.color;pctx.globalAlpha=a;pctx.fill();}pctx.globalAlpha=1;requestAnimationFrame(animP);
+})();
 
-// Check balance - show coin modal if zero
-setInterval(()=>{
-  if(getBal()<=0 && !document.getElementById('coinModal')){
-    showCoinModal();
+// ── DEALERS ──────────────────────────────────────────────────────────────
+function drawD1(cv){
+  const ctx=cv.getContext('2d'),w=cv.width,cx=w/2,cy=w/2;
+  ctx.clearRect(0,0,w,w);
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,w/2);bg.addColorStop(0,'#1a0840');bg.addColorStop(1,'#080018');
+  ctx.beginPath();ctx.arc(cx,cy,w/2,0,Math.PI*2);ctx.fillStyle=bg;ctx.fill();
+  // face
+  ctx.beginPath();ctx.arc(cx,cy-1,18,0,Math.PI*2);
+  const fg=ctx.createRadialGradient(cx-2,cy-5,2,cx,cy,18);fg.addColorStop(0,'#ffb380');fg.addColorStop(1,'#e08050');
+  ctx.fillStyle=fg;ctx.fill();
+  // hair
+  ctx.beginPath();ctx.ellipse(cx,cy-8,20,22,0,Math.PI,Math.PI*2);ctx.fillStyle='#180828';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx-18,cy+6,5,14,.2,0,Math.PI);ctx.fillStyle='#180828';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+18,cy+6,5,14,-.2,0,Math.PI);ctx.fillStyle='#180828';ctx.fill();
+  // hair highlight
+  ctx.beginPath();ctx.ellipse(cx-6,cy-14,3,8,-.2,0,Math.PI*2);ctx.fillStyle='rgba(0,229,255,.25)';ctx.fill();
+  // eyes
+  [[cx-6,cy-3],[cx+6,cy-3]].forEach(([ex,ey])=>{
+    ctx.beginPath();ctx.ellipse(ex,ey,3.5,3,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    ctx.beginPath();ctx.arc(ex,ey,2.2,0,Math.PI*2);ctx.fillStyle='#00b8d4';ctx.fill();
+    ctx.beginPath();ctx.arc(ex,ey,1,0,Math.PI*2);ctx.fillStyle='#000';ctx.fill();
+    ctx.beginPath();ctx.arc(ex-.8,ey-.8,.6,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  });
+  // brows
+  ctx.strokeStyle='#180828';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx-10,cy-7);ctx.quadraticCurveTo(cx-6,cy-9,cx-2,cy-7);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+2,cy-7);ctx.quadraticCurveTo(cx+6,cy-9,cx+10,cy-7);ctx.stroke();
+  // nose & lips
+  ctx.beginPath();ctx.arc(cx,cy+4,1,0,Math.PI*2);ctx.fillStyle='rgba(180,90,60,.3)';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx,cy+8,5,2.5,0,0,Math.PI);ctx.fillStyle='#ff6b8a';ctx.fill();
+  // blush
+  ctx.beginPath();ctx.ellipse(cx-11,cy+2,4,2.5,0,0,Math.PI*2);ctx.fillStyle='rgba(255,100,120,.2)';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+11,cy+2,4,2.5,0,0,Math.PI*2);ctx.fillStyle='rgba(255,100,120,.2)';ctx.fill();
+  // outfit
+  ctx.beginPath();ctx.moveTo(cx-12,cy+20);ctx.lineTo(cx,cy+14);ctx.lineTo(cx+12,cy+20);ctx.fillStyle='#006080';ctx.fill();
+  // earrings
+  ctx.beginPath();ctx.arc(cx-20,cy+1,3,0,Math.PI*2);ctx.fillStyle='#00e5ff';ctx.shadowColor='#00e5ff';ctx.shadowBlur=5;ctx.fill();ctx.shadowBlur=0;
+  ctx.beginPath();ctx.arc(cx+20,cy+1,3,0,Math.PI*2);ctx.fillStyle='#00e5ff';ctx.shadowColor='#00e5ff';ctx.shadowBlur=5;ctx.fill();ctx.shadowBlur=0;
+}
+
+function drawD2(cv){
+  const ctx=cv.getContext('2d'),w=cv.width,cx=w/2,cy=w/2;
+  ctx.clearRect(0,0,w,w);
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,w/2);bg.addColorStop(0,'#280818');bg.addColorStop(1,'#0e0006');
+  ctx.beginPath();ctx.arc(cx,cy,w/2,0,Math.PI*2);ctx.fillStyle=bg;ctx.fill();
+  // face
+  ctx.beginPath();ctx.arc(cx,cy-1,17,0,Math.PI*2);
+  const fg=ctx.createRadialGradient(cx-2,cy-5,2,cx,cy,17);fg.addColorStop(0,'#ffd0b0');fg.addColorStop(1,'#dda070');
+  ctx.fillStyle=fg;ctx.fill();
+  // hair dark red
+  ctx.beginPath();ctx.ellipse(cx,cy-10,19,20,0,Math.PI,Math.PI*2);ctx.fillStyle='#180010';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx-14,cy-6,7,12,.3,0,Math.PI*2);ctx.fillStyle='#180010';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+14,cy-6,7,12,-.3,0,Math.PI*2);ctx.fillStyle='#180010';ctx.fill();
+  // bun
+  ctx.beginPath();ctx.arc(cx+9,cy-20,6,0,Math.PI*2);ctx.fillStyle='#180010';ctx.fill();
+  // hair highlight pink
+  ctx.beginPath();ctx.ellipse(cx+5,cy-16,3,7,.2,0,Math.PI*2);ctx.fillStyle='rgba(224,64,251,.3)';ctx.fill();
+  // eyeshadow
+  [[cx-6,cy-3],[cx+6,cy-3]].forEach(([ex,ey])=>{
+    ctx.beginPath();ctx.ellipse(ex,ey,6,3.5,0,0,Math.PI*2);ctx.fillStyle='rgba(224,64,251,.2)';ctx.fill();
+    ctx.beginPath();ctx.ellipse(ex,ey,4,3,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    ctx.beginPath();ctx.arc(ex,ey,2.5,0,Math.PI*2);ctx.fillStyle='#c040e0';ctx.fill();
+    ctx.beginPath();ctx.arc(ex,ey,1.1,0,Math.PI*2);ctx.fillStyle='#000';ctx.fill();
+    ctx.beginPath();ctx.arc(ex-.7,ey-.7,.7,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  });
+  // lashes
+  for(let i=-2;i<=2;i++){
+    ctx.beginPath();ctx.moveTo(cx-6+i*1.5,cy-6);ctx.lineTo(cx-6+i*1.8,cy-8.5);ctx.strokeStyle='#000';ctx.lineWidth=.8;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+6+i*1.5,cy-6);ctx.lineTo(cx+6+i*1.8,cy-8.5);ctx.stroke();
   }
-},3000);
-document.addEventListener('click',function init(){
-  if(soundOn)startAmbient();
-  document.removeEventListener('click',init);
-},{once:true});
+  ctx.strokeStyle='#180010';ctx.lineWidth=1.8;
+  ctx.beginPath();ctx.moveTo(cx-10,cy-8);ctx.quadraticCurveTo(cx-6,cy-11,cx-2,cy-8);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+2,cy-8);ctx.quadraticCurveTo(cx+6,cy-11,cx+10,cy-8);ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy+3,1.2,0,Math.PI*2);ctx.fillStyle='rgba(180,90,70,.25)';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx,cy+8,5.5,3,0,0,Math.PI*2);ctx.fillStyle='#ff1a50';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx-12,cy+1,4,2.5,0,0,Math.PI*2);ctx.fillStyle='rgba(255,80,120,.25)';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+12,cy+1,4,2.5,0,0,Math.PI*2);ctx.fillStyle='rgba(255,80,120,.25)';ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx-12,cy+20);ctx.lineTo(cx,cy+14);ctx.lineTo(cx+12,cy+20);ctx.fillStyle='#901040';ctx.fill();
+  ctx.beginPath();ctx.arc(cx-19,cy+1,3.5,0,Math.PI*2);ctx.fillStyle='#e040fb';ctx.shadowColor='#e040fb';ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
+  ctx.beginPath();ctx.arc(cx+19,cy+1,3.5,0,Math.PI*2);ctx.fillStyle='#e040fb';ctx.shadowColor='#e040fb';ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
+}
+
+let blinkT=0;
+function animDealers(){
+  blinkT+=.03;
+  const c1=document.getElementById('dc1'),c2=document.getElementById('dc2');
+  drawD1(c1);drawD2(c2);
+  if(Math.sin(blinkT*1.1)>.97){const ctx=c1.getContext('2d');ctx.beginPath();ctx.ellipse(34,31,3.5,1,0,0,Math.PI*2);ctx.fillStyle='#ffb380';ctx.fill();ctx.beginPath();ctx.ellipse(40,31,3.5,1,0,0,Math.PI*2);ctx.fillStyle='#ffb380';ctx.fill();}
+  if(Math.sin(blinkT*.9+1.5)>.97){const ctx=c2.getContext('2d');ctx.beginPath();ctx.ellipse(28,31,4,1,0,0,Math.PI*2);ctx.fillStyle='#ffd0b0';ctx.fill();ctx.beginPath();ctx.ellipse(40,31,4,1,0,0,Math.PI*2);ctx.fillStyle='#ffd0b0';ctx.fill();}
+  requestAnimationFrame(animDealers);
+}
+animDealers();
+
+// ── DEALER SPEECH ────────────────────────────────────────────────────────
+const S1={
+  idle: ['Şansın açık görünüyor! 😉','Bu tur senin! 🎰','Büyük kazanç yakın! ⭐','Kalbim seninle 💙','Döndür bakalım! 🎡'],
+  win:  ['KAZANDIN! 🎉🎉','Harika! Devam et! 🔥','Şampiyon! 👑','Süper kazanç! 💰','Jackpot geliyor! 💎'],
+  lose: ['Üzme kendini 💙','Şans döner! 🍀','Bir daha dene! 🎰','Olmadı bu sefer 😔','Hadi! Tekrar! ⭐'],
+  big:  ['JACKPOT!!! 🎊🎊🎊','İNANILMAZ! 💰💰','BU GECE SENINDIR! 🔥','EFSANE! 👑','NRC YAĞIYOR! 💎💎'],
+};
+const S2={
+  idle: ['Bugün büyük kazanç! 🔥','NRC yağıyor! 💰','Jackpot zamanı! 👑','Hazır mısın? 💎','Şans kapıda! 🍀'],
+  win:  ['İşte bu! Harika! 🎉','Tebrikler! 🏆','Biliyordum! 💕','Bravo! 🎊','Mükemmel! 👑'],
+  lose: ['Endişelenme! 💪','Şans oynar 😊','Yanındayım! 💕','Olacak! 🌟','Yeniden! 🎰'],
+  big:  ['OMG JACKPOT! 🎊','Efsanesin! 💰💰','BU GECE KAZANIYORSUN! 🏆','DUDAK UÇUKLATAN! 🔥','NRC KRALI! 👑'],
+};
+let dealerMode='idle',si1=0,si2=0,dealerTO=null;
+function setMode(mode,dur=4000){
+  dealerMode=mode;
+  const b1=S1[mode]||S1.idle,b2=S2[mode]||S2.idle;
+  document.getElementById('db1').textContent=b1[Math.floor(Math.random()*b1.length)];
+  document.getElementById('db2').textContent=b2[Math.floor(Math.random()*b2.length)];
+  clearTimeout(dealerTO);
+  if(mode!=='idle') dealerTO=setTimeout(()=>setMode('idle'),dur);
+}
+setInterval(()=>{
+  if(dealerMode!=='idle')return;
+  si1=(si1+1)%S1.idle.length;si2=(si2+1)%S2.idle.length;
+  document.getElementById('db1').textContent=S1.idle[si1];
+  document.getElementById('db2').textContent=S2.idle[si2];
+},4000);
+// Listen for game results
+let lastResult='';
+setInterval(()=>{
+  const r=localStorage.getItem('nrc_last_result');
+  if(r&&r!==lastResult){lastResult=r;try{const p=JSON.parse(r);if(Date.now()-p.ts<5000){if(p.win>50000)setMode('big',6000);else if(p.win>0)setMode('win',4000);else setMode('lose',3000);}}catch(e){}}
+},800);
+
+// ── BANNER ANIMATIONS ────────────────────────────────────────────────────
+function animSlotBanner(){
+  const c=document.getElementById('bSlot');if(!c)return;
+  const ctx=c.getContext('2d');c.width=c.offsetWidth||300;c.height=72;
+  const w=c.width,h=c.height;
+  const syms=['7','◆','★','♛','♪'],cols=['#ff1744','#00e5ff','#e040fb','#ffd700','#ffab00'];
+  let t=0;
+  (function draw(){ctx.clearRect(0,0,w,h);const off=(t*25)%w;for(let i=0;i<6;i++){const x=(i*80-off+w)%w-20;const si=(i+Math.floor(t*.15))%5;ctx.font=`bold 32px Orbitron,Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=cols[si];ctx.shadowColor=cols[si];ctx.shadowBlur=12;ctx.globalAlpha=.25+.08*Math.sin(t*.04+i);ctx.fillText(syms[si],x,h/2);}ctx.globalAlpha=1;ctx.shadowBlur=0;t++;requestAnimationFrame(draw);})();
+}
+function animRuletBanner(){
+  const c=document.getElementById('bRulet');if(!c)return;
+  const ctx=c.getContext('2d');c.width=c.offsetWidth||300;c.height=72;
+  const w=c.width,h=c.height,cx=w/2,cy=h/2;let rot=0;
+  (function draw(){ctx.clearRect(0,0,w,h);for(let i=0;i<12;i++){const a=i*Math.PI/6+rot;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,28,a,a+Math.PI/6-.02);ctx.closePath();ctx.fillStyle=i%2===0?'rgba(139,26,26,.6)':'rgba(20,20,20,.6)';ctx.fill();}ctx.beginPath();ctx.arc(cx,cy,28,0,Math.PI*2);ctx.strokeStyle='rgba(0,230,118,.35)';ctx.lineWidth=2;ctx.stroke();ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle='#00e5ff';ctx.shadowColor='#00e5ff';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;rot+=.012;requestAnimationFrame(draw);})();
+}
+function animBjBanner(){
+  const c=document.getElementById('bBj');if(!c)return;
+  const ctx=c.getContext('2d');c.width=c.offsetWidth||300;c.height=72;
+  const w=c.width,h=c.height;
+  const cards=[{r:'A',s:'♥',col:'#c0392b'},{r:'K',s:'♠',col:'#aaa'},{r:'Q',s:'♦',col:'#c0392b'},{r:'J',s:'♣',col:'#aaa'}];
+  let t=0;
+  (function draw(){ctx.clearRect(0,0,w,h);const cx=w/2;cards.forEach((cd,i)=>{const ox=(i-1.5)*34+Math.sin(t*.025+i)*3;const oy=h/2+Math.sin(t*.03+i*1.2)*3;ctx.save();ctx.translate(cx+ox,oy);ctx.rotate(Math.sin(t*.015+i)*.08);ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=6;ctx.shadowOffsetY=2;ctx.fillStyle='#f8f4ec';ctx.beginPath();ctx.roundRect(-16,-24,32,48,3);ctx.fill();ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.font='bold 16px Orbitron,Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=cd.col;ctx.fillText(cd.r,0,-7);ctx.font='12px Arial';ctx.fillText(cd.s,0,9);ctx.restore();});t++;requestAnimationFrame(draw);})();
+}
+setTimeout(animSlotBanner,100);setTimeout(animRuletBanner,150);setTimeout(animBjBanner,200);
+
+// ── JACKPOT ───────────────────────────────────────────────────────────────
+let jv=1247830;
+setInterval(()=>{jv+=Math.floor(Math.random()*40+5);document.getElementById('jackpot').textContent=fmt(jv);},800);
+
+// ── SOUND ─────────────────────────────────────────────────────────────────
+let soundOn=false,ac,bgNodes=[];
+function getAC(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();return ac;}
+function stopBg(){bgNodes.forEach(n=>{try{n.stop();}catch(e){}});bgNodes=[];}
+function startBg(){
+  stopBg();try{
+    const a=getAC(),master=a.createGain();master.gain.value=.04;master.connect(a.destination);
+    const bassNotes=[65.4,98,110,98];const bassG=a.createGain();bassG.gain.value=1.2;bassG.connect(master);
+    for(let i=0;i<32;i++){const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(bassG);o.type='triangle';o.frequency.value=bassNotes[i%4];g.gain.setValueAtTime(.8,a.currentTime+i*.5);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.5+.45);o.start(a.currentTime+i*.5);o.stop(a.currentTime+i*.5+.5);bgNodes.push(o);}
+    const chords=[[261.6,329.6,392],[293.7,369.9,440]];const padG=a.createGain();padG.gain.value=.3;padG.connect(master);
+    chords.forEach((ch,ci)=>{ch.forEach(freq=>{const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(padG);o.type='sine';o.frequency.value=freq;const t=a.currentTime+ci*4;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.35,t+.3);g.gain.linearRampToValueAtTime(0,t+4);o.start(t);o.stop(t+4.1);bgNodes.push(o);});});
+    [[523,.1],[659,.09],[784,.09],[1047,.08]].forEach(([f,s],i)=>{const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(master);o.type='square';o.frequency.value=f;g.gain.setValueAtTime(.12,a.currentTime+i*s);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*s+.12);o.start(a.currentTime+i*s);o.stop(a.currentTime+i*s+.15);bgNodes.push(o);});
+    setTimeout(()=>{if(soundOn)startBg();},16000);
+  }catch(e){}
+}
+function playCoin(){try{const a=getAC();[880,1100,1320].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.15,a.currentTime+i*.06);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.06+.15);o.start(a.currentTime+i*.06);o.stop(a.currentTime+i*.06+.18);});}catch(e){}}
+document.getElementById('soundBtn').addEventListener('click',()=>{
+  soundOn=!soundOn;document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';
+  if(soundOn){startBg();playCoin();}else stopBg();
+});
+document.querySelectorAll('.gc').forEach(gc=>gc.addEventListener('click',()=>{if(soundOn)playCoin();}));
+document.addEventListener('click',function init(){if(soundOn)startBg();document.removeEventListener('click',init);},{once:true});
 
 })();
 </script>
