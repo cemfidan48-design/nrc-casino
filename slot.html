@@ -190,10 +190,12 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 
 // ── STORAGE ──────────────────────────────────────────────────────────────
 const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
-const getBal=()=>{const v=localStorage.getItem(BAL_KEY);return v!==null?parseInt(v):INIT;};
+const getBal=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
+function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_usd','1000');localStorage.setItem('nrc_initialized','1');}}
 const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
 const addStat=(w,l)=>{const s=getStats();s.spins++;s.wins+=w;s.loss+=l;localStorage.setItem(STATS_KEY,JSON.stringify(s));};
+function trackMission(key,inc=1){const m=JSON.parse(localStorage.getItem("nrc_missions")||"{}");m[key]=(m[key]||0)+inc;localStorage.setItem("nrc_missions",JSON.stringify(m));}
 const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
 
 // ── SYMBOLS ───────────────────────────────────────────────────────────────
@@ -376,12 +378,13 @@ function doSpin(){
   reelAnim=[];
   for(let r=0;r<REELS;r++){
     reelAnim[r]={
-      phase:'spin',   // spin -> decel -> done
+      phase:'spin',
       t:0,
-      delay:r*120,    // stagger
-      spinDur:1800+r*300,
+      delay:r*180,       // more stagger between reels
+      spinDur:1600+r*400, // each reel spins longer
       newSyms:newGrids[r],
-      blurAmt:8,
+      blurAmt:10,
+      bounced:false,     // bounce effect on stop
     };
   }
 
@@ -399,45 +402,65 @@ function doSpin(){
       const t=elapsed-a.delay;
 
       if(a.phase==='spin'){
-        // Fast spinning with blur
         const prog=t/a.spinDur;
         if(prog>=1){
           a.phase='decel';
-          a.t=0;
         } else {
-          // Cycle through random symbols quickly
-          const idx=Math.floor(t/60)%ROWS;
-          blurs.push(a.blurAmt*(1-prog*0.3));
+          // Blur peaks at start, gradually reduces
+          const blurVal = a.blurAmt * (1 - Math.pow(prog, 0.4));
+          blurs.push(blurVal);
           allDone=false;
-          // Show scrambled symbols
-          for(let row=0;row<ROWS;row++) tempGrid[r][row]=randSym();
+          // Fast symbol cycling — changes every 50ms
+          const cycleIdx = Math.floor(t/50);
+          for(let row=0;row<ROWS;row++) tempGrid[r][(row+cycleIdx)%ROWS]=randSym();
         }
       }
 
       if(a.phase==='decel'){
-        a.t+=(now-(startTime+a.delay+a.spinDur))*0;
-        const decelDur=400;
+        const decelDur=600;
         const dt=t-a.spinDur;
         const prog=Math.min(1,dt/decelDur);
-        const ease=1-Math.pow(1-prog,4); // ease out quart
+        // Ease out quint for smooth slowdown
+        const ease=1-Math.pow(1-prog,5);
 
-        blurs.push(a.blurAmt*(1-ease)*0.5);
+        // Blur fades out
+        blurs.push(a.blurAmt*(1-ease)*0.6);
 
-        if(prog<0.5){
-          // Still showing random
+        if(prog<0.6){
+          // Still scrambling but slowing
+          const slowCycle = Math.floor(dt/Math.max(20, 100*ease));
+          for(let row=0;row<ROWS;row++) tempGrid[r][(row+slowCycle)%ROWS]=randSym();
+        } else if(prog<0.85){
+          // Blend between random and final
           for(let row=0;row<ROWS;row++) tempGrid[r][row]=randSym();
         } else {
-          // Settling into final
+          // Final symbols locked in
           for(let row=0;row<ROWS;row++) tempGrid[r][row]=a.newSyms[row];
         }
 
         if(prog>=1){
-          a.phase='done';
+          a.phase='bounce';
+          a.bounceT=0;
           for(let row=0;row<ROWS;row++) grid[r][row]=a.newSyms[row];
-          blurs[r]=0;
+          // Play stop sound for each reel
+          playReelStop(r);
         } else {
           allDone=false;
         }
+      }
+
+      if(a.phase==='bounce'){
+        // Quick bounce effect — symbol slightly overshoots then settles
+        a.bounceT = a.bounceT || 0;
+        a.bounceT += 16;
+        const bounceDur = 200;
+        const bp = Math.min(1, a.bounceT/bounceDur);
+        // Damped bounce
+        const bounce = Math.sin(bp * Math.PI * 2) * (1-bp) * 0.3;
+        blurs.push(Math.max(0, bounce * 2));
+        for(let row=0;row<ROWS;row++) tempGrid[r][row]=grid[r][row];
+        if(bp>=1){ a.phase='done'; blurs[r]=0; }
+        else allDone=false;
       }
 
       if(a.phase==='done'){
@@ -462,11 +485,14 @@ function doSpin(){
       if(result.totalWin>0){
         setBal(getBal()+result.totalWin);
         addStat(result.totalWin,0);
+        trackMission('slot_spins');
+        localStorage.setItem('nrc_last_result',JSON.stringify({win:result.totalWin,ts:Date.now()}));
         setMsg('🎉 KAZANDIN!','+'+fmt(result.totalWin)+' NRC');
         playWinSound(result.totalWin);
         drawAll([],result.winRows);
       } else {
         addStat(0,freeSpins>0?0:totalBet);
+        trackMission('slot_spins');
         setMsg('Tekrar dene!','');
         playLoseSound();
         drawAll();
@@ -547,6 +573,12 @@ function tone(f,d,t='sine',g=.15,start=0){
 }
 function playSpinSound(){
   for(let i=0;i<8;i++) tone(300+i*50,.04,'square',.06,i*.08);
+}
+function playReelStop(reelIdx){
+  // Each reel makes a satisfying thunk sound
+  const freqs=[200,180,160,140,120];
+  tone(freqs[reelIdx]||160,.08,'square',.15);
+  setTimeout(()=>tone(freqs[reelIdx]*1.2||180,.06,'sine',.08),50);
 }
 function playWinSound(amt){
   if(amt>50000){

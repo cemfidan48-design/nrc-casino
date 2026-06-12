@@ -25,41 +25,27 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .ni.active .ni-lbl{color:var(--pink);}
 .ni.active .ni-icon{filter:drop-shadow(0 0 8px var(--pink));}
 
-.hdr{padding:14px 0 10px;display:flex;justify-content:space-between;align-items:center;}
+.hdr{padding:14px 0 8px;display:flex;justify-content:space-between;align-items:center;}
 .gtitle{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:.12em;background:linear-gradient(135deg,#00e5ff,#e040fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .bchip{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:6px 14px;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--gold);}
 
-/* WIN BANNER */
-.win-banner{height:34px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;}
+.win-banner{height:32px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;}
 .wm{color:var(--ivory);}
-.wa{color:var(--gold);text-shadow:0 0 12px rgba(255,215,0,.5);}
+.wa{color:var(--gold);text-shadow:0 0 12px rgba(255,215,0,.6);}
 
 /* BOARD */
 .board-wrap{
   background:linear-gradient(180deg,#0a0428,#060214);
-  border:2px solid rgba(0,229,255,.3);
-  border-radius:16px;
-  padding:10px 8px 0;
-  margin-bottom:10px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 0 30px rgba(0,229,255,.1),inset 0 0 20px rgba(0,0,0,.5);
+  border:2px solid rgba(0,229,255,.25);
+  border-radius:16px;padding:8px 8px 0;
+  margin-bottom:10px;position:relative;overflow:hidden;
+  box-shadow:0 0 30px rgba(0,229,255,.08),inset 0 0 20px rgba(0,0,0,.5);
 }
-.board-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,.08),transparent 50%);pointer-events:none;}
-#plinkoCanvas{display:block;width:100%;}
-
-/* MULTIPLIER BUCKETS */
-.buckets{display:flex;gap:2px;padding:0 0 8px;}
-.bucket{
-  flex:1;text-align:center;border-radius:6px;padding:5px 2px;
-  font-family:'Orbitron',monospace;font-size:8px;font-weight:700;
-  transition:transform .1s;
-}
-.bucket.hit{transform:scale(1.15);animation:bucketHit .3s ease-out;}
-@keyframes bucketHit{0%{transform:scale(1.3);}100%{transform:scale(1);}}
+.board-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,.06),transparent 50%);pointer-events:none;}
+#plinkoCanvas{display:block;width:100%;border-radius:8px;}
 
 /* BET PANEL */
-.bet-panel{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:13px 14px;display:flex;flex-direction:column;gap:10px;margin-bottom:10px;}
+.bet-panel{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;margin-bottom:10px;}
 .plbl{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ivdim);}
 
 .bet-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -77,17 +63,22 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .c4{background:radial-gradient(circle at 35% 35%,#9c27b0,#4a0072);color:#fff;}
 .c5{background:radial-gradient(circle at 35% 35%,#ffd700,#e65100);color:#333;}
 
-/* RISK */
 .risk-row{display:flex;gap:6px;}
 .risk-btn{flex:1;padding:9px 4px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.04);color:var(--ivdim);font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;cursor:pointer;text-align:center;transition:all .15s;}
 .risk-btn.sel{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.08);}
 
-/* DROP BUTTON */
-.drop-btn{width:100%;padding:17px;border:none;border-radius:14px;font-family:'Orbitron',monospace;font-size:17px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,#00e5ff,#0097a7);color:#001a1f;box-shadow:0 0 20px rgba(0,229,255,.35),0 5px 0 #004d5c;transition:transform .1s,box-shadow .1s,opacity .15s;margin-bottom:10px;}
+.rows-row{display:flex;gap:6px;}
+.rows-btn{flex:1;padding:8px 2px;border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(255,255,255,.03);color:var(--ivdim);font-family:'Orbitron',monospace;font-size:9px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;}
+.rows-btn.sel{border-color:var(--pink);color:var(--pink);background:rgba(224,64,251,.08);}
+
+.drop-btn{width:100%;padding:17px;border:none;border-radius:14px;font-family:'Orbitron',monospace;font-size:17px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--cyan),#0097a7);color:#001a1f;box-shadow:0 0 20px rgba(0,229,255,.35),0 5px 0 #004d5c;transition:transform .1s,box-shadow .1s,opacity .15s;margin-bottom:10px;}
 .drop-btn:active:not([disabled]){transform:translateY(4px);box-shadow:0 0 10px rgba(0,229,255,.2),0 1px 0 #004d5c;}
 .drop-btn[disabled]{opacity:.5;cursor:default;}
 
-/* STATS */
+/* HISTORY */
+.hist-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;min-height:24px;}
+.hr-dot{padding:3px 7px;border-radius:6px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;}
+
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
 .sc{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 8px;text-align:center;}
 .sv{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--gold);}
@@ -109,9 +100,8 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
   <span class="wa" id="winAmt"></span>
 </div>
 
-<div class="board-wrap">
+<div class="board-wrap" id="boardWrap">
   <canvas id="plinkoCanvas"></canvas>
-  <div class="buckets" id="buckets"></div>
 </div>
 
 <div class="bet-panel">
@@ -140,9 +130,18 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
     <button class="risk-btn" data-r="med">ORTA</button>
     <button class="risk-btn" data-r="high">YÜKSEK</button>
   </div>
+  <div class="plbl">Satır Sayısı</div>
+  <div class="rows-row">
+    <button class="rows-btn sel" data-rows="8">8</button>
+    <button class="rows-btn" data-rows="12">12</button>
+    <button class="rows-btn" data-rows="16">16</button>
+  </div>
 </div>
 
 <button class="drop-btn" id="dropBtn">▼ TOPU BIRAK</button>
+
+<div class="plbl" style="margin-bottom:6px;">Son Düşüşler</div>
+<div class="hist-row" id="histRow"></div>
 
 <div class="stats">
   <div class="sc"><div class="sv" id="stD">0</div><div class="sl">Düşüş</div></div>
@@ -166,54 +165,86 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 
 // ── STORAGE ───────────────────────────────────────────────────────────────
 const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
-const getBal=()=>{const v=localStorage.getItem(BAL_KEY);return v!==null?parseInt(v):INIT;};
+const getBal=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
+function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_usd','1000');localStorage.setItem('nrc_initialized','1');}}
 const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
 const addStat=(w,l)=>{const s=getStats();s.spins++;s.wins+=w;s.loss+=l;localStorage.setItem(STATS_KEY,JSON.stringify(s));};
+function trackMission(key,inc=1){const m=JSON.parse(localStorage.getItem('nrc_missions')||'{}');m[key]=(m[key]||0)+inc;localStorage.setItem('nrc_missions',JSON.stringify(m));}
 const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
 
-// ── MULTIPLIERS ───────────────────────────────────────────────────────────
-const MULTS = {
-  low:  [1.5, 1.2, 1.0, 0.8, 0.5, 0.3, 0.5, 0.8, 1.0, 1.2, 1.5],
-  med:  [5,   3,   2,   1.5, 0.8, 0.3, 0.8, 1.5, 2,   3,   5  ],
-  high: [110, 41,  10,  5,   3,   0.3, 3,   5,   10,  41,  110 ],
+// ── MULTIPLIER TABLES (Stake.com benzeri gerçekçi değerler) ───────────────
+// Her rows için bucket sayısı = rows + 1
+// Simetrik tablo — ortada düşük, kenarda yüksek
+const MULT_TABLES = {
+  8: {
+    low:  [5.6, 2.1, 1.1, 1.0, 0.5, 1.0, 1.1, 2.1, 5.6],
+    med:  [13,  3,   1.3, 0.7, 0.4, 0.7, 1.3, 3,   13],
+    high: [29,  4,   1.5, 0.3, 0.2, 0.3, 1.5, 4,   29],
+  },
+  12: {
+    low:  [8.9, 3,   1.4, 1.1, 1.0, 0.5, 0.5, 1.0, 1.1, 1.4, 3,   8.9],
+    med:  [24,  6,   2,   1.4, 0.6, 0.4, 0.4, 0.6, 1.4, 2,   6,   24],
+    high: [88,  10,  3,   1.4, 0.4, 0.2, 0.2, 0.4, 1.4, 3,   10,  88],
+  },
+  16: {
+    low:  [16,  9,   2,   1.4, 1.4, 1.2, 1.1, 1.0, 0.5, 1.0, 1.1, 1.2, 1.4, 1.4, 2,   9,   16],
+    med:  [110, 41,  10,  5,   3,   1.5, 1.0, 0.5, 0.3, 0.5, 1.0, 1.5, 3,   5,   10,  41,  110],
+    high: [1000,130, 26,  9,   4,   2,   0.7, 0.2, 0.2, 0.2, 0.7, 2,   4,   9,   26,  130, 1000],
+  },
 };
-const BUCKET_COLORS = {
-  low:  ['#00e676','#4caf50','#8bc34a','#cddc39','#ff9800','#ff5722','#ff9800','#cddc39','#8bc34a','#4caf50','#00e676'],
-  med:  ['#00e5ff','#29b6f6','#42a5f5','#66bb6a','#ff9800','#ff5722','#ff9800','#66bb6a','#42a5f5','#29b6f6','#00e5ff'],
-  high: ['#e040fb','#ab47bc','#7e57c2','#42a5f5','#26c6da','#ff5722','#26c6da','#42a5f5','#7e57c2','#ab47bc','#e040fb'],
-};
+
+// Bucket renkleri — ortadan kenara kırmızı→yeşil
+function getBucketColor(idx, total, risk){
+  const center = (total-1)/2;
+  const dist = Math.abs(idx - center) / center; // 0=center, 1=edge
+  if(risk==='low'){
+    const r=Math.floor(dist*180+75);
+    const g=Math.floor((1-dist)*200+55);
+    return `rgb(${r},${g},50)`;
+  } else if(risk==='med'){
+    if(dist<0.3) return '#ff5722';
+    if(dist<0.6) return '#ff9800';
+    return '#4caf50';
+  } else {
+    if(dist<0.2) return '#ff1744';
+    if(dist<0.4) return '#ff6d00';
+    if(dist<0.7) return '#ffd700';
+    return '#00e676';
+  }
+}
 
 // ── CANVAS ────────────────────────────────────────────────────────────────
 const canvas = document.getElementById('plinkoCanvas');
 const ctx = canvas.getContext('2d');
 let W, H;
-const ROWS = 12;
-const COLS = ROWS + 1; // buckets = ROWS + 1 = 13... we'll use 11 buckets
-const BUCKET_COUNT = 11;
+let numRows = 8;
+let risk = 'low';
+let betAmt = 100;
 
 function resize(){
-  const wrap = document.querySelector('.board-wrap');
+  const wrap = document.getElementById('boardWrap');
   W = wrap.clientWidth - 16;
   canvas.width = W;
-  canvas.height = W * 1.1;
+  canvas.height = Math.min(W * 1.15, 420);
   H = canvas.height;
-  buildBuckets();
-  drawBoard();
+  drawBoard([]);
 }
-window.addEventListener('resize', resize);
+window.addEventListener('resize', ()=>{ resize(); });
 
-// ── PINS ──────────────────────────────────────────────────────────────────
+// ── PIN POSITIONS ─────────────────────────────────────────────────────────
 function getPins(){
   const pins = [];
-  const padX = W * 0.08;
-  const padY = H * 0.06;
+  const padX = W * 0.06;
+  const padTop = H * 0.04;
+  const padBot = H * 0.14; // space for buckets
+  const usableH = H - padTop - padBot;
   const usableW = W - padX * 2;
-  const usableH = H - padY * 2;
-  for(let row = 0; row < ROWS; row++){
+
+  for(let row = 0; row < numRows; row++){
     const cols = row + 3;
     const spacingX = usableW / (cols - 1);
-    const y = padY + (usableH / (ROWS - 1)) * row;
+    const y = padTop + (usableH / (numRows - 1)) * row;
     for(let col = 0; col < cols; col++){
       const x = (W - spacingX * (cols - 1)) / 2 + col * spacingX;
       pins.push({x, y, row, col});
@@ -222,237 +253,352 @@ function getPins(){
   return pins;
 }
 
+// ── BUCKET POSITIONS ─────────────────────────────────────────────────────
+function getBuckets(){
+  const mults = MULT_TABLES[numRows][risk];
+  const count = mults.length; // numRows + 1
+  const bw = W / count;
+  const by = H - H * 0.12;
+  const bh = H * 0.1;
+  return mults.map((m, i) => ({
+    x: i * bw,
+    y: by,
+    w: bw,
+    h: bh,
+    mult: m,
+    color: getBucketColor(i, count, risk),
+    lit: false,
+    litT: 0,
+  }));
+}
+
+let buckets = [];
+
 // ── DRAW BOARD ────────────────────────────────────────────────────────────
 function drawBoard(balls){
   ctx.clearRect(0, 0, W, H);
-  // bg gradient
+
+  // Background
   const bg = ctx.createLinearGradient(0, 0, 0, H);
   bg.addColorStop(0, '#0a0428');
   bg.addColorStop(1, '#060214');
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, W, H);
 
-  // pins
+  // Pins
   const pins = getPins();
+  const PIN_R = Math.max(3, W * 0.012);
   for(const p of pins){
+    // Glow
+    const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, PIN_R * 2.5);
+    grd.addColorStop(0, 'rgba(0,229,255,0.3)');
+    grd.addColorStop(1, 'transparent');
     ctx.beginPath();
-    ctx.arc(p.x, p.y, Math.max(3, W * 0.013), 0, Math.PI * 2);
-    ctx.fillStyle = '#00e5ff';
-    ctx.shadowColor = '#00e5ff';
-    ctx.shadowBlur = 6;
+    ctx.arc(p.x, p.y, PIN_R * 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
     ctx.fill();
+    // Pin
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, PIN_R, 0, Math.PI * 2);
+    ctx.fillStyle = '#00e5ff';
+    ctx.fill();
+  }
+
+  // Buckets
+  buckets = getBuckets();
+  const now = performance.now();
+  for(const b of buckets){
+    const age = now - b.litT;
+    const litAlpha = b.lit ? Math.max(0, 1 - age / 400) : 0;
+    if(litAlpha <= 0) b.lit = false;
+
+    // Bucket bg
+    ctx.fillStyle = b.color + (litAlpha > 0 ? 'ff' : '33');
+    ctx.beginPath();
+    ctx.roundRect(b.x + 1, b.y, b.w - 2, b.h, 4);
+    ctx.fill();
+
+    // Lit glow
+    if(litAlpha > 0){
+      ctx.fillStyle = b.color + Math.floor(litAlpha * 80).toString(16).padStart(2,'0');
+      ctx.beginPath();
+      ctx.roundRect(b.x + 1, b.y - 10, b.w - 2, b.h + 10, 4);
+      ctx.fill();
+    }
+
+    // Multiplier text
+    ctx.fillStyle = litAlpha > 0 ? '#fff' : b.color;
+    ctx.font = `bold ${Math.max(7, W * 0.028)}px Orbitron,monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = litAlpha > 0 ? '#fff' : b.color;
+    ctx.shadowBlur = litAlpha > 0 ? 8 : 3;
+    const label = b.mult >= 100 ? b.mult + '×' : b.mult + '×';
+    ctx.fillText(label, b.x + b.w/2, b.y + b.h/2);
     ctx.shadowBlur = 0;
   }
 
-  // balls
-  if(balls) for(const b of balls) drawBallObj(b);
+  // Balls
+  for(const b of balls) drawBall(b);
 }
 
-function drawBallObj(b){
+function drawBall(b){
+  const BALL_R = Math.max(5, W * 0.018);
+  const bx = b.x, by = b.y;
+
+  // Shadow
   ctx.beginPath();
-  ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-  const g = ctx.createRadialGradient(b.x - b.r*.3, b.y - b.r*.3, b.r*.05, b.x, b.y, b.r);
+  ctx.arc(bx + 2, by + 2, BALL_R * 1.1, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  ctx.fill();
+
+  // Trail
+  if(b.trail && b.trail.length > 1){
+    for(let i = 1; i < b.trail.length; i++){
+      const alpha = (i / b.trail.length) * 0.3;
+      ctx.beginPath();
+      ctx.arc(b.trail[i].x, b.trail[i].y, BALL_R * (i/b.trail.length) * 0.8, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(0,229,255,${alpha})`;
+      ctx.fill();
+    }
+  }
+
+  // Ball
+  const g = ctx.createRadialGradient(bx - BALL_R*.35, by - BALL_R*.4, BALL_R*.04, bx, by, BALL_R);
   g.addColorStop(0, '#ffffff');
   g.addColorStop(.4, '#c0d8ff');
   g.addColorStop(1, '#304060');
-  ctx.fillStyle = g;
-  ctx.shadowColor = 'rgba(0,229,255,.5)';
+  ctx.beginPath();
+  ctx.arc(bx, by, BALL_R, 0, Math.PI * 2);
+  ctx.shadowColor = 'rgba(0,229,255,.6)';
   ctx.shadowBlur = 8;
+  ctx.fillStyle = g;
   ctx.fill();
   ctx.shadowBlur = 0;
-  // specular
+
+  // Specular
   ctx.beginPath();
-  ctx.arc(b.x - b.r*.25, b.y - b.r*.3, b.r*.2, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255,255,255,.75)';
+  ctx.arc(bx - BALL_R*.28, by - BALL_R*.32, BALL_R*.2, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,.8)';
   ctx.fill();
 }
 
-// ── BUCKETS UI ────────────────────────────────────────────────────────────
-let risk = 'low';
-function buildBuckets(){
-  const cont = document.getElementById('buckets');
-  const mults = MULTS[risk];
-  const colors = BUCKET_COLORS[risk];
-  cont.innerHTML = mults.map((m,i)=>`
-    <div class="bucket" id="bucket_${i}" style="background:${colors[i]}22;border:1px solid ${colors[i]}55;color:${colors[i]};">
-      ${m}×
-    </div>
-  `).join('');
+// ── DETERMINISTIC PATH (key innovation) ──────────────────────────────────
+// Top'un hangi bucket'a düşeceğini önceden hesapla
+// Her pin'de ya sola ya sağa gider — gerçek plinko fiziği
+// Ama path'i önceden belirle, sonra animasyonla göster
+function calcPath(startCol, numRows){
+  // startCol = başlangıç noktası (en üst sıra, ortaya yakın)
+  // Her sırada bir adım sola veya sağa
+  let col = startCol; // float — ortadan başla
+  const path = [{row: -1, col: col}];
+
+  for(let row = 0; row < numRows; row++){
+    // Gerçek randomness — ama hafif orta ağırlık
+    const goRight = Math.random() < 0.5;
+    if(goRight) col += 1;
+    // col artık 0..row+2 arasında
+    path.push({row, col});
+  }
+
+  // Final bucket index = col (0..numRows dahil)
+  const bucketIdx = Math.round(col);
+  return {path, bucketIdx: Math.min(numRows, Math.max(0, bucketIdx))};
 }
 
-function flashBucket(idx){
-  const el = document.getElementById('bucket_'+idx);
-  if(!el) return;
-  el.classList.remove('hit');
-  void el.offsetWidth;
-  el.classList.add('hit');
-}
-
-// ── PHYSICS ───────────────────────────────────────────────────────────────
+// ── ANIMATION ─────────────────────────────────────────────────────────────
 let activeBalls = [];
 let animId = null;
-let dropping = false;
+let isDropping = false;
+const BALL_R_BASE = () => Math.max(5, W * 0.018);
 
 function dropBall(bet){
   const pins = getPins();
-  const PIN_R = Math.max(3, W * 0.013);
-  const BALL_R = Math.max(4, W * 0.016); // daha küçük top
+  const BALL_R = BALL_R_BASE();
 
-  // Start near top center with slight random offset
-  const startX = W/2 + (Math.random() - 0.5) * W * 0.05;
+  // Calculate path first
+  const {path, bucketIdx} = calcPath(0, numRows);
+
+  // Convert path to world coordinates
+  // row=-1 is above board, row 0..numRows-1 are pin rows
+  const padX = W * 0.06;
+  const padTop = H * 0.04;
+  const padBot = H * 0.14;
+  const usableH = H - padTop - padBot;
+  const usableW = W - padX * 2;
+
+  function pinXY(row, col){
+    const cols = row + 3;
+    const spacingX = usableW / (cols - 1);
+    const x = (W - spacingX * (cols - 1)) / 2 + col * spacingX;
+    const y = padTop + (usableH / (numRows - 1)) * row;
+    return {x, y};
+  }
+
+  // Build waypoints
+  const waypoints = [];
+
+  // Start: above first row, centered
+  waypoints.push({x: W/2 + (Math.random()-0.5)*4, y: padTop - BALL_R * 2});
+
+  // Each step: between two pins
+  for(let i = 0; i < path.length - 1; i++){
+    const curr = path[i];
+    const next = path[i+1];
+
+    if(next.row >= 0 && next.row < numRows){
+      const pos = pinXY(next.row, next.col);
+      // Add slight random offset to avoid perfectly straight lines
+      waypoints.push({
+        x: pos.x + (Math.random()-0.5)*6,
+        y: pos.y + BALL_R * 1.5
+      });
+    }
+  }
+
+  // Final: bucket center
+  const bk = getBuckets()[bucketIdx];
+  waypoints.push({x: bk.x + bk.w/2, y: bk.y + bk.h/2});
+
   const ball = {
-    x: startX, y: H * 0.02,
-    vx: (Math.random() - 0.5) * 1.5,
-    vy: 0,
+    x: waypoints[0].x,
+    y: waypoints[0].y,
+    waypoints,
+    wpIdx: 0,
+    progress: 0,
+    speed: 0,
     r: BALL_R,
-    bet: bet,
+    bet,
+    bucketIdx,
     done: false,
     trail: [],
   };
 
   activeBalls.push(ball);
-
   if(!animId) animId = requestAnimationFrame(physicsLoop);
 }
 
-function physicsLoop(){
-  const pins = getPins();
-  const PIN_R = Math.max(3, W * 0.013);
-  const GRAVITY = 0.4;
-  const DAMPEN = 0.5;
-  const bucketY = H - 10;
+const GRAVITY_PER_MS = 0.0006; // acceleration
+const MAX_SPEED = 0.018; // max progress per ms
 
-  // Update each ball
+function physicsLoop(now){
+  let hasActive = false;
+  const dt = 16; // ~60fps
+
   for(const b of activeBalls){
     if(b.done) continue;
+    hasActive = true;
 
-    b.vy += GRAVITY;
-    b.x += b.vx;
-    b.y += b.vy;
+    // Accelerate toward next waypoint
+    b.speed = Math.min(MAX_SPEED, b.speed + GRAVITY_PER_MS * dt);
+    b.progress += b.speed * dt;
 
-    // Wall bounce
-    if(b.x - b.r < 0){ b.x = b.r; b.vx = Math.abs(b.vx) * DAMPEN; }
-    if(b.x + b.r > W){ b.x = W - b.r; b.vx = -Math.abs(b.vx) * DAMPEN; }
+    if(b.progress >= 1){
+      b.wpIdx++;
+      b.progress = 0;
+      // Slow down on pin hit
+      b.speed *= 0.6;
+      playPinSound();
 
-    // Pin collisions
-    for(const p of pins){
-      const dx = b.x - p.x, dy = b.y - p.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      const minD = b.r + PIN_R + 2;
-      if(dist < minD && dist > 0.1){
-        const nx = dx/dist, ny = dy/dist;
-        // Push out completely
-        b.x = p.x + nx * (minD + 0.5);
-        b.y = p.y + ny * (minD + 0.5);
-        const dot = b.vx*nx + b.vy*ny;
-        if(dot < 0){ // only bounce if moving toward pin
-          b.vx -= 2*dot*nx * DAMPEN;
-          b.vy -= 2*dot*ny * DAMPEN;
+      if(b.wpIdx >= b.waypoints.length - 1){
+        // Reached bucket
+        const bk = getBuckets()[b.bucketIdx];
+        b.x = bk.x + bk.w/2;
+        b.y = bk.y + bk.h/2;
+        b.done = true;
+
+        // Light up bucket
+        if(buckets[b.bucketIdx]){
+          buckets[b.bucketIdx].lit = true;
+          buckets[b.bucketIdx].litT = performance.now();
         }
-        // Ensure minimum downward velocity
-        if(b.vy < 0.5) b.vy = 0.5;
-        // Random nudge
-        b.vx += (Math.random() - 0.5) * 1.2;
-        playPinSound();
+
+        // Calculate result
+        const mult = MULT_TABLES[numRows][risk][b.bucketIdx] || 0;
+        const win = Math.floor(b.bet * mult);
+        const profit = win - b.bet;
+
+        if(profit > 0){
+          setBal(getBal() + win);
+          addStat(profit, 0);
+          setMsg(`${mult}× — +${fmt(profit)} NRC`, '+'+fmt(profit)+' NRC');
+          playWin(profit);
+        } else if(win === b.bet){
+          setBal(getBal() + win);
+          setMsg(`${mult}× — Baş başa`, '');
+        } else {
+          setBal(getBal() + win);
+          addStat(0, b.bet - win);
+          setMsg(`${mult}× — −${fmt(b.bet - win)} NRC`, '');
+          playLose();
+        }
+
+        localStorage.setItem('nrc_last_result', JSON.stringify({win:profit>0?profit:0,ts:Date.now()}));
+        pushHistory(mult, profit);
+        renderStats();
+
+        setTimeout(()=>{
+          activeBalls = activeBalls.filter(x=>x!==b);
+          if(activeBalls.length===0){
+            isDropping = false;
+            document.getElementById('dropBtn').disabled = false;
+            cancelAnimationFrame(animId);
+            animId = null;
+          }
+        }, 800);
+        continue;
       }
     }
+
+    // Interpolate position
+    const curr = b.waypoints[b.wpIdx];
+    const next = b.waypoints[Math.min(b.wpIdx+1, b.waypoints.length-1)];
+    const ease = b.progress * b.progress * (3 - 2 * b.progress); // smoothstep
+    b.x = curr.x + (next.x - curr.x) * ease;
+    b.y = curr.y + (next.y - curr.y) * ease;
 
     // Trail
     b.trail.push({x:b.x, y:b.y});
-    if(b.trail.length > 8) b.trail.shift();
-
-    // Reached bottom?
-    if(b.y + b.r >= bucketY){
-      b.y = bucketY - b.r;
-      b.done = true;
-
-      // Determine bucket
-      const bucketW = W / BUCKET_COUNT;
-      const bucketIdx = Math.min(BUCKET_COUNT - 1, Math.max(0, Math.floor(b.x / bucketW)));
-      const mult = MULTS[risk][bucketIdx];
-      const win = Math.floor(b.bet * mult);
-
-      flashBucket(bucketIdx);
-
-      if(win > b.bet){
-        setBal(getBal() + win);
-        addStat(win - b.bet, 0);
-        setMsg(`🎉 ${mult}× — +${fmt(win - b.bet)} NRC`, '+'+fmt(win-b.bet)+' NRC');
-        playWin(win);
-      } else if(win === b.bet){
-        setBal(getBal() + win);
-        addStat(0, 0);
-        setMsg(`${mult}× — Baş başa`, '');
-      } else {
-        setBal(getBal() + win);
-        addStat(0, b.bet - win);
-        setMsg(`${mult}× — −${fmt(b.bet - win)} NRC`, '');
-        playLose();
-      }
-
-      renderStats();
-
-      setTimeout(()=>{
-        activeBalls = activeBalls.filter(x => x !== b);
-        if(activeBalls.length === 0){
-          dropping = false;
-          document.getElementById('dropBtn').disabled = false;
-          cancelAnimationFrame(animId);
-          animId = null;
-          drawBoard();
-        }
-      }, 600);
-    }
+    if(b.trail.length > 6) b.trail.shift();
   }
 
-  // Draw
   drawBoard(activeBalls);
+  if(hasActive) animId = requestAnimationFrame(physicsLoop);
+}
 
-  // Draw trails
-  for(const b of activeBalls){
-    if(b.trail.length < 2) continue;
-    ctx.beginPath();
-    ctx.moveTo(b.trail[0].x, b.trail[0].y);
-    for(let i=1; i<b.trail.length; i++) ctx.lineTo(b.trail[i].x, b.trail[i].y);
-    ctx.strokeStyle = 'rgba(0,229,255,.25)';
-    ctx.lineWidth = b.r * 0.6;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-  }
-
-  if(activeBalls.length > 0) animId = requestAnimationFrame(physicsLoop);
+// ── HISTORY ───────────────────────────────────────────────────────────────
+let history = [];
+function pushHistory(mult, profit){
+  history.unshift({mult, profit});
+  if(history.length > 12) history.pop();
+  const row = document.getElementById('histRow');
+  row.innerHTML = history.map(h=>{
+    const col = h.profit > 0 ? '#00e676' : h.profit === 0 ? '#ffd700' : '#ff5722';
+    return `<div class="hr-dot" style="background:${col}22;border:1px solid ${col}66;color:${col};">${h.mult}×</div>`;
+  }).join('');
 }
 
 // ── SOUNDS ────────────────────────────────────────────────────────────────
 let ac;
 const getAC=()=>{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();return ac;};
-let lastPinSound=0;
+let lastPin=0;
 function playPinSound(){
-  const now=Date.now();
-  if(now-lastPinSound<80) return;
-  lastPinSound=now;
-  try{
-    const a=getAC(),o=a.createOscillator(),g=a.createGain();
-    o.connect(g);g.connect(a.destination);
-    o.type='sine';o.frequency.value=600+Math.random()*400;
-    g.gain.setValueAtTime(.08,a.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.06);
-    o.start();o.stop(a.currentTime+.06);
-  }catch(e){}
+  const now=Date.now();if(now-lastPin<60)return;lastPin=now;
+  try{const a=getAC(),o=a.createOscillator(),g=a.createGain();
+  o.connect(g);g.connect(a.destination);o.type='sine';
+  o.frequency.value=500+Math.random()*300;
+  g.gain.setValueAtTime(.07,a.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.05);
+  o.start();o.stop(a.currentTime+.06);}catch(e){}
 }
 function playWin(amt){
-  try{
-    const a=getAC();
-    const freqs=amt>10000?[523,659,784,1047,1319]:[523,659,784,1047];
-    freqs.forEach((f,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g);g.connect(a.destination);
-      o.type='square';o.frequency.value=f;
-      g.gain.setValueAtTime(.15,a.currentTime+i*.08);
-      g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.08+.15);
-      o.start(a.currentTime+i*.08);o.stop(a.currentTime+i*.08+.2);
-    });
-  }catch(e){}
+  try{const a=getAC();
+  const fs=amt>10000?[523,659,784,1047,1319]:[523,659,784,1047];
+  fs.forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();
+  o.connect(g);g.connect(a.destination);o.type='square';o.frequency.value=f;
+  g.gain.setValueAtTime(.15,a.currentTime+i*.08);
+  g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.08+.15);
+  o.start(a.currentTime+i*.08);o.stop(a.currentTime+i*.08+.2);});}catch(e){}
 }
 function playLose(){
   try{const a=getAC(),o=a.createOscillator(),g=a.createGain();
@@ -462,9 +608,7 @@ function playLose(){
 }
 
 // ── UI ────────────────────────────────────────────────────────────────────
-let betAmt = 100;
-const BET_STEPS = [50,100,250,500,1000,2500,5000];
-
+const BET_STEPS=[50,100,250,500,1000,2500,5000];
 function renderBal(){document.getElementById('hBal').textContent=fmt(getBal())+' NRC';}
 function setMsg(m,a){document.getElementById('winMsg').textContent=m;document.getElementById('winAmt').textContent=a;}
 function renderBet(){
@@ -483,31 +627,36 @@ function renderStats(){
 
 // ── EVENTS ────────────────────────────────────────────────────────────────
 document.getElementById('bMinus').addEventListener('click',()=>{
-  const i=BET_STEPS.indexOf(betAmt);
-  if(i>0) betAmt=BET_STEPS[i-1]; renderBet();
+  const i=BET_STEPS.indexOf(betAmt);if(i>0)betAmt=BET_STEPS[i-1];renderBet();
 });
 document.getElementById('bPlus').addEventListener('click',()=>{
-  const i=BET_STEPS.indexOf(betAmt);
-  if(i>=0&&i<BET_STEPS.length-1) betAmt=BET_STEPS[i+1]; renderBet();
+  const i=BET_STEPS.indexOf(betAmt);if(i>=0&&i<BET_STEPS.length-1)betAmt=BET_STEPS[i+1];renderBet();
 });
 document.querySelectorAll('.chip').forEach(btn=>{
   btn.addEventListener('click',()=>{betAmt=parseInt(btn.dataset.v);renderBet();});
 });
-
 document.querySelectorAll('.risk-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     risk=btn.dataset.r;
     document.querySelectorAll('.risk-btn').forEach(b=>b.classList.remove('sel'));
     btn.classList.add('sel');
-    buildBuckets();
+    drawBoard([]);
   });
 });
-
+document.querySelectorAll('.rows-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    numRows=parseInt(btn.dataset.rows);
+    document.querySelectorAll('.rows-btn').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    resize();
+  });
+});
 document.getElementById('dropBtn').addEventListener('click',()=>{
   const bal=getBal();
   if(betAmt>bal){setMsg('Yetersiz bakiye!','');return;}
   setBal(bal-betAmt);
-  dropping=true;
+  isDropping=true;
+  if(risk==='high') trackMission('plinko_high');
   document.getElementById('dropBtn').disabled=true;
   dropBall(betAmt);
   setMsg('Top düşüyor...','');

@@ -187,10 +187,12 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 
 // ── STORAGE ──────────────────────────────────────────────────────────────
 const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
-const getBal=()=>{const v=localStorage.getItem(BAL_KEY);return v!==null?parseInt(v):INIT;};
+const getBal=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
+function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_usd','1000');localStorage.setItem('nrc_initialized','1');}}
 const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
 const addStat=(w,l)=>{const s=getStats();s.spins++;s.wins+=w;s.loss+=l;localStorage.setItem(STATS_KEY,JSON.stringify(s));};
+function trackMission(key,inc=1){const m=JSON.parse(localStorage.getItem('nrc_missions')||'{}');m[key]=(m[key]||0)+inc;localStorage.setItem('nrc_missions',JSON.stringify(m));}
 const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────
@@ -440,8 +442,9 @@ document.getElementById('spinBtn').addEventListener('click',()=>{
     const mult=evaluate(target,betType);
     const win=mult>0?amount*mult:0, loss=mult>0?0:amount;
     if(win>0)setBal(getBal()+win);
-    addStat(win,loss); pushHistory(target); showResult(target,mult,amount);
+    addStat(win,loss); trackMission('rulet_spins'); pushHistory(target); showResult(target,mult,amount);
     mult>0?playWin(win):playLose();
+    localStorage.setItem('nrc_last_result',JSON.stringify({win,ts:Date.now()}));
     if(getBal()<=0)document.getElementById('rMain').textContent='Bakiye bitti — sıfırla';
   });
 });

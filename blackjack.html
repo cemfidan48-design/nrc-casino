@@ -164,10 +164,12 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 (function(){
 'use strict';
 const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
-const getBal=()=>{const v=localStorage.getItem(BAL_KEY);return v!==null?parseInt(v):INIT;};
+const getBal=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
+function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_usd','1000');localStorage.setItem('nrc_initialized','1');}}
 const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderNav();};
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
 const addStat=(w,l)=>{const s=getStats();s.spins++;s.wins+=w;s.loss+=l;localStorage.setItem(STATS_KEY,JSON.stringify(s));};
+function trackMission(key,inc=1){const m=JSON.parse(localStorage.getItem('nrc_missions')||'{}');m[key]=(m[key]||0)+inc;localStorage.setItem('nrc_missions',JSON.stringify(m));}
 const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
 
 const SUITS=['♠','♥','♦','♣'],RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'],RED=new Set(['♥','♦']);
@@ -260,7 +262,7 @@ async function startDeal(){
   if(isBJ(pH)){
     await flipHole(); updScores(true);
     if(isBJ(dH)){showStatus('İkisi de Blackjack — Beraberlik!','push');setBal(getBal()+curBet);addStat(0,0);}
-    else{const w=Math.floor(curBet*1.5);showStatus(`🎉 BLACKJACK! +${fmt(w)} NRC`,'bj');setBal(getBal()+curBet+w);addStat(w,0);playBigWin();}
+    else{const w=Math.floor(curBet*1.5);showStatus(`🎉 BLACKJACK! +${fmt(w)} NRC`,'bj');setBal(getBal()+curBet+w);addStat(w,0);trackMission('bj_21');playBigWin();}
     phase='done';setBtns('done');setTimeout(()=>{phase='bet';setBtns('bet');},1200);return;
   }
   phase='play';setBtns('play');
@@ -271,7 +273,7 @@ async function doHit(){
   const c=deck.pop();pH.push(c);await dealTo(document.getElementById('pCards'),c);
   updScores(false);
   if(isBust(pH)){await endRound();return;}
-  if(score(pH)===21){await doStand();return;}
+  if(score(pH)===21){trackMission('bj_21');await doStand();return;}
   phase='play';setBtns('play');
 }
 
@@ -317,6 +319,7 @@ async function endRound(){
   else if(ps<ds){msg=`Kaybettin! (${ps}/${ds}) — −${fmt(curBet)} NRC`;type='lose';loss=curBet;playLose();}
   else{msg=`Beraberlik! (${ps}) — Bahis geri`;type='push';setBal(getBal()+curBet);}
   addStat(win,loss);showStatus(msg,type);
+  localStorage.setItem('nrc_last_result',JSON.stringify({win,ts:Date.now()}));
   phase='done';setBtns('done');setTimeout(()=>{phase='bet';setBtns('bet');},1200);
 }
 

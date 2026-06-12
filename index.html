@@ -368,7 +368,7 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
   <a class="ni" href="slot.html"><span class="ni-icon">🎰</span><span class="ni-lbl">Slot</span></a>
   <a class="ni" href="rulet.html"><span class="ni-icon">🎡</span><span class="ni-lbl">Rulet</span></a>
   <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">Blackjack</span></a>
-  <a class="ni" href="plinko.html"><span class="ni-icon">⚪</span><span class="ni-lbl">Plinko</span></a>
+  <a class="ni" href="cuzdan.html"><span class="ni-icon">💰</span><span class="ni-lbl">Cüzdan</span></a>
 </nav>
 
 <script>
@@ -377,7 +377,8 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
 
 // ── STORAGE ────────────────────────────────────────────────────────────────
 const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
-const getBal=()=>{const v=localStorage.getItem(BAL_KEY);return v!==null?parseInt(v):INIT;};
+const getBal=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
+function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_usd','1000');localStorage.setItem('nrc_initialized','1');}}
 const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
 const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
@@ -638,11 +639,73 @@ function animDealers(){
 animDealers();
 
 // ── DEALER SPEECH ─────────────────────────────────────────────────────────
-const speeches1=['Şansın açık görünüyor! 😉','Bu tur senin! 🎰','Büyük kazanç yakın! ⭐','Kalbim seninle 💙','Döndür bakalım! 🎡'];
-const speeches2=['Bugün büyük kazanç var! 🔥','NRC yağıyor! 💰','Jackpot zamanı! 👑','Oyuna hazır mısın? 💎','Şans kapıda! 🍀'];
-let si1=0,si2=0;
-setInterval(()=>{si1=(si1+1)%speeches1.length;document.getElementById('db1').textContent=speeches1[si1];},4000);
-setInterval(()=>{si2=(si2+1)%speeches2.length;document.getElementById('db2').textContent=speeches2[si2];},5000);
+const speeches1 = {
+  idle:  ['Şansın açık görünüyor! 😉','Bu tur senin! 🎰','Büyük kazanç yakın! ⭐','Kalbim seninle 💙','Döndür bakalım! 🎡'],
+  win:   ['KAZANDIN! 🎉🎉🎉','Harika! Devam et! 🔥','Süper! Sen bir şampiyonsun! 👑','YEP! Bu kazanç! 💰','Müthiş! Jackpot yaklaşıyor! 💎'],
+  lose:  ['Üzme kendini, şans döner 💙','Bir daha dene! 🎰','Yakında gelir, inanıyorum! 🍀','Olmadı bu sefer 😔','Hadi! Bir daha! ⭐'],
+  bigwin:['JACKPOT!!! 🎊🎊🎊','İNANILMAZ! 💰💰💰','BU GECE SEN KAZANIYORSUN! 🔥','EFSANE! Böyle bir şey görmedim! 👑','NRC YAĞIYOR! 💎💎💎'],
+};
+const speeches2 = {
+  idle:  ['Bugün büyük kazanç var! 🔥','NRC yağıyor! 💰','Jackpot zamanı! 👑','Oyuna hazır mısın? 💎','Şans kapıda! 🍀'],
+  win:   ['İşte bu! Harika! 🎉','Vay canına! Tebrikler! 🏆','Kazandın! Hep bileceğimi biliyordum! 💕','Bravo! Devam et! 🎊','Mükemmel strateji! 👑'],
+  lose:  ['Endişelenme, sıradaki kazanç senin! 💪','Şans bazen oynar 😊','Dene tekrar! Ben senin yanındayım 💕','Olmadı ama... olacak! 🌟','Hadi yeniden! 🎰'],
+  bigwin:['OMG!!! JACKPOT!!! 🎊','Sen bir efsanesin! 💰💰','BU GECENİN KAZANANI SEN! 🏆','DUDAK UÇUKLATAN KAZANÇ! 🔥','NRC KRALI/KRALİÇESİ! 👑'],
+};
+
+let si1=0, si2=0;
+let dealerMode = 'idle';
+let dealerTimeout = null;
+
+function setDealerMode(mode, duration=4000){
+  dealerMode = mode;
+  const b1 = speeches1[mode]||speeches1.idle;
+  const b2 = speeches2[mode]||speeches2.idle;
+  document.getElementById('db1').textContent = b1[Math.floor(Math.random()*b1.length)];
+  document.getElementById('db2').textContent = b2[Math.floor(Math.random()*b2.length)];
+  clearTimeout(dealerTimeout);
+  if(mode !== 'idle'){
+    dealerTimeout = setTimeout(()=>setDealerMode('idle'), duration);
+  }
+}
+
+// Idle rotation
+setInterval(()=>{
+  if(dealerMode !== 'idle') return;
+  si1=(si1+1)%speeches1.idle.length;
+  si2=(si2+1)%speeches2.idle.length;
+  document.getElementById('db1').textContent=speeches1.idle[si1];
+  document.getElementById('db2').textContent=speeches2.idle[si2];
+},4000);
+
+// Listen for game results from other pages via localStorage
+window.addEventListener('storage', e=>{
+  if(e.key === 'nrc_last_result'){
+    try{
+      const r = JSON.parse(e.newValue);
+      if(r.win > 50000) setDealerMode('bigwin', 6000);
+      else if(r.win > 0) setDealerMode('win', 4000);
+      else setDealerMode('lose', 3000);
+    }catch(e){}
+  }
+});
+
+// Also check periodically for result changes
+let lastResultCheck = '';
+setInterval(()=>{
+  const r = localStorage.getItem('nrc_last_result');
+  if(r && r !== lastResultCheck){
+    lastResultCheck = r;
+    try{
+      const parsed = JSON.parse(r);
+      const age = Date.now() - (parsed.ts||0);
+      if(age < 5000){ // only react to results in last 5 seconds
+        if(parsed.win > 50000) setDealerMode('bigwin', 6000);
+        else if(parsed.win > 0) setDealerMode('win', 4000);
+        else setDealerMode('lose', 3000);
+      }
+    }catch(e){}
+  }
+},1000);
 
 // ── BANNER ANIMATIONS ─────────────────────────────────────────────────────
 function animBannerSlot(){
@@ -774,37 +837,122 @@ setInterval(()=>{renderBal();renderStats();},2000);
 
 // ── SOUND ─────────────────────────────────────────────────────────────────
 let soundOn=true;
-let ac,bgNode,bgGain;
+let ac,bgNodes=[];
 function getAC(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();return ac;}
 
+function stopAmbient(){
+  bgNodes.forEach(n=>{try{n.stop();}catch(e){}});
+  bgNodes=[];
+}
+
 function startAmbient(){
+  stopAmbient();
   try{
     const a=getAC();
-    bgGain=a.createGain();bgGain.gain.value=.03;bgGain.connect(a.destination);
-    // Low hum
-    const o1=a.createOscillator();o1.type='sine';o1.frequency.value=55;
-    o1.connect(bgGain);o1.start();
-    // Higher shimmer
-    const o2=a.createOscillator();o2.type='sine';o2.frequency.value=220;
-    const g2=a.createGain();g2.gain.value=.4;o2.connect(g2);g2.connect(bgGain);o2.start();
-    // Pulsing LFO
-    const lfo=a.createOscillator();lfo.frequency.value=.3;
-    const lg=a.createGain();lg.gain.value=.02;lfo.connect(lg);lg.connect(bgGain.gain);lfo.start();
-    bgNode={o1,o2,lfo};
+
+    // Master gain
+    const master=a.createGain();
+    master.gain.value=0.04;
+    master.connect(a.destination);
+
+    // ── BASS LINE (casino feel) ──
+    // Repeating bass pattern: C2-G2-A2-G2
+    const bassNotes=[65.4,98,110,98]; // Hz
+    const bassGain=a.createGain();bassGain.gain.value=1.2;bassGain.connect(master);
+    function playBass(noteIdx,time){
+      const o=a.createOscillator();
+      const g=a.createGain();
+      o.connect(g);g.connect(bassGain);
+      o.type='triangle';
+      o.frequency.value=bassNotes[noteIdx%bassNotes.length];
+      g.gain.setValueAtTime(0.8,time);
+      g.gain.exponentialRampToValueAtTime(0.001,time+0.45);
+      o.start(time);o.stop(time+0.5);
+      bgNodes.push(o);
+    }
+    const beatLen=0.5;
+    for(let i=0;i<32;i++) playBass(i,a.currentTime+i*beatLen);
+
+    // ── CHORD PAD ──
+    // Warm casino ambiance chord: Cmaj
+    const chordFreqs=[[261.6,329.6,392],[293.7,369.9,440],[261.6,329.6,392],[246.9,311.1,392]];
+    const padGain=a.createGain();padGain.gain.value=0.3;padGain.connect(master);
+    chordFreqs.forEach((chord,ci)=>{
+      chord.forEach(freq=>{
+        const o=a.createOscillator(),g=a.createGain();
+        o.connect(g);g.connect(padGain);
+        o.type='sine';o.frequency.value=freq;
+        const t=a.currentTime+ci*4;
+        g.gain.setValueAtTime(0,t);
+        g.gain.linearRampToValueAtTime(0.4,t+0.3);
+        g.gain.linearRampToValueAtTime(0.35,t+3.5);
+        g.gain.linearRampToValueAtTime(0,t+4);
+        o.start(t);o.stop(t+4.1);
+        bgNodes.push(o);
+      });
+    });
+
+    // ── MELODY (casino jingle) ──
+    // Simple pentatonic melody
+    const melFreqs=[523,659,784,880,784,659,523,659,784,1047,880,784];
+    const melTimes=[0,.25,.5,.75,1,1.25,1.5,2,2.25,2.5,2.75,3];
+    const melGain=a.createGain();melGain.gain.value=0.25;melGain.connect(master);
+    melFreqs.forEach((freq,i)=>{
+      const o=a.createOscillator(),g=a.createGain();
+      o.connect(g);g.connect(melGain);
+      o.type='square';o.frequency.value=freq;
+      const t=a.currentTime+melTimes[i];
+      g.gain.setValueAtTime(0.3,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.22);
+      o.start(t);o.stop(t+0.25);
+      bgNodes.push(o);
+    });
+
+    // ── HI-HAT RHYTHM ──
+    const hhGain=a.createGain();hhGain.gain.value=0.15;hhGain.connect(master);
+    for(let i=0;i<32;i++){
+      if(i%2===0) continue; // off-beat
+      const buf=a.createBuffer(1,a.sampleRate*0.05,a.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let j=0;j<d.length;j++) d[j]=(Math.random()*2-1)*Math.pow(1-j/d.length,2);
+      const src=a.createBufferSource();
+      src.buffer=buf;
+      const f=a.createBiquadFilter();f.type='highpass';f.frequency.value=8000;
+      src.connect(f);f.connect(hhGain);
+      src.start(a.currentTime+i*beatLen*0.5);
+      bgNodes.push(src);
+    }
+
+    // ── COIN JINGLE every 8 beats ──
+    [0,4,8,12].forEach(beat=>{
+      [880,1100,1320].forEach((freq,j)=>{
+        const o=a.createOscillator(),g=a.createGain();
+        o.connect(g);g.connect(master);
+        o.type='sine';o.frequency.value=freq;
+        const t=a.currentTime+beat*beatLen+j*.06;
+        g.gain.setValueAtTime(0.12,t);
+        g.gain.exponentialRampToValueAtTime(0.001,t+0.15);
+        o.start(t);o.stop(t+0.2);
+        bgNodes.push(o);
+      });
+    });
+
+    // Restart after ~16 seconds
+    setTimeout(()=>{ if(soundOn) startAmbient(); }, 16000);
+
   }catch(e){}
 }
-function stopAmbient(){if(bgNode){try{bgNode.o1.stop();bgNode.o2.stop();bgNode.lfo.stop();}catch(e){}bgNode=null;}}
 
 function playCoin(){
   try{
     const a=getAC();
-    [880,1100,1320].forEach((f,i)=>{
+    [880,1100,1320,1540].forEach((f,i)=>{
       const o=a.createOscillator(),g=a.createGain();
       o.connect(g);g.connect(a.destination);
       o.type='sine';o.frequency.value=f;
-      g.gain.setValueAtTime(.15,a.currentTime+i*.06);
-      g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.06+.15);
-      o.start(a.currentTime+i*.06);o.stop(a.currentTime+i*.06+.15);
+      g.gain.setValueAtTime(.18,a.currentTime+i*.06);
+      g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.06+.18);
+      o.start(a.currentTime+i*.06);o.stop(a.currentTime+i*.06+.2);
     });
   }catch(e){}
 }
@@ -815,15 +963,43 @@ document.getElementById('soundBtn').addEventListener('click',()=>{
   if(soundOn){startAmbient();playCoin();}else stopAmbient();
 });
 
-// Game card clicks with sound
 document.querySelectorAll('.gc.ready').forEach(gc=>{
   gc.addEventListener('click',()=>{if(soundOn)playCoin();});
 });
 
+// ── COIN MODAL ────────────────────────────────────────────────────────────
+function showCoinModal(){
+  if(document.getElementById('coinModal')) return;
+  const modal = document.createElement('div');
+  modal.id = 'coinModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;';
+  modal.innerHTML = `
+    <div style="background:#10102a;border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:24px;max-width:360px;width:100%;text-align:center;">
+      <div style="font-size:36px;margin-bottom:8px;">💸</div>
+      <div style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:#ffd700;margin-bottom:6px;">BAKİYE BİTTİ!</div>
+      <div style="font-size:12px;color:#6a6a8a;margin-bottom:20px;">Cüzdanından NRC satın alabilir veya görev tamamlayabilirsin.</div>
+      <a href="cuzdan.html" style="display:block;background:linear-gradient(135deg,#ffd700,#e65100);color:#0a0800;font-family:'Orbitron',monospace;font-size:13px;font-weight:900;padding:14px;border-radius:12px;text-decoration:none;margin-bottom:10px;">
+        🪙 CÜZDANA GİT
+      </a>
+      <button onclick="document.getElementById('coinModal').remove()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:#6a6a8a;font-family:inherit;font-size:11px;padding:10px 20px;border-radius:8px;cursor:pointer;width:100%;">
+        Kapat
+      </button>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────
 renderBal();renderStats();
 
-// Auto-start ambient after first interaction
+// Single-time initialization
+ensureInit();
+
+// Check balance - show coin modal if zero
+setInterval(()=>{
+  if(getBal()<=0 && !document.getElementById('coinModal')){
+    showCoinModal();
+  }
+},3000);
 document.addEventListener('click',function init(){
   if(soundOn)startAmbient();
   document.removeEventListener('click',init);
