@@ -108,6 +108,23 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 }
 .m-claim-btn:active{transform:translateY(2px);}
 
+/* ADMIN PANEL */
+.admin-panel{background:var(--panel);border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;}
+.admin-desc{font-size:10px;color:var(--ivdim);line-height:1.5;}
+.admin-input{background:rgba(0,0,0,.5);border:1px solid rgba(255,215,0,.3);color:var(--gold);font-family:'Orbitron',monospace;font-size:14px;font-weight:700;text-align:center;padding:10px;border-radius:10px;outline:none;width:100%;letter-spacing:.1em;}
+.admin-input::placeholder{color:rgba(255,215,0,.3);font-size:11px;letter-spacing:.05em;}
+.admin-pkgs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.admin-pkg{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 4px;text-align:center;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--ivdim);cursor:pointer;transition:all .15s;}
+.admin-pkg.sel{background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.4);color:var(--green);box-shadow:0 0 8px rgba(0,230,118,.2);}
+.admin-pkg:active{transform:scale(.95);}
+.admin-selected{font-size:10px;color:var(--ivdim);text-align:center;}
+.admin-btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Orbitron',monospace;font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--gold),#e65100);color:#0a0800;box-shadow:0 4px 0 #4a1800,0 0 14px rgba(255,215,0,.2);transition:transform .1s,box-shadow .1s,opacity .15s;}
+.admin-btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 #4a1800;}
+.admin-btn[disabled]{opacity:.4;cursor:default;}
+.admin-msg{font-size:11px;font-weight:600;text-align:center;min-height:16px;}
+.admin-msg.ok{color:var(--green);}
+.admin-msg.err{color:var(--red);}
+
 /* SHOP */
 .shop{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .shop-card{
@@ -210,6 +227,21 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 <div class="missions" id="missionList"></div>
 
 <!-- SHOP -->
+<div class="sec">Admin Kodu ile Yükle</div>
+<div class="admin-panel">
+  <div class="admin-desc">Geçerli bir admin kodu girerek sanal dolar yükleyebilirsin.</div>
+  <input class="admin-input" type="text" id="adminInput" placeholder="Kodu buraya gir..." autocomplete="off">
+  <div class="admin-pkgs">
+    <div class="admin-pkg" data-amt="100">$100</div>
+    <div class="admin-pkg" data-amt="200">$200</div>
+    <div class="admin-pkg" data-amt="500">$500</div>
+    <div class="admin-pkg" data-amt="1000">$1,000</div>
+  </div>
+  <div class="admin-selected" id="adminSelected">Miktar seçilmedi</div>
+  <button class="admin-btn" id="adminBtn">💳 Kodu Kullan</button>
+  <div class="admin-msg" id="adminMsg"></div>
+</div>
+
 <div class="sec">NRC Satın Al</div>
 <div class="shop">
   <div class="shop-card">
@@ -429,6 +461,86 @@ window.addEventListener('storage', e=>{
   if(e.key === MISSION_KEY || e.key === 'nrc_mission_update') renderMissions();
 });
 setInterval(renderMissions, 2000);
+
+// ── ADMIN KODU ────────────────────────────────────────────────────────────
+// Kodlar: miktar → kod eşleştirmesi
+// Her kod bir kez kullanılabilir (kullanılan kodlar localStorage'da saklanır)
+const ADMIN_CODES = {
+  'NRC100':  100,
+  'NRC200':  200,
+  'NRC500':  500,
+  'NRC1000': 1000,
+  // Patron'un özel kodları — istediğin zaman buraya ekle
+  'PATRON100':  100,
+  'PATRON200':  200,
+  'PATRON500':  500,
+  'PATRON1000': 1000,
+  'GOLD500':    500,
+  'CASINO200':  200,
+  'JACKPOT1000':1000,
+};
+
+let selectedAmt = 0;
+const USED_KEY = 'nrc_used_codes';
+
+function getUsedCodes(){
+  try{ return JSON.parse(localStorage.getItem(USED_KEY))||[]; }catch(e){ return []; }
+}
+function markUsed(code){
+  const used = getUsedCodes();
+  used.push(code.toUpperCase());
+  localStorage.setItem(USED_KEY, JSON.stringify(used));
+}
+
+// Miktar seç
+document.querySelectorAll('.admin-pkg').forEach(pkg=>{
+  pkg.addEventListener('click',()=>{
+    document.querySelectorAll('.admin-pkg').forEach(p=>p.classList.remove('sel'));
+    pkg.classList.add('sel');
+    selectedAmt = parseInt(pkg.dataset.amt);
+    document.getElementById('adminSelected').textContent = `Seçilen: $${selectedAmt} sanal dolar`;
+    document.getElementById('adminMsg').textContent = '';
+    document.getElementById('adminMsg').className = 'admin-msg';
+  });
+});
+
+// Kodu kullan
+document.getElementById('adminBtn').addEventListener('click',()=>{
+  const code = document.getElementById('adminInput').value.trim().toUpperCase();
+  const msgEl = document.getElementById('adminMsg');
+
+  if(!code){ setAdminMsg('Lütfen bir kod gir!','err'); return; }
+  if(selectedAmt===0){ setAdminMsg('Lütfen bir miktar seç!','err'); return; }
+
+  const usedCodes = getUsedCodes();
+
+  // Kod daha önce kullanıldı mı?
+  if(usedCodes.includes(code)){ setAdminMsg('Bu kod zaten kullanıldı!','err'); return; }
+
+  // Kod geçerli mi?
+  const codeAmt = ADMIN_CODES[code];
+  if(!codeAmt){ setAdminMsg('Geçersiz kod!','err'); return; }
+
+  // Kod miktarı ile seçilen miktar eşleşiyor mu?
+  if(codeAmt !== selectedAmt){ setAdminMsg(`Bu kod $${codeAmt} için geçerli!`,'err'); return; }
+
+  // Geçerli — yükle
+  markUsed(code);
+  setUSD(getUSD() + selectedAmt);
+  addTx(`💳 Admin kodu: ${code}`, selectedAmt, 'usd');
+  showToast(`✅ +$${selectedAmt} Başarıyla Yüklendi!`);
+  setAdminMsg(`✅ $${selectedAmt} sanal dolar yüklendi!`,'ok');
+  document.getElementById('adminInput').value = '';
+  document.querySelectorAll('.admin-pkg').forEach(p=>p.classList.remove('sel'));
+  document.getElementById('adminSelected').textContent = 'Miktar seçilmedi';
+  selectedAmt = 0;
+});
+
+function setAdminMsg(msg, type){
+  const el = document.getElementById('adminMsg');
+  el.textContent = msg;
+  el.className = 'admin-msg ' + type;
+}
 
 // ── SHOP ──────────────────────────────────────────────────────────────────
 document.querySelectorAll('.shop-btn').forEach(btn=>{
