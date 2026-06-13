@@ -526,7 +526,8 @@ document.getElementById('adminBtn').addEventListener('click',()=>{
   if(codeAmt !== selectedAmt){ setAdminMsg(`Bu kod $${codeAmt} için geçerli!`,'err'); return; }
 
   // Geçerli — yükle
-  markUsed(code);
+  // PATRON-VIP kodu süresiz — kullanılmış listesine ekleme
+  if(code !== 'PATRON-VIP') markUsed(code);
   setUSD(getUSD() + selectedAmt);
   addTx(`💳 Admin kodu: ${code}`, selectedAmt, 'usd');
   showToast(`✅ +$${selectedAmt} Başarıyla Yüklendi!`);
