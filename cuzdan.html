@@ -465,20 +465,21 @@ setInterval(renderMissions, 2000);
 // ── ADMIN KODU ────────────────────────────────────────────────────────────
 // Kodlar: miktar → kod eşleştirmesi
 // Her kod bir kez kullanılabilir (kullanılan kodlar localStorage'da saklanır)
-const ADMIN_CODES = {
-  'NRC100':  100,
-  'NRC200':  200,
-  'NRC500':  500,
-  'NRC1000': 1000,
-  // Patron'un özel kodları — istediğin zaman buraya ekle
-  'PATRON100':  100,
-  'PATRON200':  200,
-  'PATRON500':  500,
-  'PATRON1000': 1000,
-  'GOLD500':    500,
-  'CASINO200':  200,
-  'JACKPOT1000':1000,
-};
+// Kodlar localStorage'dan okunur — admin_codes olarak saklanır
+// Yeni kod eklemek için: localStorage.setItem('nrc_admin_codes', JSON.stringify({...kodlar}))
+function getAdminCodes(){
+  try{
+    const stored = localStorage.getItem('nrc_admin_codes');
+    if(stored) return JSON.parse(stored);
+  }catch(e){}
+  // Fallback sabit kodlar
+  return {
+    'NRC100': 100, 'NRC200': 200, 'NRC500': 500, 'NRC1000': 1000,
+    'PATRON100': 100, 'PATRON200': 200, 'PATRON500': 500, 'PATRON1000': 1000,
+    'GOLD500': 500, 'CASINO200': 200, 'JACKPOT1000': 1000,
+  };
+}
+const ADMIN_CODES = getAdminCodes();
 
 let selectedAmt = 0;
 const USED_KEY = 'nrc_used_codes';
