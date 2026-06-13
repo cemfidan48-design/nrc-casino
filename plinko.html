@@ -167,7 +167,7 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 // ── STORAGE ───────────────────────────────────────────────────────────────
 const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT=100000;
 const getBal=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
-function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_usd','1000');localStorage.setItem('nrc_initialized','1');}}
+function ensureInit(){if(!localStorage.getItem('nrc_initialized')){localStorage.setItem(BAL_KEY,INIT);localStorage.setItem('nrc_initialized','1');}}
 const setBal=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};
 const addStat=(w,l)=>{const s=getStats();s.spins++;s.wins+=w;s.loss+=l;localStorage.setItem(STATS_KEY,JSON.stringify(s));};

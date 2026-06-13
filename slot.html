@@ -109,7 +109,7 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;padding-bot
 (function(){
 'use strict';
 const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT_KEY='nrc_initialized',MISSION_KEY='nrc_missions';
-if(!localStorage.getItem(INIT_KEY)){localStorage.setItem(BAL_KEY,'100000');localStorage.setItem('nrc_usd','1000');localStorage.setItem(INIT_KEY,'1');}
+if(!localStorage.getItem(INIT_KEY)){localStorage.setItem(BAL_KEY,'100000');localStorage.setItem(INIT_KEY,'1');}
 const getNRC=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
 const setNRC=n=>{localStorage.setItem(BAL_KEY,Math.max(0,Math.floor(n)));renderBal();};
 const getStats=()=>{try{return JSON.parse(localStorage.getItem(STATS_KEY))||{spins:0,wins:0,loss:0};}catch(e){return{spins:0,wins:0,loss:0};}};

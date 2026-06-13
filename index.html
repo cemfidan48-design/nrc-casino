@@ -71,7 +71,6 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .bal-card{background:linear-gradient(135deg,rgba(0,229,255,.07),rgba(224,64,251,.04));border:1px solid rgba(0,229,255,.18);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .bal-l .bal-lbl{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ivdim);margin-bottom:3px;}
 .bal-amt{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;}
-.bal-usd{font-size:9px;color:var(--ivdim);margin-top:2px;font-style:italic;}
 .bal-btn{background:rgba(224,64,251,.1);border:1px solid rgba(224,64,251,.3);color:var(--pink);font-family:inherit;font-size:10px;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;text-decoration:none;display:block;text-align:center;}
 
 /* SECTION */
@@ -164,7 +163,6 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
     <div class="bal-lbl">Toplam Bakiye</div>
     <div class="bal-amt" id="balAmt">100,000</div>
     <div style="font-size:9px;color:var(--gold);opacity:.6;">NRC</div>
-    <div class="bal-usd" id="balUsd">≈ $100.00 USD</div>
   </div>
   <a class="bal-btn" href="cuzdan.html">💰 Cüzdan</a>
 </div>
@@ -212,7 +210,7 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
   <div class="sc"><div class="sv" id="stN">—</div><div class="sl">Net</div></div>
 </div>
 
-<footer>NRC Casino · 1 NRC = $0.001 · Sanal Para · 18+</footer>
+<footer>NRC Casino · Sanal Para · 18+</footer>
 </div></div>
 
 <nav class="nav">
@@ -229,10 +227,9 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spa
 'use strict';
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-const BAL_KEY='nrc_balance',USD_KEY='nrc_usd',STATS_KEY='nrc_stats',INIT_KEY='nrc_initialized';
+const BAL_KEY='nrc_balance',STATS_KEY='nrc_stats',INIT_KEY='nrc_initialized';
 if(!localStorage.getItem(INIT_KEY)){
   localStorage.setItem(BAL_KEY,'100000');
-  localStorage.setItem(USD_KEY,'1000');
   localStorage.setItem(INIT_KEY,'1');
 }
 const getNRC=()=>parseInt(localStorage.getItem(BAL_KEY))||0;
@@ -242,7 +239,6 @@ const fmt=n=>Math.floor(n).toLocaleString('tr-TR');
 function renderBal(){
   const b=getNRC();
   document.getElementById('balAmt').textContent=fmt(b);
-  document.getElementById('balUsd').textContent='≈ $'+(b/1000).toFixed(2)+' USD';
 }
 function renderStats(){
   const s=getStats();
