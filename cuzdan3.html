@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Cüzdan — NRC Casino</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08081a;--panel:#10102a;--panel2:#18183a;
+  --cyan:#00e5ff;--pink:#e040fb;--gold:#ffd700;--gold2:#ffaa00;
+  --green:#00e676;--red:#ff1744;--ivory:#f0e6ff;--ivdim:#6a6a8a;
+  --nav-h:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--ivory);display:flex;flex-direction:column;}
+.page{flex:1;overflow-y:auto;padding-bottom:calc(var(--nav-h)+40px);}
+.inner{max-width:480px;margin:0 auto;padding:0 12px;}
+
+.nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:#0a0a1e;border-top:1px solid rgba(0,229,255,.12);display:flex;align-items:center;justify-content:space-around;z-index:100;padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(16px);}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 10px;border-radius:12px;flex:1;text-decoration:none;}
+.ni-icon{font-size:22px;line-height:1;}
+.ni-lbl{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ivdim);}
+.ni.active .ni-lbl{color:var(--gold);}
+.ni.active .ni-icon{filter:drop-shadow(0 0 8px var(--gold));}
+
+/* HEADER */
+.hdr{padding:16px 0 12px;display:flex;justify-content:space-between;align-items:center;}
+.gtitle{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:.12em;background:linear-gradient(135deg,#ffd700,#ff6f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* BALANCE CARDS */
+.bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.bal-card{
+  background:var(--panel);border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:16px;position:relative;overflow:hidden;
+}
+.bal-card.usd{border-color:rgba(0,230,118,.2);}
+.bal-card.usd::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,230,118,.07),transparent 60%);pointer-events:none;}
+.bal-card.nrc{border-color:rgba(255,215,0,.2);}
+.bal-card.nrc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.07),transparent 60%);pointer-events:none;}
+.bc-icon{font-size:24px;margin-bottom:8px;}
+.bc-lbl{font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ivdim);margin-bottom:4px;}
+.bc-amt{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;line-height:1;}
+.bc-amt.usd{color:var(--green);}
+.bc-amt.nrc{color:var(--gold);}
+.bc-sub{font-size:9px;color:var(--ivdim);margin-top:3px;}
+
+/* DAILY BONUS */
+.bonus-card{
+  background:linear-gradient(135deg,rgba(0,230,118,.08),rgba(0,229,255,.05));
+  border:1px solid rgba(0,230,118,.25);
+  border-radius:16px;padding:16px;margin-bottom:14px;
+  position:relative;overflow:hidden;
+}
+.bonus-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,230,118,.08),transparent 60%);pointer-events:none;}
+.bonus-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.bonus-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--green);}
+.bonus-timer{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--ivdim);}
+.bonus-btn{
+  width:100%;padding:13px;border:none;border-radius:10px;
+  font-family:'Orbitron',monospace;font-size:13px;font-weight:900;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+  background:linear-gradient(135deg,var(--green),#00796b);
+  color:#001a10;
+  box-shadow:0 4px 0 #004d40,0 0 16px rgba(0,230,118,.3);
+  transition:transform .1s,box-shadow .1s,opacity .15s;
+}
+.bonus-btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 #004d40;}
+.bonus-btn[disabled]{opacity:.4;cursor:default;background:rgba(255,255,255,.08);}
+.bonus-desc{font-size:10px;color:var(--ivdim);text-align:center;margin-top:8px;}
+
+/* MISSIONS */
+.sec{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sec::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.3),transparent);}
+
+.missions{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.mission{
+  background:var(--panel);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+  position:relative;overflow:hidden;
+}
+.mission.done{border-color:rgba(0,230,118,.3);}
+.mission.done::before{content:'';position:absolute;inset:0;background:rgba(0,230,118,.04);pointer-events:none;}
+.m-icon{font-size:22px;flex-shrink:0;}
+.m-info{flex:1;}
+.m-title{font-size:12px;font-weight:600;color:var(--ivory);margin-bottom:3px;}
+.m-progress{font-size:10px;color:var(--ivdim);}
+.m-progress-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:6px;overflow:hidden;}
+.m-progress-fill{height:100%;border-radius:2px;background:linear-gradient(to right,var(--cyan),var(--pink));transition:width .3s;}
+.m-reward{text-align:right;flex-shrink:0;}
+.m-reward-amt{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--green);}
+.m-reward-lbl{font-size:8px;color:var(--ivdim);}
+.m-done-badge{
+  background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.3);
+  border-radius:6px;padding:4px 8px;
+  font-size:9px;font-weight:700;color:var(--green);
+  font-family:'Orbitron',monospace;letter-spacing:.06em;
+}
+.m-claim-btn{
+  background:linear-gradient(135deg,var(--green),#00796b);
+  border:none;border-radius:8px;padding:7px 12px;
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  color:#001a10;cursor:pointer;
+  box-shadow:0 2px 0 #004d40;
+  transition:transform .1s;
+}
+.m-claim-btn:active{transform:translateY(2px);}
+
+/* ADMIN PANEL */
+.admin-panel{background:var(--panel);border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;}
+.admin-desc{font-size:10px;color:var(--ivdim);line-height:1.5;}
+.admin-input{background:rgba(0,0,0,.5);border:1px solid rgba(255,215,0,.3);color:var(--gold);font-family:'Orbitron',monospace;font-size:14px;font-weight:700;text-align:center;padding:10px;border-radius:10px;outline:none;width:100%;letter-spacing:.1em;}
+.admin-input::placeholder{color:rgba(255,215,0,.3);font-size:11px;letter-spacing:.05em;}
+.admin-pkgs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.admin-pkg{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 4px;text-align:center;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--ivdim);cursor:pointer;transition:all .15s;}
+.admin-pkg.sel{background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.4);color:var(--green);box-shadow:0 0 8px rgba(0,230,118,.2);}
+.admin-pkg:active{transform:scale(.95);}
+.admin-selected{font-size:10px;color:var(--ivdim);text-align:center;}
+.admin-btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Orbitron',monospace;font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--gold),#e65100);color:#0a0800;box-shadow:0 4px 0 #4a1800,0 0 14px rgba(255,215,0,.2);transition:transform .1s,box-shadow .1s,opacity .15s;}
+.admin-btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 #4a1800;}
+.admin-btn[disabled]{opacity:.4;cursor:default;}
+.admin-msg{font-size:11px;font-weight:600;text-align:center;min-height:16px;}
+.admin-msg.ok{color:var(--green);}
+.admin-msg.err{color:var(--red);}
+
+/* SHOP */
+.shop{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.shop-card{
+  background:var(--panel);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.shop-card.popular{border-color:rgba(224,64,251,.3);}
+.shop-card.popular::before{content:'';position:absolute;inset:0;background:rgba(224,64,251,.04);pointer-events:none;}
+.shop-card.best{border-color:rgba(0,229,255,.3);}
+.shop-card.best::before{content:'';position:absolute;inset:0;background:rgba(0,229,255,.04);pointer-events:none;}
+.shop-badge{
+  position:absolute;top:8px;right:8px;
+  font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 7px;border-radius:4px;
+}
+.shop-badge.pop{background:rgba(224,64,251,.2);color:var(--pink);border:1px solid rgba(224,64,251,.3);}
+.shop-badge.val{background:rgba(0,229,255,.2);color:var(--cyan);border:1px solid rgba(0,229,255,.3);}
+.shop-badge.vip{background:rgba(255,215,0,.2);color:var(--gold);border:1px solid rgba(255,215,0,.3);}
+.shop-left{}
+.shop-price{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--green);line-height:1;}
+.shop-nrc{font-size:11px;color:var(--ivdim);margin-top:3px;}
+.shop-nrc strong{color:var(--gold);font-family:'Orbitron',monospace;}
+.shop-bonus{font-size:9px;color:var(--pink);margin-top:2px;}
+.shop-btn{
+  background:linear-gradient(135deg,var(--gold),#e65100);
+  border:none;border-radius:10px;padding:10px 18px;
+  font-family:'Orbitron',monospace;font-size:11px;font-weight:900;
+  color:#0a0800;cursor:pointer;
+  box-shadow:0 3px 0 #4a1800,0 0 12px rgba(255,215,0,.2);
+  transition:transform .1s,box-shadow .1s,opacity .15s;
+  white-space:nowrap;
+}
+.shop-btn:active:not([disabled]){transform:translateY(2px);box-shadow:0 1px 0 #4a1800;}
+.shop-btn[disabled]{opacity:.35;cursor:default;}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:#0f1a0f;border:1px solid var(--green);
+  color:var(--ivory);font-size:12px;font-weight:600;
+  padding:12px 20px;border-radius:40px;
+  white-space:nowrap;transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:999;pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* HISTORY */
+.tx-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.tx{
+  background:var(--panel);border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;padding:10px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.tx-desc{font-size:11px;color:var(--ivory);}
+.tx-time{font-size:9px;color:var(--ivdim);margin-top:2px;}
+.tx-amt{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;}
+.tx-amt.pos{color:var(--green);}
+.tx-amt.neg{color:var(--red);}
+
+footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spacing:.08em;padding-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="page"><div class="inner">
+
+<div class="hdr">
+  <div class="gtitle">CÜZDAN</div>
+</div>
+
+<!-- BALANCE CARDS -->
+<div class="bal-grid">
+  <div class="bal-card usd">
+    <div class="bc-icon">💵</div>
+    <div class="bc-lbl">Sanal Dolar</div>
+    <div class="bc-amt usd" id="usdBal">$1,000</div>
+    <div class="bc-sub">Oyun Kredisi</div>
+  </div>
+  <div class="bal-card nrc">
+    <div class="bc-icon">🪙</div>
+    <div class="bc-lbl">NRC Bakiye</div>
+    <div class="bc-amt nrc" id="nrcBal">100,000</div>
+    <div class="bc-sub">Casino Chip</div>
+  </div>
+</div>
+
+<!-- DAILY BONUS -->
+<div class="bonus-card">
+  <div class="bonus-top">
+    <span class="bonus-title">🎁 GÜNLÜK BONUS</span>
+    <span class="bonus-timer" id="bonusTimer">Hazır!</span>
+  </div>
+  <button class="bonus-btn" id="bonusBtn">$10 BONUS AL</button>
+  <div class="bonus-desc">Her 24 saatte bir $10 sanal dolar kazan</div>
+</div>
+
+<!-- MISSIONS -->
+<div class="sec">Günlük Görevler</div>
+<div class="missions" id="missionList"></div>
+
+<!-- SHOP -->
+<div class="sec">Admin Kodu ile Yükle</div>
+<div class="admin-panel">
+  <div class="admin-desc">Geçerli bir admin kodu girerek sanal dolar yükleyebilirsin.</div>
+  <input class="admin-input" type="text" id="adminInput" placeholder="Kodu buraya gir..." autocomplete="off">
+  <div class="admin-pkgs">
+    <div class="admin-pkg" data-amt="100">$100</div>
+    <div class="admin-pkg" data-amt="200">$200</div>
+    <div class="admin-pkg" data-amt="500">$500</div>
+    <div class="admin-pkg" data-amt="1000">$1,000</div>
+  </div>
+  <div class="admin-selected" id="adminSelected">Miktar seçilmedi</div>
+  <button class="admin-btn" id="adminBtn">💳 Kodu Kullan</button>
+  <div class="admin-msg" id="adminMsg"></div>
+</div>
+
+<div class="sec">NRC Satın Al</div>
+<div class="shop">
+  <div class="shop-card">
+    <div class="shop-left">
+      <div class="shop-price">$1</div>
+      <div class="shop-nrc"><strong>1,000</strong> NRC</div>
+    </div>
+    <button class="shop-btn" data-usd="1" data-nrc="1000">Satın Al</button>
+  </div>
+  <div class="shop-card popular">
+    <div class="shop-badge pop">POPÜLER</div>
+    <div class="shop-left">
+      <div class="shop-price">$5</div>
+      <div class="shop-nrc"><strong>5,500</strong> NRC</div>
+      <div class="shop-bonus">+%10 bonus</div>
+    </div>
+    <button class="shop-btn" data-usd="5" data-nrc="5500">Satın Al</button>
+  </div>
+  <div class="shop-card best">
+    <div class="shop-badge val">EN İYİ</div>
+    <div class="shop-left">
+      <div class="shop-price">$10</div>
+      <div class="shop-nrc"><strong>12,000</strong> NRC</div>
+      <div class="shop-bonus">+%20 bonus</div>
+    </div>
+    <button class="shop-btn" data-usd="10" data-nrc="12000">Satın Al</button>
+  </div>
+  <div class="shop-card">
+    <div class="shop-badge vip">VIP</div>
+    <div class="shop-left">
+      <div class="shop-price">$50</div>
+      <div class="shop-nrc"><strong>65,000</strong> NRC</div>
+      <div class="shop-bonus">+%30 bonus</div>
+    </div>
+    <button class="shop-btn" data-usd="50" data-nrc="65000">Satın Al</button>
+  </div>
+</div>
+
+<!-- TX HISTORY -->
+<div class="sec">İşlem Geçmişi</div>
+<div class="tx-list" id="txList"></div>
+
+<footer>NRC Casino · Sanal Para · 18+</footer>
+</div></div>
+
+<nav class="nav">
+  <a class="ni" href="index.html"><span class="ni-icon">🏠</span><span class="ni-lbl">Lobi</span></a>
+  <a class="ni" href="slot.html"><span class="ni-icon">🎰</span><span class="ni-lbl">Slot</span></a>
+  <a class="ni" href="rulet.html"><span class="ni-icon">🎡</span><span class="ni-lbl">Rulet</span></a>
+  <a class="ni" href="blackjack.html"><span class="ni-icon">🃏</span><span class="ni-lbl">BJ</span></a>
+  <a class="ni" href="plinko.html"><span class="ni-icon">⚪</span><span class="ni-lbl">Plinko</span></a>
+  <a class="ni active" href="cuzdan.html"><span class="ni-icon">💰</span><span class="ni-lbl">Cüzdan</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+// ── KEYS ──────────────────────────────────────────────────────────────────
+const NRC_KEY    = 'nrc_balance';
+const USD_KEY    = 'nrc_usd';
+const INIT_KEY   = 'nrc_initialized';
+const BONUS_KEY  = 'nrc_last_bonus';
+const MISSION_KEY= 'nrc_missions';
+const TX_KEY     = 'nrc_transactions';
+const STATS_KEY  = 'nrc_stats';
+
+const USD_INIT   = 1000;
+const NRC_INIT   = 100000;
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+function init(){
+  if(!localStorage.getItem(INIT_KEY)){
+    localStorage.setItem(NRC_KEY, NRC_INIT);
+    localStorage.setItem(USD_KEY, USD_INIT);
+    localStorage.setItem(INIT_KEY, '1');
+    addTx('🎉 Hoş geldin bonusu', NRC_INIT, 'nrc');
+    addTx('🎁 Başlangıç kredisi', USD_INIT, 'usd');
+  }
+}
+
+// ── BALANCE ───────────────────────────────────────────────────────────────
+const getNRC = ()=> parseInt(localStorage.getItem(NRC_KEY))||0;
+const getUSD = ()=> parseFloat(localStorage.getItem(USD_KEY))||0;
+const setNRC = n=>{ localStorage.setItem(NRC_KEY, Math.max(0,Math.floor(n))); renderBal(); };
+const setUSD = n=>{ localStorage.setItem(USD_KEY, Math.max(0,parseFloat(n.toFixed(2)))); renderBal(); };
+const fmt    = n=> Math.floor(n).toLocaleString('tr-TR');
+const fmtUSD = n=> '$'+parseFloat(n).toFixed(2);
+
+function renderBal(){
+  document.getElementById('nrcBal').textContent = fmt(getNRC());
+  document.getElementById('usdBal').textContent = fmtUSD(getUSD());
+}
+
+// ── TRANSACTIONS ──────────────────────────────────────────────────────────
+function getTx(){ try{ return JSON.parse(localStorage.getItem(TX_KEY))||[]; }catch(e){ return []; } }
+function addTx(desc, amt, type){
+  const txs = getTx();
+  txs.unshift({desc, amt, type, ts: Date.now()});
+  if(txs.length > 20) txs.pop();
+  localStorage.setItem(TX_KEY, JSON.stringify(txs));
+  renderTx();
+}
+function renderTx(){
+  const txs = getTx();
+  const el = document.getElementById('txList');
+  if(txs.length === 0){ el.innerHTML = '<div style="text-align:center;color:var(--ivdim);font-size:11px;padding:16px;">Henüz işlem yok</div>'; return; }
+  el.innerHTML = txs.slice(0,8).map(tx=>{
+    const d = new Date(tx.ts);
+    const time = d.toLocaleDateString('tr-TR')+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    const amtFmt = tx.type==='usd' ? fmtUSD(tx.amt) : fmt(tx.amt)+' NRC';
+    const cls = tx.amt>0?'pos':'neg';
+    return `<div class="tx">
+      <div><div class="tx-desc">${tx.desc}</div><div class="tx-time">${time}</div></div>
+      <div class="tx-amt ${cls}">${tx.amt>0?'+':''}${amtFmt}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── DAILY BONUS ───────────────────────────────────────────────────────────
+function checkBonus(){
+  const last = parseInt(localStorage.getItem(BONUS_KEY))||0;
+  const now  = Date.now();
+  const diff = now - last;
+  const h24  = 24*60*60*1000;
+  const btn  = document.getElementById('bonusBtn');
+  const timer= document.getElementById('bonusTimer');
+
+  if(diff >= h24){
+    btn.disabled = false;
+    btn.textContent = '$10 BONUS AL';
+    timer.textContent = 'Hazır! 🎁';
+    timer.style.color = 'var(--green)';
+  } else {
+    btn.disabled = true;
+    const remaining = h24 - diff;
+    const h = Math.floor(remaining/3600000);
+    const m = Math.floor((remaining%3600000)/60000);
+    const s = Math.floor((remaining%60000)/1000);
+    timer.textContent = `${h}s ${m}d ${s}s`;
+    timer.style.color = 'var(--ivdim)';
+    btn.textContent = 'Bekleniyor...';
+  }
+}
+
+document.getElementById('bonusBtn').addEventListener('click',()=>{
+  setUSD(getUSD()+10);
+  localStorage.setItem(BONUS_KEY, Date.now());
+  addTx('🎁 Günlük bonus', 10, 'usd');
+  showToast('🎁 +$10 Günlük Bonus Alındı!');
+  checkBonus();
+});
+
+setInterval(checkBonus, 1000);
+
+// ── MISSIONS ──────────────────────────────────────────────────────────────
+const MISSIONS = [
+  {id:'slot10',   icon:'🎰', title:'Slot Makinesi', desc:'Slot\'ta 10 tur oyna',      target:10,  reward:5,   unit:'usd', key:'slot_spins'},
+  {id:'rulet5',   icon:'🎡', title:'Rulet Ustası',  desc:'Rulet\'te 5 tur oyna',      target:5,   reward:3,   unit:'usd', key:'rulet_spins'},
+  {id:'bj21',     icon:'🃏', title:'Blackjack 21',  desc:'Blackjack\'te 21 yap',      target:1,   reward:10,  unit:'usd', key:'bj_21'},
+  {id:'plinko_hi',icon:'⚪', title:'Plinko Yüksek', desc:'Plinko\'da yüksek risk oyna',target:3,  reward:7,   unit:'usd', key:'plinko_high'},
+];
+
+function getMissions(){ try{ return JSON.parse(localStorage.getItem(MISSION_KEY))||{}; }catch(e){ return {}; } }
+function saveMissions(m){ localStorage.setItem(MISSION_KEY, JSON.stringify(m)); }
+
+function renderMissions(){
+  const state = getMissions();
+  const el = document.getElementById('missionList');
+  el.innerHTML = MISSIONS.map(m=>{
+    const progress = state[m.key]||0;
+    const claimed  = state[m.id+'_claimed']||false;
+    const done     = progress >= m.target;
+    const pct      = Math.min(100, (progress/m.target)*100);
+
+    let actionEl = '';
+    if(claimed){
+      actionEl = `<div class="m-done-badge">✓ ALINDI</div>`;
+    } else if(done){
+      actionEl = `<button class="m-claim-btn" data-id="${m.id}">AL</button>`;
+    } else {
+      actionEl = `<div class="m-reward-amt">+$${m.reward}</div><div class="m-reward-lbl">Ödül</div>`;
+    }
+
+    return `<div class="mission ${done||claimed?'done':''}">
+      <div class="m-icon">${m.icon}</div>
+      <div class="m-info">
+        <div class="m-title">${m.title}</div>
+        <div class="m-progress">${m.desc} · ${Math.min(progress,m.target)}/${m.target}</div>
+        <div class="m-progress-bar"><div class="m-progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="m-reward">${actionEl}</div>
+    </div>`;
+  }).join('');
+
+  // Claim buttons
+  document.querySelectorAll('.m-claim-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const id = btn.dataset.id;
+      const mission = MISSIONS.find(m=>m.id===id);
+      if(!mission) return;
+      const state = getMissions();
+      state[id+'_claimed'] = true;
+      saveMissions(state);
+      setUSD(getUSD() + mission.reward);
+      addTx(`✅ Görev: ${mission.title}`, mission.reward, 'usd');
+      showToast(`✅ +$${mission.reward} Görev Ödülü!`);
+      renderMissions();
+    });
+  });
+}
+
+// Listen for mission progress updates from other pages
+window.addEventListener('storage', e=>{
+  if(e.key === MISSION_KEY || e.key === 'nrc_mission_update') renderMissions();
+});
+setInterval(renderMissions, 2000);
+
+// ── ADMIN KODU ────────────────────────────────────────────────────────────
+// Kodlar: miktar → kod eşleştirmesi
+// Her kod bir kez kullanılabilir (kullanılan kodlar localStorage'da saklanır)
+// Kodlar localStorage'dan okunur — admin_codes olarak saklanır
+// Yeni kod eklemek için: localStorage.setItem('nrc_admin_codes', JSON.stringify({...kodlar}))
+function getAdminCodes(){
+  try{
+    const stored = localStorage.getItem('nrc_admin_codes');
+    if(stored) return JSON.parse(stored);
+  }catch(e){}
+  // Fallback sabit kodlar
+  return {
+    'NRC100': 100, 'NRC200': 200, 'NRC500': 500, 'NRC1000': 1000,
+    'PATRON100': 100, 'PATRON200': 200, 'PATRON500': 500, 'PATRON1000': 1000,
+    'GOLD500': 500, 'CASINO200': 200, 'JACKPOT1000': 1000,
+  };
+}
+const ADMIN_CODES = getAdminCodes();
+
+let selectedAmt = 0;
+const USED_KEY = 'nrc_used_codes';
+
+function getUsedCodes(){
+  try{ return JSON.parse(localStorage.getItem(USED_KEY))||[]; }catch(e){ return []; }
+}
+function markUsed(code){
+  const used = getUsedCodes();
+  used.push(code.toUpperCase());
+  localStorage.setItem(USED_KEY, JSON.stringify(used));
+}
+
+// Miktar seç
+document.querySelectorAll('.admin-pkg').forEach(pkg=>{
+  pkg.addEventListener('click',()=>{
+    document.querySelectorAll('.admin-pkg').forEach(p=>p.classList.remove('sel'));
+    pkg.classList.add('sel');
+    selectedAmt = parseInt(pkg.dataset.amt);
+    document.getElementById('adminSelected').textContent = `Seçilen: $${selectedAmt} sanal dolar`;
+    document.getElementById('adminMsg').textContent = '';
+    document.getElementById('adminMsg').className = 'admin-msg';
+  });
+});
+
+// Kodu kullan
+document.getElementById('adminBtn').addEventListener('click',()=>{
+  const code = document.getElementById('adminInput').value.trim().toUpperCase();
+  const msgEl = document.getElementById('adminMsg');
+
+  if(!code){ setAdminMsg('Lütfen bir kod gir!','err'); return; }
+  if(selectedAmt===0){ setAdminMsg('Lütfen bir miktar seç!','err'); return; }
+
+  const usedCodes = getUsedCodes();
+
+  // Kod daha önce kullanıldı mı?
+  if(usedCodes.includes(code)){ setAdminMsg('Bu kod zaten kullanıldı!','err'); return; }
+
+  // Kod geçerli mi?
+  const codeAmt = ADMIN_CODES[code];
+  if(!codeAmt){ setAdminMsg('Geçersiz kod!','err'); return; }
+
+  // Kod miktarı ile seçilen miktar eşleşiyor mu?
+  if(codeAmt !== selectedAmt){ setAdminMsg(`Bu kod $${codeAmt} için geçerli!`,'err'); return; }
+
+  // Geçerli — yükle
+  // PATRON-VIP kodu süresiz — kullanılmış listesine ekleme
+  if(code !== 'PATRON-VIP') markUsed(code);
+  setUSD(getUSD() + selectedAmt);
+  addTx(`💳 Admin kodu: ${code}`, selectedAmt, 'usd');
+  showToast(`✅ +$${selectedAmt} Başarıyla Yüklendi!`);
+  setAdminMsg(`✅ $${selectedAmt} sanal dolar yüklendi!`,'ok');
+  document.getElementById('adminInput').value = '';
+  document.querySelectorAll('.admin-pkg').forEach(p=>p.classList.remove('sel'));
+  document.getElementById('adminSelected').textContent = 'Miktar seçilmedi';
+  selectedAmt = 0;
+});
+
+function setAdminMsg(msg, type){
+  const el = document.getElementById('adminMsg');
+  el.textContent = msg;
+  el.className = 'admin-msg ' + type;
+}
+
+// ── SHOP ──────────────────────────────────────────────────────────────────
+document.querySelectorAll('.shop-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const usd = parseFloat(btn.dataset.usd);
+    const nrc = parseInt(btn.dataset.nrc);
+    const bal = getUSD();
+    if(bal < usd){
+      showToast('❌ Yetersiz sanal dolar!');
+      return;
+    }
+    setUSD(bal - usd);
+    setNRC(getNRC() + nrc);
+    addTx(`🛒 ${fmt(nrc)} NRC Satın Alındı`, -usd, 'usd');
+    addTx(`🪙 ${fmt(nrc)} NRC Yüklendi`, nrc, 'nrc');
+    showToast(`🪙 +${fmt(nrc)} NRC Hesabına Eklendi!`);
+  });
+});
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+let toastT;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+init();
+renderBal();
+checkBonus();
+renderMissions();
+renderTx();
+
+})();
+</script>
+</body>
+</html>
