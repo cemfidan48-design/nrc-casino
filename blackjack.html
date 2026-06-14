@@ -75,6 +75,13 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .a-split{background:linear-gradient(135deg,#e040fb,#7b1fa2);color:#fff;box-shadow:0 3px 0 #4a0072;}
 footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;padding-bottom:4px;}
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#08081a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NRC Casino">
+<link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
 <div class="page"><div class="inner">
@@ -255,5 +262,6 @@ deck=shuffle([...makeDeck(),...makeDeck(),...makeDeck(),...makeDeck(),...makeDec
 renderNav();setBtns('bet');
 })();
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body>
 </html>

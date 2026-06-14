@@ -109,6 +109,13 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 
 footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.25;letter-spacing:.08em;padding-bottom:8px;}
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#08081a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NRC Casino">
+<link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
 <canvas id="particles"></canvas>
@@ -446,6 +453,30 @@ document.getElementById('soundBtn').addEventListener('click',()=>{
 document.querySelectorAll('.gc').forEach(gc=>gc.addEventListener('click',()=>{if(soundOn)playCoin();}));
 document.addEventListener('click',function init(){if(soundOn)startBg();document.removeEventListener('click',init);},{once:true});
 
+})();
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
+<div id="pwaBanner" style="display:none;position:fixed;left:12px;right:12px;bottom:78px;z-index:2000;background:#10102a;border:1px solid #ffd700;border-radius:14px;padding:12px 14px;box-shadow:0 8px 28px rgba(0,0,0,.6);color:#f0e6ff;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <img src="icon-192.png" alt="" style="width:38px;height:38px;border-radius:8px;flex-shrink:0;">
+    <div style="flex:1;font-size:12px;line-height:1.4;">
+      <b style="font-family:Orbitron,monospace;color:#ffd700;">Ana Ekrana Ekle</b><br>
+      <span id="pwaTxt">Kurarsan bakiyen kaybolmaz, uygulama gibi açılır.</span>
+    </div>
+    <button id="pwaClose" style="background:none;border:none;color:#6a6a8a;font-size:22px;line-height:1;cursor:pointer;flex-shrink:0;">&times;</button>
+  </div>
+  <button id="pwaInstall" style="display:none;width:100%;margin-top:10px;padding:10px;border:none;border-radius:9px;font-family:Orbitron,monospace;font-weight:900;font-size:12px;letter-spacing:.05em;background:linear-gradient(135deg,#ffd700,#e65100);color:#0a0800;cursor:pointer;">ANA EKRANA EKLE</button>
+</div>
+<script>
+(function(){
+  var banner=document.getElementById('pwaBanner'),installBtn=document.getElementById('pwaInstall'),txt=document.getElementById('pwaTxt'),deferred=null;
+  if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) return;
+  if(sessionStorage.getItem('pwa_dismiss')) return;
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;installBtn.style.display='block';banner.style.display='block';});
+  installBtn.addEventListener('click',function(){if(deferred){deferred.prompt();deferred=null;banner.style.display='none';}});
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isSafari=/^((?!chrome|crios|fxios).)*safari/i.test(navigator.userAgent);
+  if(isIOS&&isSafari){txt.innerHTML='Alttaki <b>Paylas</b> &#8593; &rarr; <b>Ana Ekrana Ekle</b> ile kur, bakiyen kaybolmasin.';banner.style.display='block';}
+  document.getElementById('pwaClose').addEventListener('click',function(){banner.style.display='none';sessionStorage.setItem('pwa_dismiss','1');});
 })();
 </script>
 </body>

@@ -30,18 +30,37 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .gtitle{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;letter-spacing:.12em;background:linear-gradient(135deg,#ffd700,#ff6f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
 /* BALANCE CARDS */
-.bal-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:16px;}
+.bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .bal-card{
   background:var(--panel);border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;padding:16px;position:relative;overflow:hidden;
+  border-radius:16px;padding:14px;position:relative;overflow:hidden;
 }
-.bal-card.nrc{border-color:rgba(255,215,0,.2);}
-.bal-card.nrc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.07),transparent 60%);pointer-events:none;}
-.bc-icon{font-size:24px;margin-bottom:8px;}
-.bc-lbl{font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ivdim);margin-bottom:4px;}
-.bc-amt{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;line-height:1;}
-.bc-amt.nrc{color:var(--gold);}
+.bal-card.chip{border-color:rgba(255,215,0,.22);}
+.bal-card.chip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.08),transparent 60%);pointer-events:none;}
+.bal-card.coin{border-color:rgba(0,230,118,.22);}
+.bal-card.coin::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,230,118,.07),transparent 60%);pointer-events:none;}
+.bc-icon{margin-bottom:8px;height:30px;display:flex;align-items:center;}
+.bc-lbl{font-size:8px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ivdim);margin-bottom:4px;}
+.bc-amt{font-family:'Orbitron',monospace;font-size:19px;font-weight:900;line-height:1;}
+.bc-amt.chip{color:var(--gold);}
+.bc-amt.coin{color:var(--green);}
 .bc-sub{font-size:9px;color:var(--ivdim);margin-top:3px;}
+
+/* CONVERT */
+.convert-card{
+  background:linear-gradient(135deg,rgba(255,215,0,.06),rgba(0,230,118,.05));
+  border:1px solid rgba(255,255,255,.1);border-radius:16px;
+  padding:14px;margin-bottom:14px;
+}
+.convert-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--ivory);}
+.convert-flow{display:flex;align-items:center;gap:8px;}
+.convert-input{flex:1;background:rgba(0,0,0,.5);border:1px solid rgba(0,230,118,.3);color:var(--green);font-family:'Orbitron',monospace;font-size:15px;font-weight:700;text-align:center;padding:11px;border-radius:10px;outline:none;width:100%;}
+.convert-input::placeholder{color:rgba(0,230,118,.3);font-size:11px;}
+.convert-arrow{font-size:16px;color:var(--ivdim);flex-shrink:0;}
+.convert-out{flex:1;text-align:center;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--gold);}
+.convert-btn{width:100%;margin-top:10px;padding:12px;border:none;border-radius:10px;font-family:'Orbitron',monospace;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--gold),#e65100);color:#0a0800;box-shadow:0 4px 0 #4a1800;transition:transform .1s,box-shadow .1s,opacity .15s;}
+.convert-btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 #4a1800;}
+.convert-btn[disabled]{opacity:.4;cursor:default;}
 
 /* DAILY BONUS */
 .bonus-card{
@@ -67,17 +86,13 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .bonus-btn[disabled]{opacity:.4;cursor:default;background:rgba(255,255,255,.08);}
 .bonus-desc{font-size:10px;color:var(--ivdim);text-align:center;margin-top:8px;}
 
-/* MISSIONS */
+/* SECTIONS */
 .sec{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
 .sec::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.3),transparent);}
 
+/* MISSIONS */
 .missions{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-.mission{
-  background:var(--panel);border:1px solid rgba(255,255,255,.07);
-  border-radius:12px;padding:12px 14px;
-  display:flex;align-items:center;gap:12px;
-  position:relative;overflow:hidden;
-}
+.mission{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;}
 .mission.done{border-color:rgba(0,230,118,.3);}
 .mission.done::before{content:'';position:absolute;inset:0;background:rgba(0,230,118,.04);pointer-events:none;}
 .m-icon{font-size:22px;flex-shrink:0;}
@@ -87,59 +102,41 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 .m-progress-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:6px;overflow:hidden;}
 .m-progress-fill{height:100%;border-radius:2px;background:linear-gradient(to right,var(--cyan),var(--pink));transition:width .3s;}
 .m-reward{text-align:right;flex-shrink:0;}
-.m-reward-amt{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--green);}
+.m-reward-amt{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--gold);}
 .m-reward-lbl{font-size:8px;color:var(--ivdim);}
-.m-done-badge{
-  background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.3);
-  border-radius:6px;padding:4px 8px;
-  font-size:9px;font-weight:700;color:var(--green);
-  font-family:'Orbitron',monospace;letter-spacing:.06em;
-}
-.m-claim-btn{
-  background:linear-gradient(135deg,var(--green),#00796b);
-  border:none;border-radius:8px;padding:7px 12px;
-  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
-  color:#001a10;cursor:pointer;
-  box-shadow:0 2px 0 #004d40;
-  transition:transform .1s;
-}
+.m-done-badge{background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.3);border-radius:6px;padding:4px 8px;font-size:9px;font-weight:700;color:var(--green);font-family:'Orbitron',monospace;letter-spacing:.06em;}
+.m-claim-btn{background:linear-gradient(135deg,var(--green),#00796b);border:none;border-radius:8px;padding:7px 12px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:#001a10;cursor:pointer;box-shadow:0 2px 0 #004d40;transition:transform .1s;}
 .m-claim-btn:active{transform:translateY(2px);}
 
-/* ADMIN PANEL */
+/* SHOP */
+.shop{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.shop-card{background:var(--panel);border:1px solid rgba(0,229,255,.18);border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;overflow:hidden;}
+.shop-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,.06),transparent 60%);pointer-events:none;}
+.shop-amt{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--cyan);line-height:1;}
+.shop-unit{font-size:9px;color:var(--ivdim);letter-spacing:.08em;text-transform:uppercase;}
+.shop-fis{font-size:10px;color:var(--gold);font-family:'Orbitron',monospace;}
+.shop-btn{width:100%;padding:9px;border:none;border-radius:9px;font-family:'Orbitron',monospace;font-size:10px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--cyan),#0091ea);color:#001a1f;box-shadow:0 3px 0 #014a63;transition:transform .1s,box-shadow .1s;}
+.shop-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #014a63;}
+.shop-note{font-size:9px;color:var(--ivdim);text-align:center;margin:-6px 0 16px;line-height:1.5;}
+
+/* CODE PANEL */
 .admin-panel{background:var(--panel);border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;}
 .admin-desc{font-size:10px;color:var(--ivdim);line-height:1.5;}
 .admin-input{background:rgba(0,0,0,.5);border:1px solid rgba(255,215,0,.3);color:var(--gold);font-family:'Orbitron',monospace;font-size:14px;font-weight:700;text-align:center;padding:10px;border-radius:10px;outline:none;width:100%;letter-spacing:.1em;}
 .admin-input::placeholder{color:rgba(255,215,0,.3);font-size:11px;letter-spacing:.05em;}
-.admin-pkgs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-.admin-pkg{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 4px;text-align:center;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--ivdim);cursor:pointer;transition:all .15s;}
-.admin-pkg.sel{background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.4);color:var(--green);box-shadow:0 0 8px rgba(0,230,118,.2);}
-.admin-pkg:active{transform:scale(.95);}
-.admin-selected{font-size:10px;color:var(--ivdim);text-align:center;}
 .admin-btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Orbitron',monospace;font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--gold),#e65100);color:#0a0800;box-shadow:0 4px 0 #4a1800,0 0 14px rgba(255,215,0,.2);transition:transform .1s,box-shadow .1s,opacity .15s;}
 .admin-btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 #4a1800;}
-.admin-btn[disabled]{opacity:.4;cursor:default;}
 .admin-msg{font-size:11px;font-weight:600;text-align:center;min-height:16px;}
 .admin-msg.ok{color:var(--green);}
 .admin-msg.err{color:var(--red);}
 
 /* TOAST */
-.toast{
-  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);
-  background:#0f1a0f;border:1px solid var(--green);
-  color:var(--ivory);font-size:12px;font-weight:600;
-  padding:12px 20px;border-radius:40px;
-  white-space:nowrap;transition:transform .3s cubic-bezier(.34,1.56,.64,1);
-  z-index:999;pointer-events:none;
-}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:#0f1a0f;border:1px solid var(--green);color:var(--ivory);font-size:12px;font-weight:600;padding:12px 20px;border-radius:40px;white-space:nowrap;transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;pointer-events:none;max-width:90vw;overflow:hidden;text-overflow:ellipsis;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 
 /* HISTORY */
 .tx-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
-.tx{
-  background:var(--panel);border:1px solid rgba(255,255,255,.06);
-  border-radius:10px;padding:10px 14px;
-  display:flex;justify-content:space-between;align-items:center;
-}
+.tx{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
 .tx-desc{font-size:11px;color:var(--ivory);}
 .tx-time{font-size:9px;color:var(--ivdim);margin-top:2px;}
 .tx-amt{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;}
@@ -148,6 +145,13 @@ body{background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--i
 
 footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spacing:.08em;padding-bottom:4px;}
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#08081a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NRC Casino">
+<link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
 <div class="page"><div class="inner">
@@ -158,12 +162,42 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 
 <!-- BALANCE CARDS -->
 <div class="bal-grid">
-  <div class="bal-card nrc">
-    <div class="bc-icon">🪙</div>
-    <div class="bc-lbl">NRC Bakiye</div>
-    <div class="bc-amt nrc" id="nrcBal">100,000</div>
-    <div class="bc-sub">Casino Chip · Oyun Parası</div>
+  <div class="bal-card chip">
+    <div class="bc-icon">
+      <svg width="30" height="30" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" fill="#ffd700" stroke="#e65100" stroke-width="2"/>
+        <circle cx="20" cy="20" r="18" fill="none" stroke="#1a1200" stroke-width="2" stroke-dasharray="4 4.42"/>
+        <circle cx="20" cy="20" r="11" fill="none" stroke="#e65100" stroke-width="2"/>
+        <text x="20" y="25" font-size="11" font-weight="900" fill="#7a3500" text-anchor="middle" font-family="Orbitron,monospace">N</text>
+      </svg>
+    </div>
+    <div class="bc-lbl">Casino Fişi</div>
+    <div class="bc-amt chip" id="chipBal">10.000</div>
+    <div class="bc-sub">Oyunlarda kullanılır</div>
   </div>
+  <div class="bal-card coin">
+    <div class="bc-icon">
+      <svg width="30" height="30" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" fill="#00e676" stroke="#00796b" stroke-width="2"/>
+        <circle cx="20" cy="20" r="11" fill="none" stroke="#004d40" stroke-width="2"/>
+        <text x="20" y="25" font-size="12" font-weight="900" fill="#003d2e" text-anchor="middle" font-family="Orbitron,monospace">A</text>
+      </svg>
+    </div>
+    <div class="bc-lbl">ARI Token</div>
+    <div class="bc-amt coin" id="coinBal">0</div>
+    <div class="bc-sub">Fişe çevrilir (1 = 100 fiş)</div>
+  </div>
+</div>
+
+<!-- CONVERT -->
+<div class="convert-card">
+  <div class="convert-top">🔄 ARI Token → Fiş</div>
+  <div class="convert-flow">
+    <input class="convert-input" type="number" id="convInput" placeholder="ARI Token" min="1" inputmode="numeric">
+    <span class="convert-arrow">→</span>
+    <span class="convert-out" id="convOut">0 fiş</span>
+  </div>
+  <button class="convert-btn" id="convBtn">Fişe Çevir (×10)</button>
 </div>
 
 <!-- DAILY BONUS -->
@@ -172,27 +206,25 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
     <span class="bonus-title">🎁 GÜNLÜK BONUS</span>
     <span class="bonus-timer" id="bonusTimer">Hazır!</span>
   </div>
-  <button class="bonus-btn" id="bonusBtn">10.000 NRC AL</button>
-  <div class="bonus-desc">Her 24 saatte bir 10.000 NRC kazan</div>
+  <button class="bonus-btn" id="bonusBtn">10.000 FİŞ AL</button>
+  <div class="bonus-desc">Her 24 saatte bir 10.000 fiş kazan</div>
 </div>
 
 <!-- MISSIONS -->
 <div class="sec">Günlük Görevler</div>
 <div class="missions" id="missionList"></div>
 
+<!-- SHOP -->
+<div class="sec">ARI Token Satın Al</div>
+<div class="shop" id="shopGrid"></div>
+<div class="shop-note">Paketi seç → Telegram'da talebini gönder → kodun gelince aşağıdan yükle.</div>
+
 <!-- KOD İLE YÜKLEME -->
-<div class="sec">Kod ile NRC Yükle</div>
+<div class="sec">Kod ile Yükle</div>
 <div class="admin-panel">
-  <div class="admin-desc">Sana özel gönderilen kodu girip miktarı seçerek NRC yükleyebilirsin.</div>
+  <div class="admin-desc">Sana gönderilen kodu gir. Kod otomatik tanınır: fiş kodu fiş yükler, ARI Token kodu ARI Token yükler.</div>
   <input class="admin-input" type="text" id="adminInput" placeholder="Kodu buraya gir..." autocomplete="off">
-  <div class="admin-pkgs">
-    <div class="admin-pkg" data-amt="5000">5.000</div>
-    <div class="admin-pkg" data-amt="10000">10.000</div>
-    <div class="admin-pkg" data-amt="50000">50.000</div>
-    <div class="admin-pkg" data-amt="100000">100.000</div>
-  </div>
-  <div class="admin-selected" id="adminSelected">Miktar seçilmedi</div>
-  <button class="admin-btn" id="adminBtn">🪙 Kodu Kullan</button>
+  <button class="admin-btn" id="adminBtn">🔑 Kodu Kullan</button>
   <div class="admin-msg" id="adminMsg"></div>
 </div>
 
@@ -219,39 +251,50 @@ footer{font-size:9px;color:var(--ivdim);text-align:center;opacity:.3;letter-spac
 'use strict';
 
 // ── KEYS ──────────────────────────────────────────────────────────────────
-const NRC_KEY    = 'nrc_balance';
+const CHIP_KEY   = 'nrc_balance';   // Casino Fişi (oyunlar bunu okur)
+const COIN_KEY   = 'nrc_coins';     // ARI Token
 const INIT_KEY   = 'nrc_initialized';
 const BONUS_KEY  = 'nrc_last_bonus';
 const MISSION_KEY= 'nrc_missions';
 const TX_KEY     = 'nrc_transactions';
-const STATS_KEY  = 'nrc_stats';
+const USED_KEY   = 'nrc_used_codes';
 
-const NRC_INIT   = 100000;
+const CHIP_INIT  = 10000;
 const DAILY_BONUS= 10000;
+const RATE       = 100;  // 1 ARI Token = 100 fiş
 
-// ── INIT ──────────────────────────────────────────────────────────────────
+// ── KOD HAVUZLARI (SHA-256 hash — düz kod kaynak kodda görünmez) ────────────
+const CHIP_HASHES = {"e88c02f9fe712c58f1d551d93116904e42cc2b229b71f1501c5d0056ea3f3e4f":5000,"d7ff7ec43de6b45aa666e9c17b41df4a00dcf9178215f8b1be20656efe9d4c23":5000,"152a27960c28964e66d0dd918eff19e4ed07f318a55ed0f1f7613312da49f167":5000,"6fa04cf1e375a88848ecc3d9362b779bb7d41c294be9d2520428017a05368d0f":5000,"3e1fc1a64ed1e558a72e1ab3345deb51bb39be49b4030712ac0967f028c6e15d":5000,"1751f6cc3ed96af7c66bb6dffebf74ec01f831f14ad1e59e091caec3f8fc9f2f":5000,"58ac07974e8dc42b2636220d66e5cb1656dfe7db9cb60e64604713b062569a93":5000,"f0e940b13b811bc1a1ff95a0688fc25169798f0403bc933e20af576050264b65":5000,"c4c0881f1473ce6fd7d10af1d2582d9b0adfba3e448424990295a64c0a34c623":5000,"8c66b2241b7f1ec9d8c0f7d2b086b6b2f960a803a67f2f169110a02bb03efc38":5000,"65e16161c11b14264811560997a86dccd2ad4770712a36b3ec8fc2981313c224":10000,"4485d5e6e145fb01cf38aa30a6d8984791d6e3758bc2029e530c4e66ffedc900":10000,"da024d065fae4c456f4109272e957d2e358cd8632d98eb4904f8872acbc4edb6":10000,"3ea0524a5858fa022f9469ea57d48d80c36b15ada11bd183a0e4d8978d1c1625":10000,"7cdd3dbf7dc08ac885378b581948fe69478040b51c9dd1bba239e92ef1dae8c4":10000,"57d4ce49f5dfebfd62cbf4ad885c5eed017e2300c087a3ce5be13d0d7f727e42":10000,"3eca635f6761a64be24b7719883e7c9c0e979c20214ff3395a94b461b39bcfa8":10000,"ce9216f70ec0459755eaf95ab921b8a53e4e8c471452b154bef5c2505331f6a4":10000,"74950beae98860f46468b868f5d41aece430300d0a31f3ee535c3bbaa25933fa":10000,"4df65623acbd7f09c783764f6eed0d737e8aa38536eecd65c8294d85971114a0":10000,"6a6aad90212b5da1a3cf7c9c28bef9eae3907ab515cc85945c05bb7631faf468":50000,"dac5cc352d2436f7f44d6da5aa485debc20ff86d4b0a84104673981fb512ff71":50000,"25ec7607b4c6488aef2661628eae41b9da3e81dc1996bba6e2da03c1c9364e33":50000,"20a09e08748ed011e40f69260fe16e8e42bfaa553778227e647c46fee3c7e182":50000,"48acb026a79b2170fcca24c72a2d0ea4508e4c4c99bd1cf3271997b964121b67":50000,"e0a988f1bd35405371caecb7d6a77220bfbce3d992ba03a1d4cb3bbd47eed447":50000,"2f5241de14a8324dc40e6f0691ca18ddf6b5c165f55e423b4e9b448c1a39bcc3":50000,"f6c2ee3761c73274d5fb5cdaa55578c7666948ef70acd69510e2db5fad5ae484":50000,"a8ba21238fb759911d8d247e606d6f7c810766e95e76c7c1718efff7993df433":50000,"6c30dda1c223b12117af3a3c4c07315d3b84aca1b11cc412f2b574d94f1f90fe":50000,"66901e8796b3dddf7eccfde4f2c3f74457dddd58b669d548e977216624205eb5":100000,"f41ea3a806a11da8130e8b253052d17470a69a2a070262aab605d0a45ecef617":100000,"a18e4826ff0b60d5fce8df1ab44d25ba0612e419da179411ff0b091d195f51cc":100000,"5ba3f75df82d846fb95cf90d4cb2ee0d393174dac5892e9f6ab34489ae6e40f4":100000,"f281ea1fad02c7110690299e3f697d836eab5190fb3cb080ba88ee92a0e93788":100000,"aaa8a7fbd4d5a0fb5049d7ebf35171349fc5d41f0adec109ba543142ba9475dc":100000,"2105aa9ec9ca586e0061936e69e6b78d58eb260934e56e56fc046f68f417f7ee":100000,"1589754d098ddb501b32931f89eb79e67dad5c8aa3dd3f25cda6d39658723e2c":100000,"f0990cb05399b0f7b05f0e2cade3a4aa60deeb38cb2a65c6d2565095a8ab975c":100000,"8b446be88cb8fc13fe1d0e1c0f8f5fefea8667e4bec9d8dee1f39302cff603c2":100000};   // fiş yükleyen kodlar (eski 40)
+const COIN_HASHES = {"612b6e46f40ba2712828153b7f8e20d603055fe53c02e0cddfb966a4188d1274":100,"05f883c5ed5d2def1c3c91007b2f5d88cbc196dc55ad797ff7824bbdd9fc7422":100,"5a8be362dbf7fb18bdcaecf91b035e925f716c7a51c23022e2d8b479b4939360":100,"5387be3b23f065501d8bc4cd8f7fee21e1d608379c43199308245fc8c274768e":100,"50dbbbe127fcb669d0c18a331261a991ff15f0d242c1f97aaf683ad33de876fb":100,"ae9a0ed93c6c51ff0a03d1eb7c73bf3ffa205d1531f41e6c17650e66fd270bf2":100,"fbda103324f30c7aaadf028e4a8f142bb627e4cf9fc14931a1b55704072c0450":100,"22f2611c2385c4bc4dc4dd2f12e1385f7cd57fed6a4e9c935e0496ece2fa2926":100,"b78e9a5d325e7a8113674525efef559460b7963492823ce6fcb9cc27a0838018":100,"dd92ecdcf695820f83ae4acbdd241479fa508560fbc4b489d750d3368a11445e":100,"13e6e9779250bb1e5e6bc1f627df7ad77fe1d27424e189fdf2a683e86a951801":200,"b45e13f83fb26fef7050795eee6702fcc711e75349b7fcb44b86fcb4dfa6ea40":200,"07b1708e81c26210ca8786589c0a946ef2f5cdb6583c624a6c2720a5968e4728":200,"42337a491476854ee76940146749d0517daf10fb3c740900e8106778fa403279":200,"91c669989d353ed7d212e0dc1591a6120f691dcef1ecdd4b5f639095c0d3dc24":200,"debabdd586d7ccdf764cffba02f6cc0052bcf1c5f254addbc371cb16dfe3f31d":200,"5834b34e692ea8afe6f63d4f75099812cfde96ba316913818858ff638ad0a3f4":200,"7dc28c667b054b82bc033fec961b6a68e25c5b2f214a0b4ab9103ee7eccb1549":200,"397b4269deb681ec3888614b1b0ad852c0841ce6fe5b8ed503392c0851390162":200,"6fca71c273d7dbe4d330a4d182d534706640e1d7f2767fa8cf4c264021bc10df":200,"b6cb85a77edf6f5e67e7fdaa481f4fd4498381676539ef58c6e3974d224004a9":500,"e0bf75431b5d44f38e8bb41976e2edaa95a9dabad07f10dde3681bb2c6735827":500,"83837e6fb015031eeba64ac3ac9659e92a38519e7c0b5d1ba1bc1fd042b65869":500,"0ba4e0db2e64971502a9964c92f27347ccd98fbb735b85717d0524fc6ba68ac9":500,"0f80dd99ed84e1b702aa8be120a0a3e2d1ec7fe83210071696fc7c73ae9bc777":500,"2d5ed770e33398ea528e9f638858a837f525efa2d4fa5836da1203caef913ed7":500,"74a1de01f8dc685817cf23f84aebf19935955e3606d87979659dd342a4163ed8":500,"146a2c3f741b5488a54c251393c79137d3c2ecd2fafa53252e91e1063c31e120":500,"ee0a9e427f8392aa54da798ff6c84e7681baff8499077be0b9894513edf8e5f0":500,"12ebd9bc5712e6d3f116395b83c0214ebd2ff938e0e55c019f5582cb190067eb":500,"81a805c47b6d63d8dcefbb2578f39a58e2e0f60cb2835524423224e3c304a9b0":1000,"bc41576f8e1ff94b5dcc09705d444e18215d58f595740903d0b10aa408cd609a":1000,"c1b72c84f134937014b2cbb6a5a50064cf278ff50ea68395dc7a937a569bbb18":1000,"61c6b73bec77a34576cc676fa8f349eb1c1f515583e709e5dac5418f7ff822d7":1000,"a09ddbd20f0b94acb379bd3066a8882141ff5e7be5e21837d76c2cc4505a0e31":1000,"ef77404c1ff69e22543afcbda0ee97d11a231c39ee9e797ca4ff9348065f9c80":1000,"a6e9bc8f10b628d549d6af349aae0650cb7b3eae70d1fe99d5b22241f704fde3":1000,"f1c40be32c2cdc144b2a08df3d6a1ca2ce1b7cbaf6e486d1f4e802fde9e84845":1000,"c69c518a4f63736fcbc9ed9bea72197456be5fd7d0d11a376e663a54fc53a015":1000,"e98cbc5cab676d34b214e204ba56109e358aa574a97efaba3019b232e679d235":1000};   // ARI Token yükleyen kodlar (yeni 40)
+
+// ── INIT ────────────────────────────────────────────────────────────────────
 function init(){
   if(!localStorage.getItem(INIT_KEY)){
-    localStorage.setItem(NRC_KEY, NRC_INIT);
+    localStorage.setItem(CHIP_KEY, CHIP_INIT);
+    localStorage.setItem(COIN_KEY, '0');
     localStorage.setItem(INIT_KEY, '1');
-    addTx('🎉 Hoş geldin bonusu', NRC_INIT, 'nrc');
+    addTx('🎉 Hoş geldin fişi', CHIP_INIT, 'chip');
   }
+  if(localStorage.getItem(COIN_KEY)===null) localStorage.setItem(COIN_KEY,'0');
 }
 
 // ── BALANCE ───────────────────────────────────────────────────────────────
-const getNRC = ()=> parseInt(localStorage.getItem(NRC_KEY))||0;
-const setNRC = n=>{ localStorage.setItem(NRC_KEY, Math.max(0,Math.floor(n))); renderBal(); };
-const fmt    = n=> Math.floor(n).toLocaleString('tr-TR');
+const getChip  = ()=> parseInt(localStorage.getItem(CHIP_KEY))||0;
+const setChip  = n=>{ localStorage.setItem(CHIP_KEY, Math.max(0,Math.floor(n))); renderBal(); };
+const getCoins = ()=> parseInt(localStorage.getItem(COIN_KEY))||0;
+const setCoins = n=>{ localStorage.setItem(COIN_KEY, Math.max(0,Math.floor(n))); renderBal(); };
+const fmt      = n=> Math.floor(n).toLocaleString('tr-TR');
 
 function renderBal(){
-  document.getElementById('nrcBal').textContent = fmt(getNRC());
+  document.getElementById('chipBal').textContent = fmt(getChip());
+  document.getElementById('coinBal').textContent = fmt(getCoins());
 }
 
 // ── TRANSACTIONS ──────────────────────────────────────────────────────────
 function getTx(){ try{ return JSON.parse(localStorage.getItem(TX_KEY))||[]; }catch(e){ return []; } }
-function addTx(desc, amt, type){
+function addTx(desc, amt, unit){
   const txs = getTx();
-  txs.unshift({desc, amt, type, ts: Date.now()});
+  txs.unshift({desc, amt, unit, ts: Date.now()});
   if(txs.length > 20) txs.pop();
   localStorage.setItem(TX_KEY, JSON.stringify(txs));
   renderTx();
@@ -263,14 +306,52 @@ function renderTx(){
   el.innerHTML = txs.slice(0,8).map(tx=>{
     const d = new Date(tx.ts);
     const time = d.toLocaleDateString('tr-TR')+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-    const amtFmt = fmt(tx.amt)+' NRC';
+    const label = tx.unit==='coin' ? ' ARI' : ' fiş';
     const cls = tx.amt>0?'pos':'neg';
     return `<div class="tx">
       <div><div class="tx-desc">${tx.desc}</div><div class="tx-time">${time}</div></div>
-      <div class="tx-amt ${cls}">${tx.amt>0?'+':''}${amtFmt}</div>
+      <div class="tx-amt ${cls}">${tx.amt>0?'+':''}${fmt(tx.amt)}${label}</div>
     </div>`;
   }).join('');
 }
+
+// ── CONVERT (ARI Token → Fiş) ─────────────────────────────────────────────
+const convInput = document.getElementById('convInput');
+convInput.addEventListener('input',()=>{
+  const v = parseInt(convInput.value)||0;
+  document.getElementById('convOut').textContent = fmt(v*RATE)+' fiş';
+});
+document.getElementById('convBtn').addEventListener('click',()=>{
+  const v = parseInt(convInput.value)||0;
+  if(v<=0){ showToast('❌ Geçerli bir miktar gir!'); return; }
+  if(v>getCoins()){ showToast('❌ Yeterli ARI Token yok!'); return; }
+  setCoins(getCoins()-v);
+  setChip(getChip()+v*RATE);
+  addTx(`🔄 ${fmt(v)} ARI bozduruldu`, -v, 'coin');
+  addTx(`🪙 Fişe çevrildi`, v*RATE, 'chip');
+  showToast(`✅ ${fmt(v*RATE)} fiş hesabına eklendi!`);
+  convInput.value=''; document.getElementById('convOut').textContent='0 fiş';
+});
+
+// ── SHOP (Satın Al → Telegram talep) ────────────────────────────────────────
+const BOT = 'Kiraathane_Bot';
+const SHOP_PKGS = [100,200,500,1000];
+document.getElementById('shopGrid').innerHTML = SHOP_PKGS.map(p=>`
+  <div class="shop-card">
+    <div class="shop-amt">${fmt(p)}</div>
+    <div class="shop-unit">ARI Token</div>
+    <div class="shop-fis">= ${fmt(p*RATE)} fiş</div>
+    <button class="shop-btn" data-pkg="${p}">Talep Et</button>
+  </div>`).join('');
+document.querySelectorAll('.shop-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const p = btn.dataset.pkg;
+    const msg = `Merhaba, NRC Casino icin ${p} ARI Token paketi istiyorum.`;
+    try{ navigator.clipboard.writeText(msg); }catch(e){}
+    window.open('https://t.me/'+BOT, '_blank');
+    showToast('📋 Talep kopyalandı! Telegram\'da yapıştır & gönder.');
+  });
+});
 
 // ── DAILY BONUS ───────────────────────────────────────────────────────────
 function checkBonus(){
@@ -280,50 +361,42 @@ function checkBonus(){
   const h24  = 24*60*60*1000;
   const btn  = document.getElementById('bonusBtn');
   const timer= document.getElementById('bonusTimer');
-
   if(diff >= h24){
     btn.disabled = false;
-    btn.textContent = '10.000 NRC AL';
+    btn.textContent = '10.000 FİŞ AL';
     timer.textContent = 'Hazır! 🎁';
     timer.style.color = 'var(--green)';
   } else {
     btn.disabled = true;
-    const remaining = h24 - diff;
-    const h = Math.floor(remaining/3600000);
-    const m = Math.floor((remaining%3600000)/60000);
-    const s = Math.floor((remaining%60000)/1000);
-    timer.textContent = `${h}s ${m}d ${s}s`;
+    const rem = h24 - diff;
+    const h = Math.floor(rem/3600000);
+    const m = Math.floor((rem%3600000)/60000);
+    btn.textContent = 'Yarın tekrar gel';
+    timer.textContent = `${h}s ${m}dk`;
     timer.style.color = 'var(--ivdim)';
-    btn.textContent = 'Bekleniyor...';
   }
 }
-
 document.getElementById('bonusBtn').addEventListener('click',()=>{
-  setNRC(getNRC()+DAILY_BONUS);
+  setChip(getChip()+DAILY_BONUS);
   localStorage.setItem(BONUS_KEY, Date.now());
-  addTx('🎁 Günlük bonus', DAILY_BONUS, 'nrc');
-  showToast('🎁 +10.000 NRC Günlük Bonus Alındı!');
+  addTx('🎁 Günlük bonus', DAILY_BONUS, 'chip');
+  showToast('🎁 +10.000 Fiş Günlük Bonus Alındı!');
   checkBonus();
 });
 
-setInterval(checkBonus, 1000);
-
-// ── MISSIONS ──────────────────────────────────────────────────────────────
+// ── MISSIONS ────────────────────────────────────────────────────────────────
 const WEEK_MS = 7*24*60*60*1000;
 const MISSIONS = [
-  {id:'slot10',   icon:'🎰', title:'Slot Makinesi', desc:'Slot\'ta 10 tur oyna',      target:10,  reward:5000, unit:'nrc', key:'slot_spins'},
-  {id:'rulet5',   icon:'🎡', title:'Rulet Ustası',  desc:'Rulet\'te 5 tur oyna',      target:5,   reward:5000, unit:'nrc', key:'rulet_spins'},
-  {id:'bj21',     icon:'🃏', title:'Blackjack 21',  desc:'Blackjack\'te 21 yap',      target:1,   reward:5000, unit:'nrc', key:'bj_21'},
-  {id:'plinko_hi',icon:'⚪', title:'Plinko Yüksek', desc:'Plinko\'da yüksek risk oyna',target:3,  reward:5000, unit:'nrc', key:'plinko_high'},
+  {id:'slot10',   icon:'🎰', title:'Slot Makinesi', desc:'Slot\'ta 10 tur oyna',       target:10, reward:5000, key:'slot_spins'},
+  {id:'rulet5',   icon:'🎡', title:'Rulet Ustası',  desc:'Rulet\'te 5 tur oyna',       target:5,  reward:5000, key:'rulet_spins'},
+  {id:'bj21',     icon:'🃏', title:'Blackjack 21',  desc:'Blackjack\'te 21 yap',       target:1,  reward:5000, key:'bj_21'},
+  {id:'plinko_hi',icon:'⚪', title:'Plinko Yüksek', desc:'Plinko\'da yüksek risk oyna', target:3,  reward:5000, key:'plinko_high'},
 ];
-
 function getMissions(){ try{ return JSON.parse(localStorage.getItem(MISSION_KEY))||{}; }catch(e){ return {}; } }
-function saveMissions(m){ localStorage.setItem(MISSION_KEY, JSON.stringify(m)); }
-
+function saveMissions(s){ localStorage.setItem(MISSION_KEY, JSON.stringify(s)); }
 function renderMissions(){
   const state = getMissions();
   const now = Date.now();
-  // Haftalık reset: ödülü alınalı 7 gün geçen görevleri tekrar aç
   let changed = false;
   MISSIONS.forEach(m=>{
     const ts = state[m.id+'_claimed_ts'];
@@ -342,7 +415,6 @@ function renderMissions(){
     const claimed  = state[m.id+'_claimed']||false;
     const done     = progress >= m.target;
     const pct      = Math.min(100, (progress/m.target)*100);
-
     let actionEl = '';
     if(claimed){
       const ts = state[m.id+'_claimed_ts']||now;
@@ -351,10 +423,9 @@ function renderMissions(){
     } else if(done){
       actionEl = `<button class="m-claim-btn" data-id="${m.id}">AL</button>`;
     } else {
-      actionEl = `<div class="m-reward-amt">+${fmt(m.reward)}</div><div class="m-reward-lbl">NRC</div>`;
+      actionEl = `<div class="m-reward-amt">+${fmt(m.reward)}</div><div class="m-reward-lbl">FİŞ</div>`;
     }
-
-    return `<div class="mission ${done||claimed?'done':''}">
+    return `<div class="mission ${done&&!claimed?'done':''}">
       <div class="m-icon">${m.icon}</div>
       <div class="m-info">
         <div class="m-title">${m.title}</div>
@@ -365,118 +436,74 @@ function renderMissions(){
     </div>`;
   }).join('');
 
-  // Claim buttons
   document.querySelectorAll('.m-claim-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const id = btn.dataset.id;
       const mission = MISSIONS.find(m=>m.id===id);
-      if(!mission) return;
       const state = getMissions();
       state[id+'_claimed'] = true;
       state[id+'_claimed_ts'] = Date.now();
       saveMissions(state);
-      setNRC(getNRC() + mission.reward);
-      addTx(`✅ Görev: ${mission.title}`, mission.reward, 'nrc');
-      showToast(`✅ +${fmt(mission.reward)} NRC Görev Ödülü!`);
+      setChip(getChip() + mission.reward);
+      addTx(`✅ Görev: ${mission.title}`, mission.reward, 'chip');
+      showToast(`✅ +${fmt(mission.reward)} Fiş Görev Ödülü!`);
       renderMissions();
     });
   });
 }
 
-// Listen for mission progress updates from other pages
-window.addEventListener('storage', e=>{
-  if(e.key === MISSION_KEY || e.key === 'nrc_mission_update') renderMissions();
-});
-setInterval(renderMissions, 2000);
-
-// ── KOD İLE YÜKLEME (SHA-256 doğrulamalı) ──────────────────────────────────
-// GÜVENLİK: Kodlar düz metin DEĞİL. Sadece SHA-256 hash'leri gömülü.
-// Kaynak koddan gerçek kod GERİ ÜRETİLEMEZ. Kodlar yalnızca Patron'da saklı.
-const CODE_HASHES = {"e88c02f9fe712c58f1d551d93116904e42cc2b229b71f1501c5d0056ea3f3e4f":5000,"d7ff7ec43de6b45aa666e9c17b41df4a00dcf9178215f8b1be20656efe9d4c23":5000,"152a27960c28964e66d0dd918eff19e4ed07f318a55ed0f1f7613312da49f167":5000,"6fa04cf1e375a88848ecc3d9362b779bb7d41c294be9d2520428017a05368d0f":5000,"3e1fc1a64ed1e558a72e1ab3345deb51bb39be49b4030712ac0967f028c6e15d":5000,"1751f6cc3ed96af7c66bb6dffebf74ec01f831f14ad1e59e091caec3f8fc9f2f":5000,"58ac07974e8dc42b2636220d66e5cb1656dfe7db9cb60e64604713b062569a93":5000,"f0e940b13b811bc1a1ff95a0688fc25169798f0403bc933e20af576050264b65":5000,"c4c0881f1473ce6fd7d10af1d2582d9b0adfba3e448424990295a64c0a34c623":5000,"8c66b2241b7f1ec9d8c0f7d2b086b6b2f960a803a67f2f169110a02bb03efc38":5000,"65e16161c11b14264811560997a86dccd2ad4770712a36b3ec8fc2981313c224":10000,"4485d5e6e145fb01cf38aa30a6d8984791d6e3758bc2029e530c4e66ffedc900":10000,"da024d065fae4c456f4109272e957d2e358cd8632d98eb4904f8872acbc4edb6":10000,"3ea0524a5858fa022f9469ea57d48d80c36b15ada11bd183a0e4d8978d1c1625":10000,"7cdd3dbf7dc08ac885378b581948fe69478040b51c9dd1bba239e92ef1dae8c4":10000,"57d4ce49f5dfebfd62cbf4ad885c5eed017e2300c087a3ce5be13d0d7f727e42":10000,"3eca635f6761a64be24b7719883e7c9c0e979c20214ff3395a94b461b39bcfa8":10000,"ce9216f70ec0459755eaf95ab921b8a53e4e8c471452b154bef5c2505331f6a4":10000,"74950beae98860f46468b868f5d41aece430300d0a31f3ee535c3bbaa25933fa":10000,"4df65623acbd7f09c783764f6eed0d737e8aa38536eecd65c8294d85971114a0":10000,"6a6aad90212b5da1a3cf7c9c28bef9eae3907ab515cc85945c05bb7631faf468":50000,"dac5cc352d2436f7f44d6da5aa485debc20ff86d4b0a84104673981fb512ff71":50000,"25ec7607b4c6488aef2661628eae41b9da3e81dc1996bba6e2da03c1c9364e33":50000,"20a09e08748ed011e40f69260fe16e8e42bfaa553778227e647c46fee3c7e182":50000,"48acb026a79b2170fcca24c72a2d0ea4508e4c4c99bd1cf3271997b964121b67":50000,"e0a988f1bd35405371caecb7d6a77220bfbce3d992ba03a1d4cb3bbd47eed447":50000,"2f5241de14a8324dc40e6f0691ca18ddf6b5c165f55e423b4e9b448c1a39bcc3":50000,"f6c2ee3761c73274d5fb5cdaa55578c7666948ef70acd69510e2db5fad5ae484":50000,"a8ba21238fb759911d8d247e606d6f7c810766e95e76c7c1718efff7993df433":50000,"6c30dda1c223b12117af3a3c4c07315d3b84aca1b11cc412f2b574d94f1f90fe":50000,"66901e8796b3dddf7eccfde4f2c3f74457dddd58b669d548e977216624205eb5":100000,"f41ea3a806a11da8130e8b253052d17470a69a2a070262aab605d0a45ecef617":100000,"a18e4826ff0b60d5fce8df1ab44d25ba0612e419da179411ff0b091d195f51cc":100000,"5ba3f75df82d846fb95cf90d4cb2ee0d393174dac5892e9f6ab34489ae6e40f4":100000,"f281ea1fad02c7110690299e3f697d836eab5190fb3cb080ba88ee92a0e93788":100000,"aaa8a7fbd4d5a0fb5049d7ebf35171349fc5d41f0adec109ba543142ba9475dc":100000,"2105aa9ec9ca586e0061936e69e6b78d58eb260934e56e56fc046f68f417f7ee":100000,"1589754d098ddb501b32931f89eb79e67dad5c8aa3dd3f25cda6d39658723e2c":100000,"f0990cb05399b0f7b05f0e2cade3a4aa60deeb38cb2a65c6d2565095a8ab975c":100000,"8b446be88cb8fc13fe1d0e1c0f8f5fefea8667e4bec9d8dee1f39302cff603c2":100000};
-
-const USED_KEY = 'nrc_used_codes';
-let selectedAmt = 0;
-
-function getUsedCodes(){
-  try{ return JSON.parse(localStorage.getItem(USED_KEY))||[]; }catch(e){ return []; }
-}
-function markUsed(hash){
-  const used = getUsedCodes();
-  used.push(hash);
-  localStorage.setItem(USED_KEY, JSON.stringify(used));
-}
+// ── KOD İLE YÜKLEME (fiş + ARI Token, otomatik tip) ───────────────────────
+function getUsedCodes(){ try{ return JSON.parse(localStorage.getItem(USED_KEY))||[]; }catch(e){ return []; } }
+function markUsed(hash){ const u=getUsedCodes(); u.push(hash); localStorage.setItem(USED_KEY, JSON.stringify(u)); }
 async function sha256(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
-// Miktar seç
-document.querySelectorAll('.admin-pkg').forEach(pkg=>{
-  pkg.addEventListener('click',()=>{
-    document.querySelectorAll('.admin-pkg').forEach(p=>p.classList.remove('sel'));
-    pkg.classList.add('sel');
-    selectedAmt = parseInt(pkg.dataset.amt);
-    document.getElementById('adminSelected').textContent = `Seçilen: ${fmt(selectedAmt)} NRC`;
-    document.getElementById('adminMsg').textContent = '';
-    document.getElementById('adminMsg').className = 'admin-msg';
-  });
-});
-
-// Kodu kullan
 document.getElementById('adminBtn').addEventListener('click', async ()=>{
   const code = document.getElementById('adminInput').value.trim().toUpperCase();
-
   if(!code){ setAdminMsg('Lütfen bir kod gir!','err'); return; }
-  if(selectedAmt===0){ setAdminMsg('Lütfen bir miktar seç!','err'); return; }
-
   const hash = await sha256(code);
-  const usedCodes = getUsedCodes();
+  const used = getUsedCodes();
+  if(used.includes(hash)){ setAdminMsg('Bu kod zaten kullanıldı!','err'); return; }
 
-  // Kod daha önce kullanıldı mı?
-  if(usedCodes.includes(hash)){ setAdminMsg('Bu kod zaten kullanıldı!','err'); return; }
-
-  // Kod geçerli mi?
-  const codeAmt = CODE_HASHES[hash];
-  if(!codeAmt){ setAdminMsg('Geçersiz kod!','err'); return; }
-
-  // Kod miktarı ile seçilen miktar eşleşiyor mu?
-  if(codeAmt !== selectedAmt){ setAdminMsg(`Bu kod ${fmt(codeAmt)} NRC için geçerli!`,'err'); return; }
-
-  // Geçerli — yükle
-  markUsed(hash);
-  setNRC(getNRC() + selectedAmt);
-  addTx('🪙 Kod ile yükleme', selectedAmt, 'nrc');
-  showToast(`✅ +${fmt(selectedAmt)} NRC Yüklendi!`);
-  setAdminMsg(`✅ ${fmt(selectedAmt)} NRC yüklendi!`,'ok');
+  if(CHIP_HASHES[hash]!==undefined){
+    const amt = CHIP_HASHES[hash];
+    markUsed(hash); setChip(getChip()+amt);
+    addTx('🔑 Kod ile fiş yükleme', amt, 'chip');
+    showToast(`✅ +${fmt(amt)} Fiş Yüklendi!`);
+    setAdminMsg(`✅ ${fmt(amt)} fiş yüklendi!`,'ok');
+  } else if(COIN_HASHES[hash]!==undefined){
+    const amt = COIN_HASHES[hash];
+    markUsed(hash); setCoins(getCoins()+amt);
+    addTx('🔑 Kod ile ARI Token yükleme', amt, 'coin');
+    showToast(`✅ +${fmt(amt)} ARI Token Yüklendi!`);
+    setAdminMsg(`✅ ${fmt(amt)} ARI Token yüklendi! Fişe çevirmeyi unutma.`,'ok');
+  } else {
+    setAdminMsg('Geçersiz kod!','err'); return;
+  }
   document.getElementById('adminInput').value = '';
-  document.querySelectorAll('.admin-pkg').forEach(p=>p.classList.remove('sel'));
-  document.getElementById('adminSelected').textContent = 'Miktar seçilmedi';
-  selectedAmt = 0;
 });
-
-function setAdminMsg(msg, type){
-  const el = document.getElementById('adminMsg');
-  el.textContent = msg;
-  el.className = 'admin-msg ' + type;
-}
+function setAdminMsg(msg,type){ const el=document.getElementById('adminMsg'); el.textContent=msg; el.className='admin-msg '+type; }
 
 // ── TOAST ─────────────────────────────────────────────────────────────────
 let toastT;
 function showToast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
   clearTimeout(toastT);
-  toastT=setTimeout(()=>el.classList.remove('show'),2500);
+  toastT = setTimeout(()=>t.classList.remove('show'), 2600);
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────
+// ── BOOT ────────────────────────────────────────────────────────────────────
 init();
 renderBal();
-checkBonus();
-renderMissions();
 renderTx();
+renderMissions();
+checkBonus();
+setInterval(checkBonus, 60000);
 
 })();
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body>
 </html>
